@@ -3,7 +3,7 @@
 This module integrates PHPUnit with Kohana.  It's kinda obvious, but I'll say it anyway -
 
 
-*_This is NOT compatible with kohana-unittest, so be prepared for problems if you enable both of them at the same_*
+*_This is NOT compatible with kohana-unittest_*
 
 
 ## Installation
@@ -60,7 +60,9 @@ Of course, you'll need to make sure the path to the tests.php file is correct.  
 
 ## Writing tests
 
-If you're writing a test for your application, place it in "application/tests".  Similarly, if you're writing a test for a module place it in modules/[modulefolder]/tests
+If you're writing a test for your application, place it in "application/phpunit_tests".  Similarly, if you're writing a test for a module place it in modules/[modulefolder]/phpunit_tests
+
+*Note:* The 'phpunit_tests' folder is used to avoid conflict with kohana-unittest, however if you want to use the tests folder instead then feel free to change tests.php to reflect this.
 
 To allow users to selectively run tests you need to organise your tests into groups.  Here's an example test showing how to do this:
 

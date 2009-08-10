@@ -11,7 +11,7 @@ Class Tests
 			throw new Exception('Please include the kohana bootstrap file (see README.markdown)');
 		}
 		
-		$files = Kohana::list_files('tests', TRUE);
+		$files = Kohana::list_files('phpunit_tests', TRUE);
 
 		$suite = new PHPUnit_Framework_TestSuite();
 
