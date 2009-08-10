@@ -1,4 +1,8 @@
 <?php
 
 if(class_exists('PHPUnit_Util_Filter'))
-	define('SUPPRESS_REQUEST', TRUE);
+{
+    restore_exception_handler();
+    restore_error_handler();
+    define('SUPPRESS_REQUEST', TRUE);
+}
