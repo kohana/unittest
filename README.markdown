@@ -14,7 +14,7 @@ Step 1: Enable this module in your bootstrap file
 	 * Enable modules. Modules are referenced by a relative or absolute path.
 	 */
 	Kohana::modules(array(
-		'phpunit'		=> MODPATH.'phpunit'	// PHPUnit integration
+		'phpunit'	=> MODPATH.'phpunit'	 // PHPUnit integration
 		// 'database'   => MODPATH.'database',   // Database access
 		// 'image'      => MODPATH.'image',      // Image manipulation
 		// 'kodoc'      => MODPATH.'kodoc',      // Kohana documentation
@@ -54,7 +54,7 @@ to read:
 
 Step 3: Start testing!
 
-	$ phpunit --bootstrap=application/bootstrap.php modules/phpunit/tests.php
+	$ phpunit --bootstrap=index.php modules/phpunit/tests.php
 
 Of course, you'll need to make sure the path to the tests.php file is correct.  If you want you can copy it to a more accessible location
 
@@ -82,5 +82,5 @@ To allow users to selectively run tests you need to organise your tests into gro
 
 To actually limit your testing to the "somegroup" group, use:
 
-	$ phpunit --boostrap=application/bootstrap.php modules/phpunit/tests.php --group=somegroup
+	$ phpunit --boostrap=index.php modules/phpunit/tests.php --group=somegroup
 
