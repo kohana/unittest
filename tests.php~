@@ -32,19 +32,10 @@ Class Tests
 			} 
 			else 
 			{		
-				if(is_file($file))
+				if(is_file($file) AND ! strpos($file, 'Base_Test'.EXT))
 				{
-					// The default PHPUnit TestCase extension
-					if(! strpos($file, 'TestCase'.EXT))
-					{			
-						$suite->addTestFile($file);
-					}
-					else
-					{
-						require_once($file);
-					}
-
 					PHPUnit_Util_Filter::addFileToFilter($file);
+					$suite->addTestFile($file);
 				}
 			}
 		}
