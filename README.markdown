@@ -64,6 +64,8 @@ If you're writing a test for your application, place it in "application/phpunit_
 
 *Note:* The 'phpunit_tests' folder is used to avoid conflict with kohana-unittest, however if you want to use the tests folder instead then feel free to change tests.php to reflect this.
 
+### Grouping tests
+
 To allow users to selectively run tests you need to organise your tests into groups.  Here's an example test showing how to do this:
 
 
@@ -82,5 +84,21 @@ To allow users to selectively run tests you need to organise your tests into gro
 
 To actually limit your testing to the "somegroup" group, use:
 
-	$ phpunit --boostrap=index.php modules/phpunit/tests.php --group=somegroup
+	$ phpunit --boostrap=index.php --group=somegroup modules/phpunit/tests.php
 
+This functionality can be used to record which bug reports a test is for:
+
+	/**
+	 *
+	 * @group bugs.1477
+	 */
+	function testAccountCannotGoBelowZero()
+	{
+		// Some arbitary code
+	}
+
+To see all groups that are available in your code run:
+
+	$ phpunit --boostrap=index.php --list-groups modules/phpunit/tests.php
+
+*Note:* the `--list-groups` switch should appear before the path to the test suite loader
