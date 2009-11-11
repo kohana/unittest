@@ -58,7 +58,7 @@ Step 3: Start testing!
 
 Of course, you'll need to make sure the path to the tests.php file is correct.  If you want you can copy it to a more accessible location
 
-If you want to run tests frm within an IDE then you need to include the kohana files within the test itself:
+If you want to run tests from within an IDE then you need to include the kohana files within the test itself:
 
 	<?php
 
