@@ -10,6 +10,261 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 {
 
 	/**
+	 * Provides test data for testAlpha()
+	 * @return array
+	 */
+	public function providerAlpha()
+	{
+		return array(
+			array('asdavafaiwnoabwiubafpowf', TRUE),
+			array('!aidhfawiodb', FALSE),
+			array('51535oniubawdawd78', FALSE),
+			array('!"£$(G$W£(HFW£F(HQ)"n', FALSE)
+		);
+	}
+	
+	/**
+	 * Tests Validate::alpha()
+	 * 
+	 * Checks whether a string consists of alphabetical characters only.
+	 *
+	 * @test
+	 * @group kohana.validate.helpers
+	 * @dataProvider providerAlpha
+	 * @param string  $string
+	 * @param boolean $expected
+	 */
+	public function testAlpha($string, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			Validate::alpha($string)
+		);
+	}
+
+	/*
+	 * Provides test data for testAlphaNumeric
+	 */
+	public function provideAlphaNumeric()
+	{
+		return array(
+			array('abcd1234',  TRUE),
+		    array('abcd',      TRUE),
+		    array('1234',      TRUE),
+		    array('abc123&^/-', FALSE)
+		);
+	}
+
+	/**
+	 * Tests Validate::alpha_numberic()
+	 *
+	 * Checks whether a string consists of alphabetical characters and numbers only.
+	 *
+	 * @test
+	 * @group kohana.validate.helpers
+	 * @dataProvider provideAlphaNumeric
+	 * @param string  $input     The string to test
+	 * @param boolean $expected  Is $input valid
+	 */
+	public function testAlphaNumeric($input, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			Validate::alpha_numeric($input)
+		);
+	}
+
+	/**
+	 * Provides test data for testAlphaDash
+	 */
+	public function providerAlphaDash()
+	{
+		return array(
+			array('abcdef',     TRUE),
+		    array('12345',      TRUE),
+		    array('abcd1234',   TRUE),
+		    array('abcd1234-',  TRUE),
+		    array('abc123&^/-', FALSE)
+		);
+	}
+
+	/**
+	 * Tests Validate::alpha_dash()
+	 *
+	 * Checks whether a string consists of alphabetical characters, numbers, underscores and dashes only.
+	 *
+	 * @test
+	 * @group kohana.validate.helpers
+	 * @dataProvider providerAlphaDash
+	 * @param string  $input          The string to test
+	 * @param boolean $contains_utf8  Does the string contain utf8 specific characters
+	 * @param boolean $expected       Is $input valid?
+	 */
+	public function testAlphaDash($input, $expected, $contains_utf8 = FALSE)
+	{
+		if( ! $contains_utf8)
+		{
+			$this->assertSame(
+				$expected,
+				Validate::alpha_dash($input)
+			);
+		}		
+
+		$this->assertSame(
+			$expected,
+			Validate::alpha_dash($input, TRUE)
+		);
+	}
+
+	/**
+	 * DataProvider for the valid::decimal() test
+	 */
+	public function providerDecimal()
+	{
+		return array(
+			array('45.1664',  3,    NULL, FALSE),
+			array('45.1664',  4,    NULL, TRUE),
+			array('45.1664',  4,    2,    TRUE),
+		);
+	}
+
+	/**
+	 * Tests Validate::decimal()
+	 *
+	 * @test
+	 * @group kohana.validate.helpers
+	 * @dataProvider providerDecimal
+	 * @param string  $decimal  The decimal to validate
+	 * @param integer $places   The number of places to check to
+	 * @param integer $digits   The number of digits preceding the point to check
+	 * @param boolean $expected Whether $decimal conforms to $places AND $digits
+	 */
+	public function testDecimal($decimal, $places, $digits, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			Validate::decimal($decimal, $places, $digits),
+			'Decimal: "'.$decimal.'" to '.$places.' places and '.$digits.' digits (preceeding period)'
+		);
+	}
+
+	/**
+	 * Provides test data for testDigit
+	 * @return array
+	 */
+	public function providerDigit()
+	{
+		return array(
+			array('12345',    TRUE),
+		    array('10.5',     FALSE),
+		    array('abcde',    FALSE),
+		    array('abcd1234', FALSE)
+		);
+	}
+
+	/**
+	 * Tests Validate::digit()
+	 *
+	 * @test
+	 * @group kohana.validate.helpers
+	 * @dataProvider providerDigit
+	 * @param mixed   $input     Input to validate
+	 * @param boolean $expected  Is $input valid
+	 */
+	public function testDigit($input, $expected, $contains_utf8 = FALSE)
+	{
+		if( ! $contains_utf8)
+		{
+			$this->assertSame(
+				$expected,
+				Validate::digit($input)
+			);
+		}
+
+		$this->assertSame(
+			$expected,
+			Validate::digit($input, TRUE)
+		);
+
+	}
+
+	/**
+	 * DataProvider for the valid::color() test
+	 */
+	public function providerColor()
+	{
+		return array(
+			array('#000000', TRUE),
+			array('#GGGGGG', FALSE),
+			array('#AbCdEf', TRUE),
+			array('#000', TRUE),
+			array('#abc', TRUE),
+			array('#DEF', TRUE),
+			array('000000', TRUE),
+			array('GGGGGG', FALSE),
+			array('AbCdEf', TRUE),
+			array('000', TRUE),
+			array('DEF', TRUE)
+		);
+	}
+
+	/**
+	 * Tests Validate::color()
+	 *
+	 * @test
+	 * @group kohana.validate.helpers
+	 * @dataProvider providerColor
+	 * @param string  $color     The color to test
+	 * @param boolean $expected  Is $color valid
+	 */
+	public function testColor($color, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			Validate::color($color)
+		);
+	}
+
+	/**
+	 * Provides test data for testCreditCard()
+	 */
+	public function providerCreditCard()
+	{
+		return array(
+			array('4222222222222',    'visa',       TRUE),
+		    array('4012888888881881', 'visa',       TRUE),
+		    array('4012888888881881', NULL,         TRUE),
+		    array('4012888888881881', array('mastercard', 'visa'), TRUE),
+		    array('4012888888881881', array('discover', 'mastercard'), FALSE),
+		    array('4012888888881881', 'mastercard', FALSE),
+		    array('5105105105105100', 'mastercard', TRUE),
+		    array('6011111111111117', 'discover',   TRUE),
+		    array('6011111111111117', 'visa',       FALSE)
+		);
+	}
+
+	/**
+	 * Tests Validate::credit_card()
+	 *
+	 * @test
+	 * @group kohana.validation.helpers
+	 * @dataProvider  providerCreditCard()
+	 * @param string  $number   Credit card number
+	 * @param string  $type	    Credit card type
+	 * @param boolean $expected
+	 */
+	public function testCreditCard($number, $type, $expected)
+	{
+		$this->markTestSkipped('Missing credit card config file');
+
+		$this->assertSame(
+			$expected,
+			Validate::credit_card($number, $type)
+		);
+	}
+
+
+	/**
 	 * Provides test data for testEmail()
 	 *
 	 * @return array
@@ -298,6 +553,36 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * DataProvider for the Validate::numeric() test
+	 */
+	public function providerNumeric()
+	{
+		return array(
+			array('12345', TRUE),
+		    array('10.5',  TRUE),
+		    array('-10.5', TRUE),
+		    array('10.5a', FALSE)
+		);
+	}
+
+	/**
+	 * Tests Validate::numeric()
+	 *
+	 * @test
+	 * @group kohana.validate.helpers
+	 * @dataProvider providerNumeric
+	 * @param string  $input     Input to test
+	 * @param boolean $expected  Whether or not $input is numeric
+	 */
+	public function testNumeric($input, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			Validate::numeric($input)
+		);
+	}
+
+	/**
 	 * Provides test data for testPhone()
 	 * @return array
 	 */
@@ -335,40 +620,72 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Provides test data for testCreditCard()
+	 * DataProvider for the valid::range() test
 	 */
-	public function providerCreditCard()
+	public function providerRange()
 	{
 		return array(
-			array('4222222222222',    'visa',       TRUE),
-		    array('4012888888881881', 'visa',       TRUE),
-		    array('4012888888881881', NULL,         TRUE),
-		    array('4012888888881881', array('mastercard', 'visa'), TRUE),
-		    array('4012888888881881', array('discover', 'mastercard'), FALSE),
-		    array('4012888888881881', 'mastercard', FALSE),
-		    array('5105105105105100', 'mastercard', TRUE),
-		    array('6011111111111117', 'discover',   TRUE),
-		    array('6011111111111117', 'visa',       FALSE)
+			array(1,  0,  2, TRUE),
+			array(-1, -5, 0, TRUE),
+			array(-1, 0,  1, FALSE),
+			array(1,  0,  0, FALSE),
+			array(2147483647, 0, 200000000000000, TRUE),
+			array(-2147483647, -2147483655, 2147483645, TRUE)
 		);
 	}
 
 	/**
-	 * Tests Validate::credit_card()
+	 * Tests Validate::range()
+	 *
+	 * Tests if a number is within a range.
 	 *
 	 * @test
-	 * @group kohana.validation.helpers
-	 * @dataProvider  providerCreditCard()
-	 * @param string  $number   Credit card number
-	 * @param string  $type	    Credit card type
-	 * @param boolean $expected
+	 * @group kohana.validate.helpers
+	 * @dataProvider providerRange
+	 * @param integer $number    Number to test
+	 * @param integer $min       Lower bound
+	 * @param integer $max       Upper bound
+	 * @param boolean $expected  Is Number within the bounds of $min && $max
 	 */
-	public function testCreditCard($number, $type, $expected)
+	public function testRange($number, $min, $max, $expected)
 	{
-		$this->markTestSkipped('Missing credit card config file');
-		
-		$this->assertSame(
+		$this->AssertSame(
 			$expected,
-			Validate::credit_card($number, $type)
+			Validate::range($number, $min, $max)
 		);
 	}
+
+	/**
+	 * Provides test data for testUrl()
+	 *
+	 * @return array
+	 */
+	public function providerUrl()
+	{
+		return array(
+			array('http://google.com', TRUE),
+			array('http://localhost', TRUE),
+			array('ftp://my.server.com', TRUE),
+			array('http://ww$.gooogle.com', FALSE)
+		);
+	}
+
+	/**
+	 * Tests Validate::url()
+	 *
+	 * @test
+	 * @group kohana.validate.helpers
+	 * @dataProvider providerUrl
+	 * @param string  $url       The url to test
+	 * @param boolean $expected  Is it valid?
+	 */
+	public function testUrl($url, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			Validate::url($url)
+		);
+	}
+
+	
 }
