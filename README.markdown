@@ -8,6 +8,18 @@ This module integrates PHPUnit with Kohana.  It's kinda obvious, but I'll say it
 
 ## Installation
 
+Step 0: Download this module!
+
+The following instructions will assume you've moved it to `modules/phpunit`, if you haven't then you should update all paths accordingly.
+
+To get it from git execute the following command in the root of your project:
+
+	$ git submodule add git://github.com/BMatt/kohana-phpunit.git modules/phpunit
+
+And watch the gitorious magic...
+
+Of course you can always download the code from the [github project](http://github.com/BMatt/kohana-phpunit) as an archive.
+
 Step 1: Enable this module in your bootstrap file
 
 	/**
