@@ -14,11 +14,11 @@ The following instructions will assume you've moved it to `modules/phpunit`, if 
 
 To get it from git execute the following command in the root of your project:
 
-	$ git submodule add git://github.com/BMatt/kohana-phpunit.git modules/phpunit
+	$ git submodule add git://github.com/banks/kohana-phpunit.git modules/phpunit
 
 And watch the gitorious magic...
 
-Of course you can always download the code from the [github project](http://github.com/BMatt/kohana-phpunit) as an archive.
+Of course you can always download the code from the [github project](http://github.com/banks/kohana-phpunit) as an archive.
 
 Step 1: Enable this module in your bootstrap file
 
@@ -66,7 +66,9 @@ to read:
 
 Step 3: Start testing!
 
-	$ phpunit --bootstrap=index.php modules/phpunit/tests.php
+### From the command line
+
+	$ phpunit --bootstrap=index.php modules/phpunit/classes/tests.php
 
 Of course, you'll need to make sure the path to the tests.php file is correct.  If you want you can copy it to a more accessible location
 
@@ -80,7 +82,10 @@ If you want to run tests from within an IDE then you need to include the kohana 
 	{
 		// ...
 	}
+	
+### From the web
 
+Just navigate to http://yoursite.com/phpunit. You may need to use yoursite.com/index.php/phpunit if you have not removed this by using .htaccess.
 
 ## Writing tests
 
@@ -173,7 +178,7 @@ This functionality can be used to record which bug reports a test is for:
 
 To see all groups that are available in your code run:
 
-	$ phpunit --boostrap=index.php --list-groups modules/phpunit/tests.php
+	$ phpunit --boostrap=index.php --list-groups modules/phpunit/classes/tests.php
 
 *Note:* the `--list-groups` switch should appear before the path to the test suite loader
 
