@@ -14,11 +14,11 @@ The following instructions will assume you've moved it to `modules/phpunit`, if 
 
 To get it from git execute the following command in the root of your project:
 
-	$ git submodule add git://github.com/banks/kohana-phpunit.git modules/phpunit
+	$ git submodule add git://github.com/BMatt/kohana-phpunit.git modules/phpunit
 
 And watch the gitorious magic...
 
-Of course you can always download the code from the [github project](http://github.com/banks/kohana-phpunit) as an archive.
+Of course you can always download the code from the [github project](http://github.com/BMatt/kohana-phpunit) as an archive.
 
 Step 1: Enable this module in your bootstrap file
 
