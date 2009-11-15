@@ -29,7 +29,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Checks whether a string consists of alphabetical characters only.
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerAlpha
 	 * @param string  $string
 	 * @param boolean $expected
@@ -61,7 +61,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Checks whether a string consists of alphabetical characters and numbers only.
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider provideAlphaNumeric
 	 * @param string  $input     The string to test
 	 * @param boolean $expected  Is $input valid
@@ -94,7 +94,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Checks whether a string consists of alphabetical characters, numbers, underscores and dashes only.
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerAlphaDash
 	 * @param string  $input          The string to test
 	 * @param boolean $contains_utf8  Does the string contain utf8 specific characters
@@ -132,7 +132,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Tests Validate::decimal()
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerDecimal
 	 * @param string  $decimal  The decimal to validate
 	 * @param integer $places   The number of places to check to
@@ -166,7 +166,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Tests Validate::digit()
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerDigit
 	 * @param mixed   $input     Input to validate
 	 * @param boolean $expected  Is $input valid
@@ -212,7 +212,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Tests Validate::color()
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerColor
 	 * @param string  $color     The color to test
 	 * @param boolean $expected  Is $color valid
@@ -291,7 +291,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Check an email address for correct format.
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerEmail
 	 * @param string  $email   Address to check
 	 * @param boolean $strict  Use strict settings
@@ -328,7 +328,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Test skips on windows
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerEmailDomain
 	 * @param string  $email   Email domain to check
 	 * @param boolean $correct Is it correct?
@@ -368,7 +368,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Checks that a field is exactly the right length.
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerExactLength
 	 * @param string  $string  The string to length check
 	 * @param integer $length  The length of the string
@@ -430,7 +430,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Tests Validate::ip()
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider  providerIp
 	 * @param string  $input_ip
 	 * @param boolean $allow_private
@@ -467,7 +467,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Checks that a field is short enough.
 	 * 
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerMaxLength
 	 * @param string  $string    String to test
 	 * @param integer $maxlength Max length for this string
@@ -501,7 +501,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Checks that a field is long enough.
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerMinLength
 	 * @param string  $string     String to compare
 	 * @param integer $minlength  The minimum allowed length
@@ -539,7 +539,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Checks if a field is not empty.
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerNotEmpty
 	 * @param mixed   $value  Value to check
 	 * @param boolean $empty  Is the value really empty?
@@ -569,7 +569,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Tests Validate::numeric()
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerNumeric
 	 * @param string  $input     Input to test
 	 * @param boolean $expected  Whether or not $input is numeric
@@ -606,7 +606,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Tests Validate::phone()
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider  providerPhone
 	 * @param string  $phone     Phone number to test
 	 * @param boolean $expected  Is $phone valid
@@ -640,7 +640,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Tests if a number is within a range.
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerRange
 	 * @param integer $number    Number to test
 	 * @param integer $min       Lower bound
@@ -674,7 +674,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Tests Validate::url()
 	 *
 	 * @test
-	 * @group kohana.validate.helpers
+	 * @group kohana.validation.helpers
 	 * @dataProvider providerUrl
 	 * @param string  $url       The url to test
 	 * @param boolean $expected  Is it valid?
