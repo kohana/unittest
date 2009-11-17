@@ -13,13 +13,16 @@
  */
 Class Kohana_CLI_Test extends PHPUnit_Framework_TestCase
 {
+	
 	/**
-	 * @var array $_SERVER before each test
+	 * Tell PHPUnit to isolate globals during tests 
+	 * @var boolean 
 	 */
-	protected $_server = array();
+	protected $backupGlobals = TRUE;
 
 	/**
-	 * @var array An array of arguments to put in $_SERVER['argv']
+	 * An array of arguments to put in $_SERVER['argv']
+	 * @var array 
 	 */
 	protected $options = array(
 							'--uri' => 'test/something',
@@ -30,11 +33,11 @@ Class Kohana_CLI_Test extends PHPUnit_Framework_TestCase
 
 	/**
 	 * Setup the enviroment for each test
+	 *
+	 * PHPUnit automatically backups up & restores global variables
 	 */
 	function setUp()
 	{
-		$this->_server = $_SERVER;
-		
 		$_SERVER['argv'] = array('index.php');
 
 		foreach($this->options as $option => $value)
@@ -51,17 +54,6 @@ Class Kohana_CLI_Test extends PHPUnit_Framework_TestCase
 
 		$_SERVER['argc'] = count($_SERVER['argv']);
 	}
-
-	/**
-	 * Return the enviroment to its original state
-	 */
-	function tearDown()
-	{
-		$_SERVER = $this->_server;
-
-		$this->_server = array();
-	}
-
 
 	/**
 	 * Tests CLI::options()
