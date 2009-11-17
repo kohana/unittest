@@ -40,7 +40,7 @@ class Controller_PHPUnit extends Controller implements PHPUnit_Framework_TestLis
 	
 	public function before()
 	{
-		$this->_suite = Tests::suite();
+		$this->_suite = Kohana_Tests::suite();
 		
 		$this->_results = array(
 			'errors' => array(),

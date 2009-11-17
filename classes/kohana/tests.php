@@ -2,15 +2,10 @@
 /**
  * PHPUnit testsuite for kohana application
  */
-class Tests
+class Kohana_Tests
 {
 	static function suite()
-	{
-		if( ! class_exists('Kohana'))
-		{
-			throw new Exception('Please include the kohana bootstrap file (see README.markdown)');
-		}
-		
+	{		
 		$files = Kohana::list_files('phpunit_tests');
 
 		$suite = new PHPUnit_Framework_TestSuite();
