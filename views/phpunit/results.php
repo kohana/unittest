@@ -41,7 +41,7 @@
 		display: block;
 	}
 	div.failures-list {
-		background-color: #fed;
+		background-color: #ffcccc;
 	}
 	div.errors-list {
 		background-color: #ffc;
