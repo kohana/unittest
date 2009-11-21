@@ -339,7 +339,8 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 		{
 			$this->assertSame(
 				$correct,
-				Validate::email_domain($email)
+				Validate::email_domain($email),
+				'Make sure you\'re connected to the internet'
 			);
 		}
 		else
