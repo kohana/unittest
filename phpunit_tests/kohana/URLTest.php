@@ -4,6 +4,7 @@
  * Tests URL
  *
  * @group Kohana
+ * @group Kohana.URL
  */
 Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 {
@@ -19,6 +20,9 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 								'protocol'	=> 'http',
 								'HTTP_HOST' => 'example.com',
 							);
+	/**
+	 * Sets up the enviroment for each test
+	 */
 	function setUp()
 	{
 		$this->_base_url = Kohana::$base_url;
@@ -28,6 +32,9 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 		$this->setEnviroment($this->_defaults);
 	}
 
+	/**
+	 * Resets the enviroment after each test
+	 */
 	function tearDown()
 	{
 		Kohana::$base_url = $this->_base_url;
@@ -35,6 +42,12 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 		Kohana::$index_file = $this->_index_file;
 	}
 
+	/**
+	 * Changes certain aspects of the enviroment
+	 *
+	 * @param array $vars
+	 * @return boolean
+	 */
 	function setEnviroment(array $vars)
 	{
 		if(empty($vars))
@@ -65,6 +78,11 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 		return TRUE;
 	}
 
+	/**
+	 * Provides test data for testBase()
+	 * 
+	 * @return array
+	 */
 	function providerBase()
 	{
 		return array(
@@ -104,6 +122,104 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 		$this->assertSame(
 			$expected,
 			URL::base($index, $protocol)
+		);
+	}
+
+	/**
+	 * Provides test data for testSite()
+	 * 
+	 * @return array
+	 */
+	function providerSite()
+	{
+		return array(
+			array('', FALSE,		'/kohana/index.php/'),
+			array('', TRUE,			'http://example.com/kohana/index.php/'),
+
+			array('my/site', FALSE, '/kohana/index.php/my/site'),
+			array('my/site', TRUE,  'http://example.com/kohana/index.php/my/site'),
+
+			array('my/site?var=asd&kohana=awesome', FALSE,  '/kohana/index.php/my/site?var=asd&kohana=awesome'),
+			array('my/site?var=asd&kohana=awesome', TRUE,  'http://example.com/kohana/index.php/my/site?var=asd&kohana=awesome'),
+
+			array('?kohana=awesome&life=good', FALSE, '/kohana/index.php/?kohana=awesome&life=good'),
+			array('?kohana=awesome&life=good', TRUE, 'http://example.com/kohana/index.php/?kohana=awesome&life=good'),
+
+			array('?kohana=awesome&life=good#fact', FALSE, '/kohana/index.php/?kohana=awesome&life=good#fact'),
+			array('?kohana=awesome&life=good#fact', TRUE, 'http://example.com/kohana/index.php/?kohana=awesome&life=good#fact'),
+
+			array('some/long/route/goes/here?kohana=awesome&life=good#fact', FALSE, '/kohana/index.php/some/long/route/goes/here?kohana=awesome&life=good#fact'),
+			array('some/long/route/goes/here?kohana=awesome&life=good#fact', TRUE, 'http://example.com/kohana/index.php/some/long/route/goes/here?kohana=awesome&life=good#fact'),
+
+			array('/route/goes/here?kohana=awesome&life=good#fact', 'https', 'https://example.com/kohana/index.php/route/goes/here?kohana=awesome&life=good#fact'),
+			array('/route/goes/here?kohana=awesome&life=good#fact', 'ftp', 'ftp://example.com/kohana/index.php/route/goes/here?kohana=awesome&life=good#fact'),
+		);
+	}
+
+	/**
+	 * Tests URL::site()
+	 *
+	 * @test
+	 * @dataProvider providerSite
+	 * @param string          $uri         URI to use
+	 * @param boolean|string  $protocol    Protocol to use
+	 * @param string          $expected    Expected result
+	 * @param array           $enviroment  Array of enviroment vars to set
+	 */
+	function testSite($uri, $protocol, $expected, array $enviroment = array())
+	{
+		$this->setEnviroment($enviroment);
+
+		$this->assertSame(
+			$expected,
+			URL::site($uri, $protocol)
+		);
+	}
+
+	/**
+	 * Provides test data for testTitle()
+	 * @return array
+	 */
+	function providerTitle()
+	{
+		return array(
+			// Tests that..
+			// Title is converted to lowercase
+			array('WE SHALL NOT BE MOVED', '-', 'we-shall-not-be-moved'),
+			// Excessive white space is removed and replaced with 1 char
+			array('THISSSSSS         IS       IT  ', '-', 'thissssss-is-it'),
+			// separator is either - (dash) or _ (underscore) & others are converted to underscores
+			array('some title', '-', 'some-title'),
+			array('some title', '_', 'some_title'),
+			array('some title', '!', 'some_title'),
+			array('some title', NULL, 'some_title'),
+			array('some title', ':', 'some_title'),
+			// Numbers are preserved
+			array('99 Ways to beat apple', '-', '99-ways-to-beat-apple'),
+			// ... with lots of spaces & caps
+			array('99    ways   TO beat      APPLE', '_', '99_ways_to_beat_apple'),
+			array('99    ways   TO beat      APPLE', '-', '99-ways-to-beat-apple'),
+			// Invalid characters are removed
+			array('Each GBP(£) is now worth 32 USD($)', '-', 'each-gbp-is-now-worth-32-usd'),
+			// ... inc. separator
+			array('Is it reusable or re-usable?', '-', 'is-it-reusable-or-re-usable'),
+		);
+	}
+
+	/**
+	 * Tests URL::title()
+	 *
+	 * @test
+	 * @dataProvider providerTitle
+	 * @param string $title        Input to convert
+	 * @param string $separator    Seperate to replace invalid characters with
+	 * @param string $expected     Expected result
+	 */
+	function testTitle($title, $separator, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			URL::title($title, $separator)
 		);
 	}
 }
