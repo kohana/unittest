@@ -666,7 +666,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 			array('http://google.com', TRUE),
 			array('http://localhost', TRUE),
 			array('ftp://my.server.com', TRUE),
-			array('http://ww$.gooogle.com', FALSE)
+			array('http://ww£.gooogle.com', FALSE)
 		);
 	}
 
