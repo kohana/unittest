@@ -8,6 +8,11 @@ if( ! class_exists('Kohana'))
 if($file = Kohana::find_file('classes', 'kohana/tests'))
 {
 	require_once $file;
+
+	// PHPUnit requires a test suite class to be in this file,
+	// so we create a faux one that uses the kohana base
+	Class TestSute extends Kohana_Tests
+	{}
 }
 else
 {
