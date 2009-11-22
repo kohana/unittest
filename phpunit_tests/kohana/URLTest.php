@@ -8,12 +8,34 @@
  */
 Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 {
+	/**
+	 * Tell PHPUnit to isolate globals during tests
+	 * @var boolean
+	 */
+	protected $backupGlobals = TRUE;
+
+	/**
+	 * Backup of Kohana::$base_url
+	 * @var string
+	 */
 	protected $_base_url = '';
 
+	/**
+	 * Backup of Request::$protocol
+	 * @var string
+	 */
 	protected $_protocol = '';
 
+	/**
+	 * Backup of Kohana::$index_file
+	 * @var string
+	 */
 	protected $_index_file = '';
 
+	/**
+	 * Default values to set for base_url, index_file, protocol and HTTP_HOST
+	 * @var array
+	 */
 	protected $_defaults =	array(
 								'base_url'	=> '/kohana/',
 								'index_file'=> 'index.php',
@@ -21,7 +43,7 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 								'HTTP_HOST' => 'example.com',
 							);
 	/**
-	 * Sets up the enviroment for each test
+	 * Sets up the enviroment for each test, loads default enviroment values
 	 */
 	function setUp()
 	{
