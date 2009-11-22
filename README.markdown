@@ -1,9 +1,6 @@
 # Kohana-PHPUnit integration
 
-This module integrates PHPUnit with Kohana.  It's kinda obvious, but I'll say it anyway -
-
-
-*_Tests written for kohana-unittest are NOT compatible with this module, hence using the phpunit_tests folder and not tests_*
+This module integrates PHPUnit with Kohana.  
 
 If you look through any of the tests provided in this module you'll probably notice all theHorribleCamelCase. 
 I've chosen to do this because it's part of the PHPUnit coding conventions and is required for certain features such as auto documentation.
@@ -14,11 +11,11 @@ Step 0: Download this module!
 
 To get it from git execute the following command in the root of your project:
 
-	$ git submodule add git://github.com/BMatt/kohana-phpunit.git modules/phpunit
+	$ git submodule add git://github.com/kohana/unittest.git modules/phpunit
 
 And watch the gitorious magic...
 
-Of course you can always download the code from the [github project](http://github.com/BMatt/kohana-phpunit) as an archive.
+Of course you can always download the code from the [github project](http://github.com/kohana/unittest) as an archive.
 
 The following instructions will assume you've moved it to `modules/phpunit`, if you haven't then you should update all paths accordingly.
 
@@ -92,8 +89,6 @@ Just navigate to http://yoursite.com/phpunit. You may need to use yoursite.com/i
 ## Writing tests
 
 If you're writing a test for your application, place it in "application/phpunit_tests".  Similarly, if you're writing a test for a module place it in modules/[modulefolder]/phpunit_tests
-
-*Note:* The 'phpunit_tests' folder is used to avoid conflict with kohana-unittest, however if you want to use the tests folder instead then feel free to change tests.php to reflect this.
 
 Rather than tell you how to write tests I'll point you in the direction of the [PHPUnit Manual](http://www.phpunit.de/manual/3.4/en/index.html) and tell you about a few of the awesome features in PHPUnit.
 
