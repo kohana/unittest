@@ -3,8 +3,8 @@
 /**
  * Tests URL
  *
- * @group Kohana
- * @group Kohana.URL
+ * @group kohana
+ * @group kohana.url
  */
 Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 {

@@ -148,8 +148,6 @@ To allow users to selectively run tests you need to organise your tests into gro
 		/**
 		 * Tests can also be grouped too!
 		 *
-		 * @group annoyingstuff
-		 * @group somegroup.annoyingstuff
 		 * @group somegroup.morespecific.annoyingstuff
 		 */
 		function testSomeAnnoyingCase()
@@ -157,6 +155,12 @@ To allow users to selectively run tests you need to organise your tests into gro
 			// CODE!!
 		}
 	}
+
+Our convention is to use lowercase group names, with more specific levels in a group seperated by periods. i.e. The Validate helper tests are part of the following groups:
+
+	kohana
+	kohana.validation
+	kohana.validation.helpers
 
 To actually limit your testing to the "somegroup" group, use:
 
