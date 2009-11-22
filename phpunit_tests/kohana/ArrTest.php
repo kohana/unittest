@@ -31,7 +31,9 @@ Class Kohana_ArrTest extends PHPUnit_Framework_TestCase
 			// That it's not just using the callback "function"
 			array('different_name(harry,jerry)', array('different_name', array('harry', 'jerry'))),
 			// That static callbacks are parsed into arrays
-			array('kohana::appify(this)', array(array('kohana', 'appify'), array('this')))
+			array('kohana::appify(this)', array(array('kohana', 'appify'), array('this'))),
+			// Spaces are preserved in parameters
+			array('deal::make(me, my mate )', array(array('deal', 'make'), array('me', ' my mate ')))
 			// TODO: add more cases
 		);
 	}
@@ -48,14 +50,51 @@ Class Kohana_ArrTest extends PHPUnit_Framework_TestCase
 	{
 		$result = Arr::callback($str);
 
-		$this->assertSame(
-			2,
-			count($result)
+		$this->assertSame(2, count($result));
+		$this->assertSame($expected, $result);
+	}
+
+	/**
+	 * Provides test data for testExtract
+	 *
+	 * @return array
+	 */
+	function providerExtract()
+	{
+		return array(
+			array(
+				array('kohana' => 'awesome', 'blueflame' => 'was'),
+				array('kohana', 'cakephp', 'symfony'),
+				NULL,
+				array('kohana' => 'awesome', 'cakephp' => NULL, 'symfony' => NULL)
+			),
+			// I realise noone should EVER code like this in real life,
+			// but unit testing is very very very very boring
+			array(
+				array('chocolate cake' => 'in stock', 'carrot cake' => 'in stock'),
+				array('carrot cake', 'humble pie'),
+				'not in stock',
+				array('carrot cake' => 'in stock', 'humble pie' => 'not in stock'),
+			),
 		);
-		$this->assertSame(
-			$expected,
-			$result
-		);
+	}
+
+	/**
+	 * Tests Arr::extract()
+	 *
+	 * @test
+	 * @dataProvider providerExtract
+	 * @param array $array
+	 * @param array $keys
+	 * @param mixed $default
+	 * @param array $expected
+	 */
+	function testExtract(array $array, array $keys, $default, $expected)
+	{
+		$array = Arr::extract($array, $keys, $default);
+
+		$this->assertSame(count($expected), count($array));
+		$this->assertSame($expected, $array);
 	}
 
 
@@ -124,6 +163,11 @@ Class Kohana_ArrTest extends PHPUnit_Framework_TestCase
 		);
 	}
 
+	function testMerge()
+	{
+
+	}
+
 	/**
 	 * Provides test data for testGet()
 	 *
@@ -158,5 +202,79 @@ Class Kohana_ArrTest extends PHPUnit_Framework_TestCase
 			$expected,
 			Arr::path($this->traversable, $path, $default)
 		);
+	}
+
+	/**
+	 * Provides test data for testRange()
+	 * 
+	 * @return array
+	 */
+	function providerRange()
+	{
+		return array(
+			array(1, 2),
+			array(1, 100),
+			array(25, 10),
+		);
+	}
+	
+	/**
+	 * Tests Arr::range()
+	 *
+	 * @dataProvider providerRange
+	 * @param integer $step  The step between each value in the array
+	 * @param integer $max   The max value of the range (inclusive)
+	 */
+	function testRange($step, $max)
+	{
+		$range = Arr::range($step, $max);
+
+		$this->assertSame((int) floor($max / $step), count($range));
+
+		$current = $step;
+
+		foreach($range as $key => $value)
+		{
+			$this->assertSame($key, $value);
+			$this->assertSame($current, $key);
+			$this->assertLessThanOrEqual($max, $key);
+			$current += $step;
+		}
+	}
+
+	/**
+	 * Provides test data for testUnshift()
+	 *
+	 * @return array
+	 */
+	function providerUnshift()
+	{
+		return array(
+			array(array('one' => '1', 'two' => '2',), 'zero', '0'),
+			array(array('step 1', 'step 2', 'step 3'), 'step 0', 'wow')
+		);
+	}
+
+	/**
+	 * Tests Arr::unshift()
+	 *
+	 * @test
+	 * @dataProvider providerUnshift
+	 * @param array $array
+	 * @param string $key
+	 * @param mixed $value
+	 */
+	function testUnshift(array $array, $key, $value)
+	{
+		$original = $array;
+
+		Arr::unshift($array, $key, $value);
+
+		$this->assertNotSame($original, $array);
+		$this->assertSame(count($original) + 1, count($array));
+		$this->assertArrayHasKey($key, $array);
+
+		$this->assertSame($value, reset($array));
+		$this->assertSame(key($array), $key);
 	}
 }
