@@ -590,16 +590,16 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	public function providerPhone()
 	{
 		return array(
-			array('0163634840',   TRUE),
-		    array('+27173634840', TRUE),
-		    array('123578',       FALSE),
+			array('0163634840',       NULL, TRUE),
+		    array('+27173634840',     NULL, TRUE),
+		    array('123578',           NULL, FALSE),
 			// Some uk numbers
-			array('01234456778',  TRUE),
-			array('+0441234456778',  FALSE),
+			array('01234456778',      NULL, TRUE),
+			array('+0441234456778',   NULL, FALSE),
 			// Google UK case you're interested
-			array('+44 20-7031-3000', TRUE),
+			array('+44 20-7031-3000', array(12), TRUE),
 			// BT Corporate
-			array('020 7356 5000',	  TRUE),
+			array('020 7356 5000',	  NULL, TRUE),
 		);
 	}
 
@@ -612,11 +612,11 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * @param string  $phone     Phone number to test
 	 * @param boolean $expected  Is $phone valid
 	 */
-	public function testPhone($phone, $expected)
+	public function testPhone($phone, $lengths, $expected)
 	{
 		$this->assertSame(
 			$expected,
-			Validate::phone($phone)
+			Validate::phone($phone, $lengths)
 		);
 	}
 
