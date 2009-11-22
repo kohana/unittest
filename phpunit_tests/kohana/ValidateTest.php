@@ -255,8 +255,6 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreditCard($number, $type, $expected)
 	{
-		$this->markTestSkipped('Missing credit card config file');
-
 		$this->assertSame(
 			$expected,
 			Validate::credit_card($number, $type)
