@@ -6,7 +6,7 @@ class Kohana_Tests
 {
 	static function suite()
 	{		
-		$files = Kohana::list_files('phpunit_tests');
+		$files = Kohana::list_files('tests');
 
 		$suite = new PHPUnit_Framework_TestSuite();
 
