@@ -5,19 +5,24 @@ This module integrates PHPUnit with Kohana.
 If you look through any of the tests provided in this module you'll probably notice all theHorribleCamelCase. 
 I've chosen to do this because it's part of the PHPUnit coding conventions and is required for certain features such as auto documentation.
 
+## Requirements
+
+* PHPUnit
+* The [Archive module](http://github.com/BMatt/kohana-archive) is required for downloading code coverage reports
+
 ## Installation
 
 Step 0: Download this module!
 
 To get it from git execute the following command in the root of your project:
 
-	$ git submodule add git://github.com/kohana/unittest.git modules/phpunit
+	$ git submodule add git://github.com/kohana/unittest.git modules/unittest
 
 And watch the gitorious magic...
 
 Of course you can always download the code from the [github project](http://github.com/kohana/unittest) as an archive.
 
-The following instructions will assume you've moved it to `modules/phpunit`, if you haven't then you should update all paths accordingly.
+The following instructions will assume you've moved it to `modules/unittest`, if you haven't then you should update all paths accordingly.
 
 Step 1: Enable this module in your bootstrap file
 
@@ -67,7 +72,7 @@ Step 3: Start testing!
 
 ### From the command line
 
-	$ phpunit --bootstrap=index.php modules/phpunit/tests.php
+	$ phpunit --bootstrap=index.php modules/unittest/tests.php
 
 Of course, you'll need to make sure the path to the tests.php file is correct.  If you want you can copy it to a more accessible location
 
@@ -88,7 +93,7 @@ Just navigate to http://yoursite.com/phpunit. You may need to use yoursite.com/i
 
 ## Writing tests
 
-If you're writing a test for your application, place it in "application/phpunit_tests".  Similarly, if you're writing a test for a module place it in modules/[modulefolder]/phpunit_tests
+If you're writing a test for your application, place it in "application/tests".  Similarly, if you're writing a test for a module place it in modules/[modulefolder]/tests
 
 Rather than tell you how to write tests I'll point you in the direction of the [PHPUnit Manual](http://www.phpunit.de/manual/3.4/en/index.html) and tell you about a few of the awesome features in PHPUnit.
 
@@ -164,7 +169,7 @@ Our convention is to use lowercase group names, with more specific levels in a g
 
 To actually limit your testing to the "somegroup" group, use:
 
-	$ phpunit --boostrap=index.php --group=somegroup modules/phpunit/tests.php
+	$ phpunit --boostrap=index.php --group=somegroup modules/unittest/tests.php
 
 This functionality can be used to record which bug reports a test is for:
 
@@ -179,13 +184,13 @@ This functionality can be used to record which bug reports a test is for:
 
 To see all groups that are available in your code run:
 
-	$ phpunit --boostrap=index.php --list-groups modules/phpunit/tests.php
+	$ phpunit --boostrap=index.php --list-groups modules/unittest/tests.php
 
 *Note:* the `--list-groups` switch should appear before the path to the test suite loader
 
 You can also exclude groups while testing using the `--exclude-group` switch.  This can be useful if you want to ignore all kohana tests:
 
-	$ phpunit --bootstrap=index.php --exclude-group=kohana modules/phpunit/tests.php
+	$ phpunit --bootstrap=index.php --exclude-group=kohana modules/unittest/tests.php
 
 For more info see:
 
