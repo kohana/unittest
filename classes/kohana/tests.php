@@ -10,8 +10,8 @@ class Kohana_Tests
 
 		$suite = new PHPUnit_Framework_TestSuite();
 
-		PHPUnit_Util_Filter::addDirectoryToFilter(MODPATH);
-		PHPUnit_Util_Filter::addDirectoryToFilter(SYSPATH);
+		//PHPUnit_Util_Filter::addDirectoryToFilter(MODPATH);
+		//PHPUnit_Util_Filter::addDirectoryToFilter(SYSPATH);
 		self::addTests($suite, $files);
 
 		return $suite;

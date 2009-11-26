@@ -6,108 +6,183 @@
  * @package	Kohana PHPUnit
  */
 
-class Controller_PHPUnit extends Controller implements PHPUnit_Framework_TestListener
+class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framework_TestListener
 {
 	/**
 	 * Test Suite
 	 * @var PHPUnit_Framework_TestSuite
 	 */
 	protected $_suite;
-	
+
+
+	protected $report_formats =	array
+								(
+									'PHPUnit_Util_Report'						=> 'HTML files (zipped)',
+									'PHPUnit_Util_Log_CodeCoverage_XML_Clover'	=> 'Clover',
+									'PHPUnit_Util_Log_CodeCoverage_XML_Source'	=> 'XML',
+								);
+
 	/**
 	 * Results
 	 * @var array
 	 */
-	protected $_results;
+	protected $_results	=	array
+							(
+								'errors'		=> array(),
+								'failures'		=> array(),
+								'skipped'		=> array(),
+								'incomplete'	=> array(),
+							);
 	
 	/**
 	 * Test result totals
 	 * @var array
 	 */
-	protected $_totals;
+	protected $_totals = array
+						(
+							'tests'			=> 0,
+							'passed'		=> 0,
+							'errors'		=> 0,
+							'failures'		=> 0,
+							'skipped'		=> 0,
+							'incomplete'	=> 0,
+							'assertions'	=> 0,
+						);
 	
 	/**
 	 * Info about the current test running
 	 * @var array
 	 */
-	protected $_current;
+	protected $_current = array();
 	
 	/**
 	 * Time for tests to run (seconds)
 	 * @var float
 	 */
-	protected $_time;
-	
+	protected $_time = 0;
+
+	/**
+	 * Is the XDEBUG extension loaded?
+	 * @var boolean
+	 */
+	protected $xdebug_loaded = FALSE;
+
+	/**
+	 * Template
+	 * @var string
+	 */
+	public $template = 'phpunit/layout';
+
+	/**
+	 * Loads test suite
+	 */
 	public function before()
 	{
 		$this->_suite = Kohana_Tests::suite();
-		
-		$this->_results = array(
-			'errors' => array(),
-			'failures' => array(),
-			'skipped' => array(),
-			'incomplete' => array(),
-		);		
-		
-		$this->_totals = array(
-			'tests' => 0,
-			'passed' => 0,
-			'errors' => 0,
-			'failures' => 0,
-			'skipped' => 0,
-			'incomplete' => 0,
-			'assertions' => 0,
-		);
-		
-		$this->_current = array();
-		
-		$this->_time = 0;
+		$this->xdebug_loaded = extension_loaded('xdebug');
+
+		parent::before();
+
+		$this->template->set_global('xdebug_enabled', $this->xdebug_loaded);
 	}
-	
+
+	/**
+	 * Handles index page for /phpunit/ and /phpunit/index/
+	 */
 	public function action_index()
 	{
 		$this->request->response = View::factory('phpunit/index')
-			->set('groups', $this->_get_groups_list());
+			->set('groups', $this->get_groups_list());
 	}
-	
+
+	/**
+	 * Handles test running interface
+	 */
 	public function action_run()
 	{
-		if (isset($_POST['group']))
+		if ( ! empty($_POST))
 		{
+			$uri = Route::get('phpunit')->uri(array('group'=> Arr::get($_POST, 'group'), 'action'=>'run'));
+
+			if( ! empty($_POST['collect_cc']))
+			{
+				$uri .= url::query(array('cc' => '1'));
+			}
+
 			// Redirect to correct URL for group
-			$this->request->redirect(Route::get('phpunit')->uri(array('group'=>$_POST['group'], 'action'=>'run')));
+			$this->request->redirect($uri);
 		}
+
+		$this->template->body = View::factory('phpunit/results');
 		
 		$group = $this->request->param('group');
-		
-		// Create a test result and attach a SimpleTestListener
-		// object as an observer to it.
-		$result = new PHPUnit_Framework_TestResult;
-		$result->addListener($this);
-		
-		//Set groups
-		if (is_null($group))
+
+		$use_group	=	($group === NULL ? array() : (array) $group);
+
+		// Only collect code coverage if xdebug is enabled and user asked for it
+		$collect_cc	=	(! empty($_GET['cc']) ? ((bool) $_GET['cc']) : FALSE)
+						AND
+						$this->xdebug_loaded;
+
+		$result = $this->run($use_group, $collect_cc);
+
+		if($result->getCollectCodeCoverageInformation())
 		{
-			$use_group = array();
-		}
-		else
-		{
-			$use_group = array($group);
-		}
-		 
-		// Run the tests.
-		$this->_suite->run($result, FALSE, $use_group);	
+			$coverage = $result->getCodeCoverageInformation();
+
+			$coverage_summary = PHPUnit_Util_CodeCoverage::getSummary($coverage);
+
+			$executable = 0;
+			$executed	= 0;
+
+			foreach($coverage_summary as $file => $_lines)
+			{
+				$file_stats = PHPUnit_Util_CodeCoverage::getStatistics($coverage_summary, $file);
+				$executable += $file_stats['locExecutable'];
+				$executed   += $file_stats['locExecuted'];
+			}
+
+			$this->template->body->set('coverage', ($executed / $executable) * 100);
+		}		
 		
 		// Show some results
-		$this->request->response = View::factory('phpunit/results')
+		$this->template->body
 			->set('group', $group)
-			->set('groups', $this->_get_groups_list())
+			->set('groups', $this->get_groups_list())
 			->set('time', $this->_nice_time())
+			->set('report_uri', Route::get('phpunit')->uri(array_merge($this->request->param(), array('action' => 'report'))))
+			->set('report_formats', $this->report_formats)
 			->set('results', $this->_results)
 			->set('totals', $this->_totals);		
 	}
-	
-	protected function _get_groups_list()
+
+	/**
+	 * Runs all tests in $groups
+	 * 
+	 * @param array $groups             Array of groups to test
+	 * @param bool  $do_code_coverage   Should code coverage info be collected?
+	 * @return PHPUnit_Framework_TestResult
+	 */
+	protected function run(array $groups = array(), $collect_code_coverage = FALSE)
+	{
+		// We attatch ourselves as an observer to collect stats and info about tests
+		// see: add* start* end* methods
+		$result = new PHPUnit_Framework_TestResult;
+		$result->addListener($this);
+
+		$result->collectCodeCoverageInformation((bool) $collect_code_coverage);
+
+		// Run the tests.
+		$this->_suite->run($result, FALSE, $groups);
+
+		return $result;
+	}
+
+	/**
+	 * Get the list of groups from the test suite, sorted with 'All groups' prefixed
+	 * @return array Array of groups in the test suite
+	 */
+	protected function get_groups_list()
 	{
 		// Make groups aray suitable for drop down
 		$groups = $this->_suite->getGroups();

@@ -1,119 +1,17 @@
 <?php defined('SYSPATH') or die('No direct script access.') ?>
-<style type="text/css">
-	#header {
-		background-color: #263038;
-		color: #fff;
-		padding: 20px;
-		font-family: sans-serif;
-	}
-	#results {
-		font-family: sans-serif;
-	}
-	#results > div {
-		margin-top: 10px;
-		padding: 20px;
-	}
-	#results > div ol li{
-		font-size: 1.1em;
-		margin-bottom: 15px;
-		font-weight: bold;
-	}
-	h1, h2 {
-		margin: 0 0 15px;
-	}
-	#header span {
-		display: block;
-		color: #83919C;
-		margin: 5px 0 0 0;
-	}
-	#header span b {
-		color: #ddd;
-	}
-	#header form {
-		color: #000;
-		float: right;
-		background: #E5EFF8;
-		border: 4px solid #4D6171;
-		padding: 20px;
-		font-size: 1.2em;
-	}
-	#header form label {
-		display: block;
-	}
-	div.failures-list {
-		background-color: #ffcccc;
-	}
-	div.errors-list {
-		background-color: #ffc;
-	}
-	
-	span.test-case {
-		color: #83919C;
-	}
-	span.test-name {
-		color: #222;
-	}
-	span.test-data-set {
-		display: block;
-		color: #666;
-		font-weight: normal;
-	}
-	span.test-message {
-		display: block;
-		color: #444;
-	}
-	div.big-message {
-		font-size: 2em;
-		text-align: center;
-	}
-	div.all-pass {
-		background-color: #E0FFE0;
-		border: 3px solid #b0FFb0;
-	}
-	div.no-tests {
-		background-color: #FFFFE0;
-		border: 3px solid #FFFFb0;
-	}
-	span.show {
-		font-size: 0.7em;
-		font-weight: normal;
-		color:#4D6171;
-	}
-	.hidden {
-		display: none;
-	}
-</style>
-<script type="text/javascript">
-document.write('<style type="text/css"> .collapsed { display: none; } </style>');
-function toggle(type)
-{
-	var elem = document.getElementById(type+'-ol');
-	var plus = document.getElementById(type+'-show');
-
-	if (elem.style && elem.style['display'])
-		// Only works with the "style" attr
-		var disp = elem.style['display'];
-	else if (elem.currentStyle)
-		// For MSIE, naturally
-		var disp = elem.currentStyle['display'];
-	else if (window.getComputedStyle)
-		// For most other browsers
-		var disp = document.defaultView.getComputedStyle(elem, null).getPropertyValue('display');
-
-	// Toggle the state of the "display" style
-	elem.style.display = disp == 'block' ? 'none' : 'block';
-	plus.innerHTML = disp == 'block' ? '[<?php echo __('show'); ?>]' : '[<?php echo __('hide'); ?>]';
-	return false;
-}
-</script>
-<div id="header">
-	
-	<?php echo Form::open();?>
-	<?php echo Form::label('group', __('Switch Group')); ?>
-	<?php echo Form::select('group', $groups, $group, array('id' => 'group'));?>
-	<?php echo Form::submit('run', 'Run');?>
-	<?php echo Form::close();?>
-	
+<div id="header" class="results">
+	<fieldset id="results-options">
+		<legend>Options</legend>
+		<?php echo Form::open();?>
+		<?php echo Form::label('group', __('Switch Group')); ?>
+		<?php echo Form::select('group', $groups, $group, array('id' => 'group'));?>
+		<?php if($xdebug_enabled): ?>
+		<?php echo Form::label('collect_cc', __('Collect Coverage')); ?>
+		<?php echo Form::checkbox('collect_cc', 1, isset($coverage), array('id' => 'collect_cc')); ?>
+		<?php endif; ?>
+		<?php echo Form::submit('run', 'Run');?>
+		<?php echo Form::close();?>
+	</fieldset>
 	<h1><?php echo  (is_null($group) ? __('All Groups') : __('Group').': ')?> <?php echo $group?></h1>
 	<span class="time"><?php echo __('Time') ?>: <b><?php echo $time?></b></span>
 	<span class="summary">
@@ -121,7 +19,20 @@ function toggle(type)
 		<?php echo __('Assertions') ?> <b><?php echo $totals['assertions']?></b>, 
 		<?php echo __('Failures') ?> <b><?php echo $totals['failures']?></b>, 
 		<?php echo __('Skipped') ?> <b><?php echo $totals['skipped']?></b>, 
-		<?php echo __('Errors') ?> <b><?php echo $totals['errors']?></b>.</span>
+		<?php echo __('Errors') ?> <b><?php echo $totals['errors']?></b>.
+	</span>
+	<?php if($xdebug_enabled AND isset($coverage)): ?>
+	<span class="code_coverage">
+		<?php $level_class = ($coverage > 75 ? 'excellent' : ($coverage > 35 ? 'ok' : 'terrible')); ?>
+		<?php echo __('Tests covered :percent of the codebase', array(':percent' => '<b class="'.$level_class.'">'.num::format($coverage, 2).'%</b>')) ?>,
+		
+		<form id="download-report">
+			<label><?php echo __('Download report as'); ?></label>
+			<?php echo form::select('format', $report_formats); ?>
+			<input type="submit" value="Get it!" />
+		</form>
+	</span>
+	<?php endif; ?>
 </div>
 
 <div id="results">
