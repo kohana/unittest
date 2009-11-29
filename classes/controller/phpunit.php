@@ -95,6 +95,76 @@ class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framewor
 			->set('groups', $this->get_groups_list());
 	}
 
+	public function action_report()
+	{
+		if( ! $this->xdebug_loaded)
+		{
+			throw new Kohana_Exception('Xdebug extension needs to be loaded in order to generate reports');
+		}
+		if( ! class_exists('Archive'))
+		{
+			throw new Kohana_Exception('The Archive module is needed to package the reports');
+		}
+
+		// We don't want to use the HTML layout, we're sending the user binary data
+		$this->auto_render = FALSE;
+
+		$config = Kohana::config('phpunit');
+
+		$temp_path = rtrim($config->temp_path, '/').'/';
+
+		if( ! is_writable($temp_path))
+		{
+			throw new Kohana_Exception('Temp path :path isn\'t writable by the webserver', array(':path' => $temp_path));
+		}
+
+		$count = 0;
+		// Highly unlikely, but do it anyway
+		do
+		{
+			$folder_name = date('Y-m-d_H:i:s').($count > 0 ? '('.$count.')' : '');
+			++$count;
+		}
+		while(is_dir($temp_path.$folder_name));
+
+		$folder = $temp_path.$folder_name;
+
+		mkdir($folder, 0777);
+
+		$result = $this->run(array(), TRUE);
+
+		require_once 'PHPUnit/Runner/Version.php';
+		switch(Arr::get($_GET, 'format', 'PHP_Util_Report'))
+		{
+			case 'PHPUnit_Util_Log_CodeCoverage_XML_Clover':
+				
+				break;
+			
+			case 'PHPUnit_Util_Report':
+			default:
+				require_once 'PHPUnit/Util/Report'.EXT;
+				PHPUnit_Util_Report::render($result, $folder);
+				break;
+		}
+
+		$archive = Archive::factory('zip');
+
+		$archive->add($folder, 'report', TRUE);
+
+		// TODO: Include the test results?
+
+		$filename = $folder_name.'.zip';
+
+		$archive->save($temp_path.$filename);
+
+		// It'd be nice to clear up afterwards but by deleting the report dir we corrupt the archive
+		// And once the archive has been sent to the user Request stops the script so we can't delete anything
+		// It'll be up to the user to delete files periodically
+
+		
+		Request::instance()->send_file($temp_path.$filename, $filename);
+	}
+
 	/**
 	 * Handles test running interface
 	 */

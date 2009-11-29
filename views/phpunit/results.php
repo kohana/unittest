@@ -26,11 +26,11 @@
 		<?php $level_class = ($coverage > 75 ? 'excellent' : ($coverage > 35 ? 'ok' : 'terrible')); ?>
 		<?php echo __('Tests covered :percent of the codebase', array(':percent' => '<b class="'.$level_class.'">'.num::format($coverage, 2).'%</b>')) ?>,
 		
-		<form id="download-report">
+		<?php echo Form::open($report_uri, array('method' => 'GET', 'id' => 'download-report')); ?>
 			<label><?php echo __('Download report as'); ?></label>
-			<?php echo form::select('format', $report_formats); ?>
+			<?php echo Form::select('format', $report_formats); ?>
 			<input type="submit" value="Get it!" />
-		</form>
+		<?php echo Form::close(); ?>
 	</span>
 	<?php endif; ?>
 </div>
