@@ -2,6 +2,16 @@
 	<head>
 		<title>PHPUnit for Kohana</title>
 		<style type="text/css">
+			#select {
+                font-family: sans-serif;
+                border: 2px solid black;
+                padding: 30px;
+                margin: 100px;
+			}
+			#groups {
+				overflow: auto;
+				margin-bottom: 25px;
+			}
 			#header {
 				background-color: #263038;
 				color: #fff;

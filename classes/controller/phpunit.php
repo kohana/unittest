@@ -91,7 +91,7 @@ class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framewor
 	 */
 	public function action_index()
 	{
-		$this->request->response = View::factory('phpunit/index')
+		$this->template->body = View::factory('phpunit/index')
 			->set('groups', $this->get_groups_list());
 	}
 
