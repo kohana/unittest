@@ -20,9 +20,11 @@
 			<?php if( ! $xdebug_enabled): ?>
 				<p><?php echo __('Xdebug needs to be installed to generate reports'); ?></p>
 			<?php else: ?>
-				<?php echo Form::open(Route::get('phpunit')->uri(array('action' => 'coverage'))); ?>
-				<?php echo Form::label('cc_group', __('Generate code coverage for')); ?>
+				<?php echo Form::open(Route::get('phpunit')->uri(array('action' => 'report'))); ?>
+				<?php echo Form::label('cc_group', __('Generate report for')); ?>
 				<?php echo Form::select('group', $groups, NULL, array('id' => 'cc_group'));?>
+				<?php echo Form::label('cc_format', __('Report format')); ?>
+				<?php echo Form::select('format', $report_formats, array(), array('id' => 'cc_format')); ?>
 				<?php echo Form::submit('submit', 'Run');?>
 				<?php echo Form::close();?>
 			<?php endif; ?>

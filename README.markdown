@@ -7,7 +7,7 @@ I've chosen to do this because it's part of the PHPUnit coding conventions and i
 
 ## Requirements
 
-* PHPUnit
+* PHPUnit > 3.4
 * The [Archive module](http://github.com/BMatt/kohana-archive) is required for downloading code coverage reports
 
 ## Installation
@@ -68,7 +68,13 @@ to read:
         	        ->response;
 	}
 
-Step 3: Start testing!
+Step 3: Create a folder called phpunit in your app's cache dir (APPPATH/cache).  If you don't want to use this path for storing generated reports then skip this step and change the config file (see Step 3.5)
+
+Step 3.5: Make sure the settings in config/phpunit.php are correct for your enviroment.
+
+If they aren't, then copy the file to application/config/phpunit.php and change the values accordingly
+
+Step 4: Start testing!
 
 ### From the command line
 

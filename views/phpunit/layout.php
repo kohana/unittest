@@ -8,7 +8,7 @@
                 padding: 30px;
                 margin: 100px;
 			}
-			#groups {
+			#select #groups {
 				overflow: auto;
 				margin-bottom: 25px;
 			}
@@ -71,7 +71,9 @@
 			fieldset#results-options {
 				float:right;
 			}
-
+			fieldset form label {
+				display: block;
+			}
 			fieldset#results-options form label {
 				clear: left;
 				float: left;

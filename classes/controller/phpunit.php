@@ -92,7 +92,8 @@ class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framewor
 	public function action_index()
 	{
 		$this->template->body = View::factory('phpunit/index')
-			->set('groups', $this->get_groups_list());
+			->set('groups', $this->get_groups_list())
+			->set('report_formats', $this->report_formats);
 	}
 
 	public function action_report()
@@ -109,20 +110,22 @@ class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framewor
 		// We don't want to use the HTML layout, we're sending the user binary data
 		$this->auto_render = FALSE;
 
-		$config = Kohana::config('phpunit');
-
-		$temp_path = rtrim($config->temp_path, '/').'/';
+		$config		= Kohana::config('phpunit');
+		$temp_path	= rtrim($config->temp_path, '/').'/';
+		$group		= (array) Arr::get($_POST, 'group', array());
 
 		if( ! is_writable($temp_path))
 		{
-			throw new Kohana_Exception('Temp path :path isn\'t writable by the webserver', array(':path' => $temp_path));
+			throw new Kohana_Exception('Temp path :path does not exist or is not writable by the webserver', array(':path' => $temp_path));
 		}
 
+		// Icky, and highly unlikely, but do it anyway
 		$count = 0;
-		// Highly unlikely, but do it anyway
 		do
 		{
-			$folder_name = date('Y-m-d_H:i:s').($count > 0 ? '('.$count.')' : '');
+			$folder_name =	date('Y-m-d_H:i:s')
+							.(! empty($group) ? '['.implode(',', $group).']' : '')
+							.($count > 0 ? '('.$count.')' : '');
 			++$count;
 		}
 		while(is_dir($temp_path.$folder_name));
@@ -131,15 +134,15 @@ class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framewor
 
 		mkdir($folder, 0777);
 
-		$result = $this->run(array(), TRUE);
+		$result = $this->run($group, TRUE);
 
 		require_once 'PHPUnit/Runner/Version.php';
 		switch(Arr::get($_GET, 'format', 'PHP_Util_Report'))
 		{
+			// Not implmeneted yet..
 			case 'PHPUnit_Util_Log_CodeCoverage_XML_Clover':
-				
-				break;
-			
+			case 'PHPUnit_Util_Log_CodeCoverage_XML_Source':
+
 			case 'PHPUnit_Util_Report':
 			default:
 				require_once 'PHPUnit/Util/Report'.EXT;
