@@ -7,7 +7,7 @@
 		<?php echo Form::select('group', $groups, $group, array('id' => 'group'));?>
 		<?php if($xdebug_enabled): ?>
 		<?php echo Form::label('collect_cc', __('Collect Coverage')); ?>
-		<?php echo Form::checkbox('collect_cc', 1, isset($coverage), array('id' => 'collect_cc')); ?>
+		<?php echo Form::checkbox('collect_cc', 1, ! empty($coverage), array('id' => 'collect_cc')); ?>
 		<?php endif; ?>
 		<?php echo Form::submit('run', 'Run');?>
 		<?php echo Form::close();?>
@@ -21,7 +21,7 @@
 		<?php echo __('Skipped') ?> <b><?php echo $totals['skipped']?></b>, 
 		<?php echo __('Errors') ?> <b><?php echo $totals['errors']?></b>.
 	</span>
-	<?php if($xdebug_enabled AND isset($coverage)): ?>
+	<?php if($xdebug_enabled AND ! empty($coverage)): ?>
 	<span class="code_coverage">
 		<?php $level_class = ($coverage > 75 ? 'excellent' : ($coverage > 35 ? 'ok' : 'terrible')); ?>
 		<?php echo __('Tests covered :percent of the codebase', array(':percent' => '<b class="'.$level_class.'">'.num::format($coverage, 2).'%</b>')) ?>,

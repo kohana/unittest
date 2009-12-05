@@ -6,60 +6,13 @@
  * @package	Kohana PHPUnit
  */
 
-class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framework_TestListener
+class Controller_PHPUnit extends Controller_Template
 {
 	/**
 	 * Test Suite
 	 * @var PHPUnit_Framework_TestSuite
 	 */
-	protected $_suite;
-
-
-	protected $report_formats =	array
-								(
-									'PHPUnit_Util_Report'						=> 'HTML files (zipped)',
-									'PHPUnit_Util_Log_CodeCoverage_XML_Clover'	=> 'Clover',
-									'PHPUnit_Util_Log_CodeCoverage_XML_Source'	=> 'XML',
-								);
-
-	/**
-	 * Results
-	 * @var array
-	 */
-	protected $_results	=	array
-							(
-								'errors'		=> array(),
-								'failures'		=> array(),
-								'skipped'		=> array(),
-								'incomplete'	=> array(),
-							);
-	
-	/**
-	 * Test result totals
-	 * @var array
-	 */
-	protected $_totals = array
-						(
-							'tests'			=> 0,
-							'passed'		=> 0,
-							'errors'		=> 0,
-							'failures'		=> 0,
-							'skipped'		=> 0,
-							'incomplete'	=> 0,
-							'assertions'	=> 0,
-						);
-	
-	/**
-	 * Info about the current test running
-	 * @var array
-	 */
-	protected $_current = array();
-	
-	/**
-	 * Time for tests to run (seconds)
-	 * @var float
-	 */
-	protected $_time = 0;
+	protected $suite;
 
 	/**
 	 * Is the XDEBUG extension loaded?
@@ -78,7 +31,7 @@ class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framewor
 	 */
 	public function before()
 	{
-		$this->_suite = Kohana_Tests::suite();
+		$this->suite = Kohana_Tests::suite();
 		$this->xdebug_loaded = extension_loaded('xdebug');
 
 		parent::before();
@@ -93,79 +46,43 @@ class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framewor
 	{
 		$this->template->body = View::factory('phpunit/index')
 			->set('groups', $this->get_groups_list())
-			->set('report_formats', $this->report_formats);
+			->set('report_formats', Kohana_PHPUnit::$report_formats);
 	}
 
+	/**
+	 * Handles report generation
+	 */
 	public function action_report()
 	{
-		if( ! $this->xdebug_loaded)
-		{
-			throw new Kohana_Exception('Xdebug extension needs to be loaded in order to generate reports');
-		}
 		if( ! class_exists('Archive'))
 		{
 			throw new Kohana_Exception('The Archive module is needed to package the reports');
 		}
 
-		// We don't want to use the HTML layout, we're sending the user binary data
+		// We don't want to use the HTML layout, we're sending the user 100111011100110010101100
 		$this->auto_render = FALSE;
 
 		$config		= Kohana::config('phpunit');
 		$temp_path	= rtrim($config->temp_path, '/').'/';
-		$group		= (array) Arr::get($_POST, 'group', array());
+		$groups		= (array) Arr::get($_POST, 'group', array());
 
-		if( ! is_writable($temp_path))
-		{
-			throw new Kohana_Exception('Temp path :path does not exist or is not writable by the webserver', array(':path' => $temp_path));
-		}
+		$runner = new Kohana_PHPUnit($this->suite);
 
-		// Icky, and highly unlikely, but do it anyway
-		$count = 0;
-		do
-		{
-			$folder_name =	date('Y-m-d_H:i:s')
-							.(! empty($group) ? '['.implode(',', $group).']' : '')
-							.($count > 0 ? '('.$count.')' : '');
-			++$count;
-		}
-		while(is_dir($temp_path.$folder_name));
-
-		$folder = $temp_path.$folder_name;
-
-		mkdir($folder, 0777);
-
-		$result = $this->run($group, TRUE);
-
-		require_once 'PHPUnit/Runner/Version.php';
-		switch(Arr::get($_GET, 'format', 'PHP_Util_Report'))
-		{
-			// Not implmeneted yet..
-			case 'PHPUnit_Util_Log_CodeCoverage_XML_Clover':
-			case 'PHPUnit_Util_Log_CodeCoverage_XML_Source':
-
-			case 'PHPUnit_Util_Report':
-			default:
-				require_once 'PHPUnit/Util/Report'.EXT;
-				PHPUnit_Util_Report::render($result, $folder);
-				break;
-		}
+		list($report, $folder) = $runner->generate_report($groups, $temp_path, Arr::get($_GET, 'format', 'PHP_Util_Report'));
 
 		$archive = Archive::factory('zip');
 
-		$archive->add($folder, 'report', TRUE);
-
 		// TODO: Include the test results?
+		$archive->add($report, 'report', TRUE);
 
-		$filename = $folder_name.'.zip';
+		$filename = $folder.'.zip';
 
 		$archive->save($temp_path.$filename);
 
 		// It'd be nice to clear up afterwards but by deleting the report dir we corrupt the archive
 		// And once the archive has been sent to the user Request stops the script so we can't delete anything
 		// It'll be up to the user to delete files periodically
-
-		
-		Request::instance()->send_file($temp_path.$filename, $filename);
+		$this->request->send_file($temp_path.$filename, $filename);
 	}
 
 	/**
@@ -188,67 +105,35 @@ class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framewor
 
 		$this->template->body = View::factory('phpunit/results');
 		
-		$group = $this->request->param('group');
-
-		$use_group	=	($group === NULL ? array() : (array) $group);
+		$group	= $this->request->param('group');
+		$group	= ($group === NULL ? array() : (array) $group);
 
 		// Only collect code coverage if xdebug is enabled and user asked for it
-		$collect_cc	=	(! empty($_GET['cc']) ? ((bool) $_GET['cc']) : FALSE)
-						AND
-						$this->xdebug_loaded;
+		$collect_cc	=	(! empty($_GET['cc'])) AND ((bool) $_GET['cc']);
+		
+		$runner = new Kohana_PHPUnit($this->suite);
 
-		$result = $this->run($use_group, $collect_cc);
-
-		if($result->getCollectCodeCoverageInformation())
+		try
 		{
-			$coverage = $result->getCodeCoverageInformation();
-
-			$coverage_summary = PHPUnit_Util_CodeCoverage::getSummary($coverage);
-
-			$executable = 0;
-			$executed	= 0;
-
-			foreach($coverage_summary as $file => $_lines)
-			{
-				$file_stats = PHPUnit_Util_CodeCoverage::getStatistics($coverage_summary, $file);
-				$executable += $file_stats['locExecutable'];
-				$executed   += $file_stats['locExecuted'];
-			}
-
-			$this->template->body->set('coverage', ($executed / $executable) * 100);
-		}		
+			$runner->run($group, $collect_cc);
+		}
+		catch(Kohana_Exception $e)
+		{
+			// Code coverage is not allowed
+			// TODO: Tell the user this?
+			$runner->run($group);
+		}
 		
 		// Show some results
 		$this->template->body
 			->set('group', $group)
 			->set('groups', $this->get_groups_list())
-			->set('time', $this->_nice_time())
+			->set('time', $this->nice_time($runner->time))
 			->set('report_uri', Route::get('phpunit')->uri(array_merge($this->request->param(), array('action' => 'report'))))
-			->set('report_formats', $this->report_formats)
-			->set('results', $this->_results)
-			->set('totals', $this->_totals);		
-	}
-
-	/**
-	 * Runs all tests in $groups
-	 * 
-	 * @param array $groups             Array of groups to test
-	 * @param bool  $do_code_coverage   Should code coverage info be collected?
-	 * @return PHPUnit_Framework_TestResult
-	 */
-	protected function run(array $groups = array(), $collect_code_coverage = FALSE)
-	{
-		// We attatch ourselves as an observer to collect stats and info about tests
-		// see: add* start* end* methods
-		$result = new PHPUnit_Framework_TestResult;
-		$result->addListener($this);
-
-		$result->collectCodeCoverageInformation((bool) $collect_code_coverage);
-
-		// Run the tests.
-		$this->_suite->run($result, FALSE, $groups);
-
-		return $result;
+			->set('report_formats', Kohana_PHPUnit::$report_formats)
+			->set('coverage', $runner->calculate_cc_percentage())
+			->set('results', $runner->results)
+			->set('totals', $runner->totals);
 	}
 
 	/**
@@ -258,96 +143,13 @@ class Controller_PHPUnit extends Controller_Template implements PHPUnit_Framewor
 	protected function get_groups_list()
 	{
 		// Make groups aray suitable for drop down
-		$groups = $this->_suite->getGroups();
+		$groups = $this->suite->getGroups();
 		sort($groups);
 		return array('' => 'All Groups') + array_combine($groups, $groups);	
 	}
 	
-	public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
-	{
-		$this->_totals['errors']++;
-		$this->_current['result'] = 'errors';
-		$this->_current['message'] = $test->getStatusMessage();
-		
-	}
-	
-	public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
-	{
-		$this->_totals['failures']++;
-		$this->_current['result'] = 'failures';
-		$this->_current['message'] = $test->getStatusMessage();
-	}
-	
-	public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
-	{
-		$this->_totals['incomplete']++;
-		$this->_current['result'] = 'incomplete';
-		$this->_current['message'] = $test->getStatusMessage();
-	}
-	
-	public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
-	{
-		$this->_totals['skipped']++;
-		$this->_current['result'] = 'skipped';
-		$this->_current['message'] = $test->getStatusMessage();
-	}
-	
-	public function startTest(PHPUnit_Framework_Test $test)
-	{
-		$this->_current['name'] = $test->getName(FALSE);
-		$this->_current['description'] = $test->toString();
-		$this->_current['result'] = 'passed';
-	}
-	
-	public function endTest(PHPUnit_Framework_Test $test, $time)
-	{
-		// Add totals
-		$this->_totals['tests']++;
-		$this->_totals['assertions'] += $test->getNumAssertions();
-		
-		// Handle passed tests
-		if ($this->_current['result'] == 'passed')
-		{
-			// Add to total
-			$this->_totals['passed']++;
-		}
-		else
-		{
-			// Add to results
-			$this->_results[$this->_current['result']][] = $this->_current;
-		}
-		
-		$this->_current = array();
-		
-		$this->_time += $time;
-	}
-	
-	public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
-	{
-	}
-	
-	public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
-	{
-		// Parse test descriptions to make them look nicer
-		foreach ($this->_results as $case => $test_results)
-		{
-			foreach ($test_results as $type => $result)
-			{
-				preg_match("/^(?:([a-z0-9_]+?)::)?([a-z0-9_]+)(?: with data set (#\d+ \(.*?\)))?/i", $result['description'], $m);
-				
-				$this->_results[$case][$type] += array(
-					'class' => $m[1],
-					'test' => $m[2],
-					'data_set' => isset($m[3]) ? $m[3] : FALSE,
-				);
-			}
-		}
-	}
-	
-	protected function _nice_time()
-	{
-		$time = $this->_time;
-		
+	protected function nice_time($time)
+	{		
 		$parts = array();
 		
 		if ($time > DATE::DAY)
