@@ -27,7 +27,7 @@ Class Kohana_NumTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @test
 	 * @dataProvider providerOrdinal
-	 * @covers Num::ordinal()
+	 * @covers Num::ordinal
 	 * @param integer $number
 	 * @param <type> $expected
 	 */

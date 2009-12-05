@@ -36,7 +36,7 @@ Class Kohana_HTMLTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @test
 	 * @dataProvider providerAttributes
-	 * @covers HTML::attributes()
+	 * @covers HTML::attributes
 	 * @param array  $attributes  Attributes to use
 	 * @param string $expected    Expected output
 	 */
