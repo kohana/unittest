@@ -30,7 +30,7 @@ Step 1: Enable this module in your bootstrap file
 	 * Enable modules. Modules are referenced by a relative or absolute path.
 	 */
 	Kohana::modules(array(
-		'phpunit'	=> MODPATH.'phpunit'	 // PHPUnit integration
+		'unittest'	=> MODPATH.'unittest'	 // PHPUnit integration
 		// 'database'   => MODPATH.'database',   // Database access
 		// 'image'      => MODPATH.'image',      // Image manipulation
 		// 'kodoc'      => MODPATH.'kodoc',      // Kohana documentation
