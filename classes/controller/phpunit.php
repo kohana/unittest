@@ -31,6 +31,7 @@ class Controller_PHPUnit extends Controller_Template
 	 */
 	public function before()
 	{
+		spl_autoload_register('unittest_autoload');
 		$this->suite = Kohana_Tests::suite();
 		$this->xdebug_loaded = extension_loaded('xdebug');
 
@@ -104,7 +105,8 @@ class Controller_PHPUnit extends Controller_Template
 		}
 
 		$this->template->body = View::factory('phpunit/results');
-		
+
+		$config = Kohana::config('phpunit');
 		$group	= $this->request->param('group');
 		$group	= ($group === NULL ? array() : (array) $group);
 
@@ -123,6 +125,8 @@ class Controller_PHPUnit extends Controller_Template
 			// TODO: Tell the user this?
 			$runner->run($group);
 		}
+
+		
 		
 		// Show some results
 		$this->template->body
@@ -134,6 +138,15 @@ class Controller_PHPUnit extends Controller_Template
 			->set('coverage', $runner->calculate_cc_percentage())
 			->set('results', $runner->results)
 			->set('totals', $runner->totals);
+
+		if($config['use_whitelist'])
+		{
+			$this->template->body->set('coverage_explanation', $this->nice_codebase_explanation($config['whitelist']));
+		}
+		else
+		{	
+			$this->template->body->set('coverage_explanation', '');
+		}
 	}
 
 	/**
@@ -146,6 +159,53 @@ class Controller_PHPUnit extends Controller_Template
 		$groups = $this->suite->getGroups();
 		sort($groups);
 		return array('' => 'All Groups') + array_combine($groups, $groups);	
+	}
+
+	/**
+	 * Prettifies the list of whitelisted modules
+	 *
+	 * @param array Array of whitelist options from config
+	 * @return string
+	 */
+	protected function nice_codebase_explanation(array $whitelist)
+	{
+		$return = '';
+
+		if($whitelist['app'])
+		{
+			$return .= 'Application, ';
+		}
+
+		if(array_search(FALSE, $whitelist['modules'], TRUE) === FALSE)
+		{
+			if(array_search(TRUE, $whitelist['modules'], TRUE) === (count($whitelist['modules']) - 1))
+			{
+				$modules = array_keys(Kohana::modules());
+				
+			}
+			else
+			{
+				$modules = $whitelist['modules'];
+			}
+
+			foreach($modules as $module)
+			{
+				if( ! is_string($module))
+				{
+					continue;
+				}
+
+				$return .= ucfirst($module).', ';
+			}
+		}
+		
+
+		if($whitelist['system'])
+		{
+			$return .= 'System, ';
+		}
+
+		return substr($return, 0, -2);
 	}
 	
 	protected function nice_time($time)

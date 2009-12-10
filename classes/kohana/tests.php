@@ -42,14 +42,22 @@ class Kohana_Tests
 			if($modules = $config->whitelist['modules'])
 			{
 				$k_modules = Kohana::modules();
-				
-				if($modules === TRUE)
+
+				// Have to do this because kohana merges config...
+				// If you want to include all modules & override defaults then TRUE must be the first
+				// value in the modules array of your app/config/phpunit file
+				if(array_search(TRUE, $modules, TRUE) === (count($modules) - 1))
 				{
 					$modules = $k_modules;
 				}
-				else
+				elseif(array_search(FALSE, $modules, TRUE) === FALSE)
 				{
 					$modules = array_intersect_key($k_modules, array_combine($modules, $modules));
+				}
+				else
+				{
+					// modules are disabled
+					$modules = array();
 				}
 
 				$directories += array_values($modules);

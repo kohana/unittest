@@ -24,7 +24,15 @@
 	<?php if($xdebug_enabled AND ! empty($coverage)): ?>
 	<span class="code_coverage">
 		<?php $level_class = ($coverage > 75 ? 'excellent' : ($coverage > 35 ? 'ok' : 'terrible')); ?>
-		<?php echo __('Tests covered :percent of the codebase', array(':percent' => '<b class="'.$level_class.'">'.num::format($coverage, 2).'%</b>')) ?>,
+		<?php
+			echo __('Tests covered :percent of the :codebase',
+				array
+				(
+					':percent'	=> '<b class="'.$level_class.'">'.num::format($coverage, 2).'%</b>',
+					':codebase' => ( ! empty($coverage_explanation) ? '<span title="'.$coverage_explanation.'" style="display:inline;">codebase</span>' : 'codebase')
+				)
+			);
+		?>,
 		
 		<?php echo Form::open($report_uri, array('method' => 'GET', 'id' => 'download-report')); ?>
 			<label><?php echo __('Download report as'); ?></label>

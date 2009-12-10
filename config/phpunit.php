@@ -18,9 +18,10 @@ return array
 						// Should the app be whitelisted?
 						// Useful if you just want to test your application
 						'app'		=> TRUE,
-						// Set to TRUE to include all modules, or use an array of module names
+						// Set to array(TRUE) to include all modules, or use an array of module names
 						// (the keys of the array passed to Kohana::modules() in the bootstrap)
-						'modules'	=> TRUE,
+						// By default this is set to include no modules as the config merging puts TRUE at the top
+						'modules'	=> array(TRUE),
 						// If you don't want the kohana code coverage reports to pollute your app's,
 						// then set this to FALSE
 						'system'	=> TRUE,
