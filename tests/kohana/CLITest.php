@@ -7,11 +7,12 @@
  *
  * @group kohana
  * @group kohana.cli
+ * @group testdox
  * @see CLI
  * @author BRMatt <matthew@sigswitch.com>
  * @author Shadowhand 
  */
-Class Kohana_CLI_Test extends PHPUnit_Framework_TestCase
+Class Kohana_CLITest extends PHPUnit_Framework_TestCase
 {
 	
 	/**
@@ -62,7 +63,7 @@ Class Kohana_CLI_Test extends PHPUnit_Framework_TestCase
 	 *
 	 * @test
 	 */
-	function testOptionsOnlyParsesWantedArguments()
+	function testOnlyParsesWantedArguments()
 	{
 		$options = CLI::options('uri');
 
@@ -79,7 +80,7 @@ Class Kohana_CLI_Test extends PHPUnit_Framework_TestCase
 	 *
 	 * @test
 	 */
-	function testOptionsDoesNotParseInvalidArguments()
+	function testDoesNotParseInvalidArguments()
 	{
 		$options = CLI::options('uri', 'invalid');
 		
@@ -95,7 +96,7 @@ Class Kohana_CLI_Test extends PHPUnit_Framework_TestCase
 	 *
 	 * @test
 	 */
-	function testOptionsParsesMultipleArguments()
+	function testParsesMultipleArguments()
 	{
 		$options = CLI::options('uri', 'version');
 
@@ -113,7 +114,7 @@ Class Kohana_CLI_Test extends PHPUnit_Framework_TestCase
 	 *
 	 * @test
 	 */
-	function testOptionsParsesArgumentsWithoutValueAsNull()
+	function testParsesArgumentsWithoutValueAsNull()
 	{
 		$options = CLI::options('uri', 'we_are_cool');
 
