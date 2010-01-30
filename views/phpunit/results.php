@@ -2,12 +2,21 @@
 <div id="header" class="results">
 	<fieldset id="results-options">
 		<legend>Options</legend>
-		<?php echo Form::open();?>
+		<?php echo Form::open(NULL, array('method' => 'get'));?>
 		<?php echo Form::label('group', __('Switch Group')); ?>
 		<?php echo Form::select('group', $groups, $group, array('id' => 'group'));?>
 		<?php if($xdebug_enabled): ?>
-		<?php echo Form::label('collect_cc', __('Collect Coverage')); ?>
-		<?php echo Form::checkbox('collect_cc', 1, ! empty($coverage), array('id' => 'collect_cc')); ?>
+			<?php echo Form::label('collect_cc', __('Collect Coverage')); ?>
+			<?php echo Form::checkbox('collect_cc', 1, isset($coverage), array('id' => 'collect_cc')); ?>
+			<div depends_on="#collect_cc">
+				<?php echo Form::label('use_whitelist', __('Use whitelist'));?>
+				<?php echo Form::checkbox('use_whitelist', 1, $whitelist, array('id' => 'use_whitelist')); ?>
+
+				<div depends_on="#use_whitelist">
+					<?php echo Form::label('whitelist', __('Whitelisted modules')); ?>
+					<?php echo Form::select('whitelist[]', $whitelistable_items, $whitelisted_items, array('id' => 'whitelist', 'multiple' => 'multiple')); ?>
+				</div>
+			</div>
 		<?php endif; ?>
 		<?php echo Form::submit('run', 'Run');?>
 		<?php echo Form::close();?>
@@ -21,7 +30,7 @@
 		<?php echo __('Skipped') ?> <b><?php echo $totals['skipped']?></b>, 
 		<?php echo __('Errors') ?> <b><?php echo $totals['errors']?></b>.
 	</span>
-	<?php if($xdebug_enabled AND ! empty($coverage)): ?>
+	<?php if($xdebug_enabled AND isset($coverage)): ?>
 	<span class="code_coverage">
 		<?php $level_class = ($coverage > 75 ? 'excellent' : ($coverage > 35 ? 'ok' : 'terrible')); ?>
 		<?php
@@ -29,12 +38,12 @@
 				array
 				(
 					':percent'	=> '<b class="'.$level_class.'">'.num::format($coverage, 2).'%</b>',
-					':codebase' => ( ! empty($coverage_explanation) ? '<span title="'.$coverage_explanation.'" style="display:inline;">codebase</span>' : 'codebase')
+					':codebase' => ( ! empty($coverage_explanation) ? '<span title="'.$coverage_explanation.'" style="display:inline;">modules</span>' : 'codebase')
 				)
 			);
 		?>,
 		
-		<?php echo Form::open($report_uri, array('method' => 'GET', 'id' => 'download-report')); ?>
+		<?php echo Form::open($report_uri, array('method' => 'POST', 'id' => 'download-report')); ?>
 			<label><?php echo __('Download report as'); ?></label>
 			<?php echo Form::select('format', $report_formats); ?>
 			<input type="submit" value="Get it!" />

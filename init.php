@@ -28,7 +28,7 @@ if(class_exists('PHPUnit_Util_Filter'))
 require_once "PHPUnit/Framework.php";
 
 // Add route for web runner
-Route::set('phpunit', 'phpunit(/<action>(/<group>))', array('group' => '[a-zA-Z0-9\.-_]+'))
+Route::set('phpunit', 'phpunit(/<action>)')
 	->defaults(array(
 		'action' => 'index',
 		'controller' => 'phpunit',

@@ -9,12 +9,6 @@
 class Controller_PHPUnit extends Controller_Template
 {
 	/**
-	 * Test Suite
-	 * @var PHPUnit_Framework_TestSuite
-	 */
-	protected $suite;
-
-	/**
 	 * Is the XDEBUG extension loaded?
 	 * @var boolean
 	 */
@@ -32,7 +26,13 @@ class Controller_PHPUnit extends Controller_Template
 	public function before()
 	{
 		spl_autoload_register('unittest_autoload');
-		$this->suite = Kohana_Tests::suite();
+
+		// We want to let the user decide what to whitelist
+		Kohana_Tests::$auto_whitelist = FALSE;
+
+		$this->config = Kohana::config('phpunit');
+		
+		// Switch used to disable cc settings
 		$this->xdebug_loaded = extension_loaded('xdebug');
 
 		parent::before();
@@ -46,7 +46,8 @@ class Controller_PHPUnit extends Controller_Template
 	public function action_index()
 	{
 		$this->template->body = View::factory('phpunit/index')
-			->set('groups', $this->get_groups_list())
+			->set('whitelistable_items', $this->get_whitelistable_items())
+			->set('groups', $this->get_groups_list(Kohana_Tests::suite()))
 			->set('report_formats', Kohana_PHPUnit::$report_formats);
 	}
 
@@ -63,13 +64,18 @@ class Controller_PHPUnit extends Controller_Template
 		// We don't want to use the HTML layout, we're sending the user 100111011100110010101100
 		$this->auto_render = FALSE;
 
-		$config		= Kohana::config('phpunit');
-		$temp_path	= rtrim($config->temp_path, '/').'/';
-		$groups		= (array) Arr::get($_POST, 'group', array());
+		$suite		= Kohana_Tests::suite();
+		$temp_path	= rtrim($this->config->temp_path, '/').'/';
+		$groups		= (array) Arr::get($_GET, 'group', array());
 
-		$runner = new Kohana_PHPUnit($this->suite);
+		if(Arr::get($_GET, 'use_whitelist', FALSE))
+		{
+			$this->whitelist(Arr::get($_GET, 'whitelist', array()));
+		}
 
-		list($report, $folder) = $runner->generate_report($groups, $temp_path, Arr::get($_GET, 'format', 'PHP_Util_Report'));
+		$runner = new Kohana_PHPUnit($suite);
+
+		list($report, $folder) = $runner->generate_report($groups, $temp_path, Arr::get($_POST, 'format', 'PHP_Util_Report'));
 
 		$archive = Archive::factory('zip');
 
@@ -91,121 +97,151 @@ class Controller_PHPUnit extends Controller_Template
 	 */
 	public function action_run()
 	{
-		if ( ! empty($_POST))
-		{
-			$uri = Route::get('phpunit')->uri(array('group'=> Arr::get($_POST, 'group'), 'action'=>'run'));
-
-			if( ! empty($_POST['collect_cc']))
-			{
-				$uri .= url::query(array('cc' => '1'));
-			}
-
-			// Redirect to correct URL for group
-			$this->request->redirect($uri);
-		}
-
 		$this->template->body = View::factory('phpunit/results');
 
-		$config = Kohana::config('phpunit');
-		$group	= $this->request->param('group');
-		$group	= ($group === NULL ? array() : (array) $group);
+		// Get the test suite and work out which groups we're testing
+		$suite	= Kohana_Tests::suite();
+		$group	= (array) Arr::get($_GET, 'group', array());
 
-		// Only collect code coverage if xdebug is enabled and user asked for it
-		$collect_cc	=	(! empty($_GET['cc'])) AND ((bool) $_GET['cc']);
+		// Stop phpunit from interpretting "all groups" as "no groups"
+		if(empty($group) OR empty($group[0]))
+		{
+			$group = array();
+		}
+
+		// Only collect code coverage if the user asked for it
+		$collect_cc	=	(bool) Arr::get($_GET, 'collect_cc', FALSE);
 		
-		$runner = new Kohana_PHPUnit($this->suite);
+		if($collect_cc AND Arr::get($_GET, 'use_whitelist', FALSE))
+		{
+			$whitelist = $this->whitelist(Arr::get($_GET, 'whitelist', array()));
+		}
+
+		$runner = new Kohana_PHPUnit($suite);
 
 		try
 		{
 			$runner->run($group, $collect_cc);
+			
+			if($collect_cc)
+			{
+				$this->template->body->set('coverage', $runner->calculate_cc_percentage());
+			}
+			
+			if(isset($whitelist))
+			{
+				$this->template->body->set('coverage_explanation', $this->nice_whitelist_explanation($whitelist));
+			}
 		}
 		catch(Kohana_Exception $e)
 		{
-			// Code coverage is not allowed
+			// Code coverage is not allowed, possibly xdebug disabled?
 			// TODO: Tell the user this?
 			$runner->run($group);
 		}
 
-		
-		
 		// Show some results
 		$this->template->body
-			->set('group', $group)
-			->set('groups', $this->get_groups_list())
+			->set('group',  Arr::get($this->get_groups_list($suite), reset($group), 'All groups'))
+			->set('groups', $this->get_groups_list($suite))
 			->set('time', $this->nice_time($runner->time))
-			->set('report_uri', Route::get('phpunit')->uri(array_merge($this->request->param(), array('action' => 'report'))))
+			->set('report_uri', Route::get('phpunit')->uri(array('action' => 'report')).url::query())
 			->set('report_formats', Kohana_PHPUnit::$report_formats)
-			->set('coverage', $runner->calculate_cc_percentage())
 			->set('results', $runner->results)
-			->set('totals', $runner->totals);
+			->set('totals', $runner->totals)
 
-		if($config['use_whitelist'])
-		{
-			$this->template->body->set('coverage_explanation', $this->nice_codebase_explanation($config['whitelist']));
-		}
-		else
-		{	
-			$this->template->body->set('coverage_explanation', '');
-		}
+			// Whitelist related stuff
+			->set('whitelistable_items', $this->get_whitelistable_items())
+			->set('whitelisted_items', isset($whitelist) ? array_keys($whitelist) : array())
+			->set('whitelist', ! empty($whitelist));;
+			
 	}
 
 	/**
 	 * Get the list of groups from the test suite, sorted with 'All groups' prefixed
 	 * @return array Array of groups in the test suite
 	 */
-	protected function get_groups_list()
+	protected function get_groups_list($suite)
 	{
 		// Make groups aray suitable for drop down
-		$groups = $this->suite->getGroups();
+		$groups = $suite->getGroups();
 		sort($groups);
 		return array('' => 'All Groups') + array_combine($groups, $groups);	
 	}
 
 	/**
-	 * Prettifies the list of whitelisted modules
+	 * Gets a list of items that are whitelistable
 	 *
-	 * @param array Array of whitelist options from config
-	 * @return string
+	 * @return array
 	 */
-	protected function nice_codebase_explanation(array $whitelist)
+	protected function get_whitelistable_items()
 	{
-		$return = '';
+		static $whitelist;
 
-		if($whitelist['app'])
+		if(count($whitelist))
 		{
-			$return .= 'Application, ';
-		}
-
-		if(array_search(FALSE, $whitelist['modules'], TRUE) === FALSE)
-		{
-			if(array_search(TRUE, $whitelist['modules'], TRUE) === (count($whitelist['modules']) - 1))
-			{
-				$modules = array_keys(Kohana::modules());
-				
-			}
-			else
-			{
-				$modules = $whitelist['modules'];
-			}
-
-			foreach($modules as $module)
-			{
-				if( ! is_string($module))
-				{
-					continue;
-				}
-
-				$return .= ucfirst($module).', ';
-			}
+			return $whitelist;
 		}
 		
+		$whitelist = array();
 
-		if($whitelist['system'])
+		$whitelist['k_app'] = 'Application';
+
+		$k_modules = array_keys(Kohana::modules());
+
+		$whitelist += array_map('ucfirst', array_combine($k_modules, $k_modules));
+
+		$whitelist['k_sys'] = 'Kohana Core';
+
+		return $whitelist;
+	}
+
+	/**
+	 * Whitelists a specified set of modules specified by the user
+	 * 
+	 * @param array $modules
+	 */
+	protected function whitelist(array $modules)
+	{
+		$k_modules = Kohana::modules();
+		$whitelist = array();
+
+		// Make sure our whitelist is valid
+		foreach($modules as $item)
 		{
-			$return .= 'System, ';
+			if(isset($k_modules[$item]))
+			{
+				$whitelist[$item] = $k_modules[$item];
+			}
+			else if($item === 'k_app')
+			{
+				$whitelist[$item] = APPPATH;
+			}
+			else if($item === 'k_sys')
+			{
+				$whitelist[$item] = SYSPATH;
+			}
 		}
 
-		return substr($return, 0, -2);
+		if(count($whitelist))
+		{
+			Kohana_Tests::whitelist($whitelist);
+		}
+
+		return $whitelist;
+	}
+
+	/**
+	 * Prettifies the list of whitelisted modules
+	 *
+	 * @param array Array of whitelisted items
+	 * @return string
+	 */
+	protected function nice_whitelist_explanation(array $whitelist)
+	{
+		$items = array_intersect_key($this->get_whitelistable_items(), $whitelist);
+
+		return implode(', ', $items);
 	}
 	
 	protected function nice_time($time)

@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>PHPUnit for Kohana</title>
+		
 		<style type="text/css">
 			#select {
                 font-family: sans-serif;
@@ -51,7 +52,7 @@
 				border: 4px solid #4D6171;
 				padding: 20px 20px 0px;
 				font-size: 1.2em;
-				width: 35%;
+				width: 43%;
 				display: block;
 				-moz-border-radius: 2px;
 			}
@@ -74,6 +75,11 @@
 			fieldset form label {
 				display: block;
 			}
+
+			fieldset select {
+				width: 45%;
+			}
+
 			fieldset#results-options form label {
 				clear: left;
 				float: left;
@@ -88,6 +94,10 @@
 			fieldset#results-options form input[type="submit"] {
 				float: none;
 				clear: both;
+			}
+
+			fieldset#results-options form select {
+				float: left;
 			}
 			
 			fieldset.tests {
@@ -171,10 +181,49 @@
 			.hidden {
 				display: none;
 			}
+			span[title]{
+				border-bottom: 1px dashed #83919C;
+			}
 
 
 		</style>
-		<script type="text/javascript">
+		
+	</head>
+	<body>
+		<?php echo $body; ?>
+	</body>
+	<?php echo html::script('http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js'); ?>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			// Using our own attribute is a little messy but gets the job done
+			// this isn't very important code anyway...
+			$('[depends_on]').each(function(){
+				var dependent = $(this);
+				var controller = $(dependent.attr('depends_on'));
+
+				// We do this in the loop so that it can access dependent
+				// Javascript scopes are slightly crazy
+				var toggler = function(){
+					if($(this).attr("checked")){
+						dependent.show();
+					} else {
+						dependent.hide();
+					}
+				}
+
+				// Register the toggler
+				controller.change(toggler);
+
+				// And degrade nicely...
+				if( ! controller.attr('checked')){
+					dependent.hide();
+				}
+
+			});
+
+		});
+
 		document.write('<style type="text/css"> .collapsed { display: none; } </style>');
 		function toggle(type)
 		{
@@ -196,9 +245,5 @@
 			plus.innerHTML = disp == 'block' ? '[<?php echo __('show'); ?>]' : '[<?php echo __('hide'); ?>]';
 			return false;
 		}
-		</script>
-	</head>
-	<body>
-		<?php echo $body; ?>
-	</body>
+	</script>
 </html>
