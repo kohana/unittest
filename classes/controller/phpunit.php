@@ -70,7 +70,13 @@ class Controller_PHPUnit extends Controller_Template
 
 		$suite		= Kohana_Tests::suite();
 		$temp_path	= rtrim($this->config->temp_path, '/').'/';
-		$groups		= (array) Arr::get($_GET, 'group', array());
+		$group		= (array) Arr::get($_GET, 'group', array());
+
+		// Stop phpunit from interpretting "all groups" as "no groups"
+		if(empty($group) OR empty($group[0]))
+		{
+			$group = array();
+		}
 
 		if(Arr::get($_GET, 'use_whitelist', FALSE))
 		{
@@ -79,7 +85,7 @@ class Controller_PHPUnit extends Controller_Template
 
 		$runner = new Kohana_PHPUnit($suite);
 
-		list($report, $folder) = $runner->generate_report($groups, $temp_path, Arr::get($_POST, 'format', 'PHP_Util_Report'));
+		list($report, $folder) = $runner->generate_report($group, $temp_path, Arr::get($_POST, 'format', 'PHP_Util_Report'));
 
 		$archive = Archive::factory('zip');
 
@@ -106,6 +112,7 @@ class Controller_PHPUnit extends Controller_Template
 		// Get the test suite and work out which groups we're testing
 		$suite	= Kohana_Tests::suite();
 		$group	= (array) Arr::get($_GET, 'group', array());
+
 
 		// Stop phpunit from interpretting "all groups" as "no groups"
 		if(empty($group) OR empty($group[0]))
@@ -157,8 +164,7 @@ class Controller_PHPUnit extends Controller_Template
 			// Whitelist related stuff
 			->set('whitelistable_items', $this->get_whitelistable_items())
 			->set('whitelisted_items', isset($whitelist) ? array_keys($whitelist) : array())
-			->set('whitelist', ! empty($whitelist));;
-			
+			->set('whitelist', ! empty($whitelist));
 	}
 
 	/**

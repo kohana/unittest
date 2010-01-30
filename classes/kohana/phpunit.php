@@ -227,10 +227,6 @@ Class Kohana_PHPUnit implements PHPUnit_Framework_TestListener
 
 		$this->result->collectCodeCoverageInformation((bool) $collect_cc);
 
-		if(empty($groups))
-		{
-
-		}
 		// Run the tests.
 		$this->suite->run($this->result, FALSE, $groups);
 
