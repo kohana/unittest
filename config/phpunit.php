@@ -6,13 +6,12 @@ return array
 	// Needs to be readable and writable
 	'temp_path'				=> Kohana::$cache_dir.'/phpunit',
 
-	// Should the code coverage checkbox be selected by default for the web ui
-	'coverage_selected'		=> TRUE,
-
 	// If you don't use a whitelist then only files included during the request will be counted
 	// If you do, then only whitelisted items will be counted
 	'use_whitelist'		=> TRUE,
 
+	// Items to whitelist, only used in cli
+	// Web runner ui allows user to choose which items to whitelist
 	'whitelist'	=>	array
 					(
 						// Should the app be whitelisted?
@@ -20,7 +19,7 @@ return array
 						'app'		=> TRUE,
 						// Set to array(TRUE) to include all modules, or use an array of module names
 						// (the keys of the array passed to Kohana::modules() in the bootstrap)
-						// By default this is set to include no modules as the config merging puts TRUE at the top
+						// Or set to FALSE to exclude all modules
 						'modules'	=> array(TRUE),
 						// If you don't want the kohana code coverage reports to pollute your app's,
 						// then set this to FALSE

@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * PHPUnit test runner for kohana
+ *
+ * @package    Unittest
+ * @author     Kohana Team
+ * @author     BRMatt <matthew@sigswitch.com>
+ * @author	   Paul Banks
+ * @copyright  (c) 2008-2009 Kohana Team
+ * @license    http://kohanaphp.com/license
+ */
 Class Kohana_PHPUnit implements PHPUnit_Framework_TestListener
 {
 	/**

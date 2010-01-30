@@ -8,9 +8,13 @@
  * @group kohana
  * @group kohana.cli
  * @group testdox
+ *
  * @see CLI
- * @author BRMatt <matthew@sigswitch.com>
- * @author Shadowhand 
+ * @package    Unittest
+ * @author     Kohana Team
+ * @author     BRMatt <matthew@sigswitch.com>
+ * @copyright  (c) 2008-2009 Kohana Team
+ * @license    http://kohanaphp.com/license
  */
 Class Kohana_CLITest extends PHPUnit_Framework_TestCase
 {

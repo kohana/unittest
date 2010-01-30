@@ -4,6 +4,12 @@
  * Tests HTML
  * 
  * @group kohana
+ *
+ * @package    Unittest
+ * @author     Kohana Team
+ * @author     BRMatt <matthew@sigswitch.com>
+ * @copyright  (c) 2008-2009 Kohana Team
+ * @license    http://kohanaphp.com/license
  */
 Class Kohana_HTMLTest extends PHPUnit_Framework_TestCase
 {

@@ -1,9 +1,13 @@
 <?php defined('SYSPATH') or die ('No direct script access.');
 /**
  * PHPUnit Kohana web based test runner
- * 
- * @author	Paul Banks
- * @package	Kohana PHPUnit
+ *
+ * @package	   Unittest
+ * @author     Kohana Team
+ * @author     BRMatt <matthew@sigswitch.com>
+ * @author	   Paul Banks
+ * @copyright  (c) 2008-2009 Kohana Team
+ * @license    http://kohanaphp.com/license
  */
 
 class Controller_PHPUnit extends Controller_Template

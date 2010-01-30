@@ -1,6 +1,13 @@
 <?php
 /**
  * PHPUnit testsuite for kohana application
+ *
+ * @package    Unittest
+ * @author     Kohana Team
+ * @author     BRMatt <matthew@sigswitch.com>
+ * @author	   Paul Banks
+ * @copyright  (c) 2008-2009 Kohana Team
+ * @license    http://kohanaphp.com/license
  */
 class Kohana_Tests
 {
