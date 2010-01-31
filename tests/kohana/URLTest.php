@@ -130,6 +130,9 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 			// These tests make sure that the protocol changes when the global setting changes
 			array(TRUE,   TRUE,   'https://example.com/kohana/index.php/', array('protocol' => 'https')),
 			array(FALSE,  TRUE,   'https://example.com/kohana/', array('protocol' => 'https')),
+
+			// Change base url
+			array(FALSE, 'https', 'https://example.com/kohana/', array('base_url' => 'omglol://example.com/kohana/'))
 		);
 	}
 
