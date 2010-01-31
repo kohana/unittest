@@ -38,4 +38,36 @@ Class Kohana_NumTest extends PHPUnit_Framework_TestCase
 	{
 		$this->assertSame($expected, Num::ordinal($number));
 	}
+
+	/**
+	 * Provides test data for testFormat()
+	 * @return array
+	 */
+	function providerFormat()
+	{
+		return array(
+			// English
+			array(10000, 2, FALSE, '10,000.00'),
+			array(10000, 2, TRUE, '10,000.00'),
+
+			// Additional dp's should be removed
+			array(123.456, 2, FALSE, '123.46'),
+			array(123.456, 2, TRUE, '123.46'),
+		);
+	}
+
+	/**
+	 * @todo test locales
+	 * @test
+	 * @dataProvider providerFormat
+	 * @covers Num::format
+	 * @param integer $number
+	 * @param integer $places
+	 * @param boolean $monetary
+	 * @param string $expected
+	 */
+	function testFormat($number, $places, $monetary, $expected)
+	{
+		$this->assertSame($expected, Num::format($number, $places, $monetary));
+	}
 }
