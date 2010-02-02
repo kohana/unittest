@@ -103,6 +103,11 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 			$_SERVER['HTTP_HOST'] = $vars['HTTP_HOST'];
 		}
 
+		if (isset($vars['_GET']))
+		{
+			$_GET = $vars['_GET'];
+		}
+
 		return TRUE;
 	}
 
@@ -130,6 +135,9 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 			// These tests make sure that the protocol changes when the global setting changes
 			array(TRUE,   TRUE,   'https://example.com/kohana/index.php/', array('protocol' => 'https')),
 			array(FALSE,  TRUE,   'https://example.com/kohana/', array('protocol' => 'https')),
+
+			// Change base url
+			array(FALSE, 'https', 'https://example.com/kohana/', array('base_url' => 'omglol://example.com/kohana/'))
 		);
 	}
 
@@ -248,6 +256,39 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 		$this->assertSame(
 			$expected,
 			URL::title($title, $separator)
+		);
+	}
+
+	/**
+	 * Provides test data for URL::query()
+	 * @return array
+	 */
+	public function providerQuery()
+	{
+		return array(
+			array(NULL, '', array('_GET' => array())),
+			array(NULL, '?test=data', array('_GET' => array('test' => 'data'))),
+			array(array('test' => 'data'), '?test=data', array('_GET' => array())),
+			array(array('test' => 'data'), '?more=data&test=data', array('_GET' => array('more' => 'data')))
+		);
+	}
+
+	/**
+	 * Tests URL::query()
+	 *
+	 * @test
+	 * @dataProvider providerQuery
+	 * @param array $params Query string
+	 * @param string $expected Expected result
+	 * @param array $enviroment Set environment
+	 */
+	function testQuery($params, $expected, $enviroment)
+	{
+		$this->setEnviroment($enviroment);
+
+		$this->assertSame(
+			$expected,
+			URL::query($params)
 		);
 	}
 }
