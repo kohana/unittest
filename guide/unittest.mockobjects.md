@@ -80,7 +80,7 @@ You start off by telling PHPUnit how many times the method should be called by c
 
 In our example we want `check()` to be called once on our mock object, so if we update it accordingly:
 
-	$mock = $this->GetMock('ORM', array('check'));
+	$mock = $this->getMock('ORM', array('check'));
 
 	$mock->expects($this->once());
 
