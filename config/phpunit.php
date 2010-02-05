@@ -2,6 +2,10 @@
 
 return array
 (
+	// The only enviroment in which the web runner is allowed to run
+	// The CLI can be run reguardless
+	'enviroment'		=> 'development',
+
 	// This is the folder where we generate and zip all the reports for downloading
 	// Needs to be readable and writable
 	'temp_path'				=> Kohana::$cache_dir.'/phpunit',

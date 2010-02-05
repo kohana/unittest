@@ -13,6 +13,18 @@
 class Controller_PHPUnit extends Controller_Template
 {
 	/**
+	 * The uri by which the report uri will be executed
+	 * @var string
+	 */
+	protected $report_uri = '';
+
+	/**
+	 * The uri by which the run action will be executed
+	 * @var string
+	 */
+	protected $run_uri = '';
+
+	/**
 	 * Is the XDEBUG extension loaded?
 	 * @var boolean
 	 */
@@ -29,18 +41,21 @@ class Controller_PHPUnit extends Controller_Template
 	 */
 	public function before()
 	{
-		spl_autoload_register('unittest_autoload');
-
-		// We want to let the user decide what to whitelist
-		Kohana_Tests::$auto_whitelist = FALSE;
-
-		$this->config = Kohana::config('phpunit');
-		
-		// Switch used to disable cc settings
-		$this->xdebug_loaded = extension_loaded('xdebug');
-
 		parent::before();
 
+		// Prevent the whitelist from being autoloaded, but allow the blacklist
+		// to be laoded
+		Kohana_Tests::configure_enviroment(FALSE);
+
+		$this->config = Kohana::config('phpunit');
+
+		// This just stops some very very long lines
+		$route = Route::get('default');
+		$this->report_uri	= $route->uri(array('controller' => 'phpunit', 'action' => 'report'));
+		$this->run_uri		= $route->uri(array('controller' => 'phpunit', 'action' => 'run'));
+
+		// Switch used to disable cc settings
+		$this->xdebug_loaded = extension_loaded('xdebug');
 		$this->template->set_global('xdebug_enabled', $this->xdebug_loaded);
 	}
 
@@ -50,6 +65,8 @@ class Controller_PHPUnit extends Controller_Template
 	public function action_index()
 	{
 		$this->template->body = View::factory('phpunit/index')
+			->set('run_uri', $this->run_uri)
+			->set('report_uri', $this->report_uri)
 			->set('whitelistable_items', $this->get_whitelistable_items())
 			->set('groups', $this->get_groups_list(Kohana_Tests::suite()))
 			->set('report_formats', Kohana_PHPUnit::$report_formats);
@@ -60,6 +77,7 @@ class Controller_PHPUnit extends Controller_Template
 	 */
 	public function action_report()
 	{
+		// Fairly foolproof
 		if( ! class_exists('Archive'))
 		{
 			throw new Kohana_Exception('The Archive module is needed to package the reports');
@@ -68,9 +86,10 @@ class Controller_PHPUnit extends Controller_Template
 		// We don't want to use the HTML layout, we're sending the user 100111011100110010101100
 		$this->auto_render = FALSE;
 
-		$suite		= Kohana_Tests::suite();
-		$temp_path	= rtrim($this->config->temp_path, '/').'/';
-		$group		= (array) Arr::get($_GET, 'group', array());
+		$suite			= Kohana_Tests::suite();
+		$temp_path		= rtrim($this->config->temp_path, '/').'/';
+		$group			= (array) Arr::get($_GET, 'group', array());
+		$report_format	= Arr::get($_POST, 'format', 'PHP_Util_Report');
 
 		// Stop phpunit from interpretting "all groups" as "no groups"
 		if(empty($group) OR empty($group[0]))
@@ -85,7 +104,9 @@ class Controller_PHPUnit extends Controller_Template
 
 		$runner = new Kohana_PHPUnit($suite);
 
-		list($report, $folder) = $runner->generate_report($group, $temp_path, Arr::get($_POST, 'format', 'PHP_Util_Report'));
+		// $report is the actual directory of the report,
+		// $folder is the name component of directory
+		list($report, $folder) = $runner->generate_report($group, $temp_path, $report_format);
 
 		$archive = Archive::factory('zip');
 
@@ -153,22 +174,26 @@ class Controller_PHPUnit extends Controller_Template
 
 		// Show some results
 		$this->template->body
+			->set('results', $runner->results)
+			->set('totals',  $runner->totals)
+			->set('time',    $this->nice_time($runner->time))
+
+			// Sets group to the currently selected group, or default all groups
 			->set('group',  Arr::get($this->get_groups_list($suite), reset($group), 'All groups'))
 			->set('groups', $this->get_groups_list($suite))
-			->set('time', $this->nice_time($runner->time))
-			->set('report_uri', Route::get('phpunit')->uri(array('action' => 'report')).url::query())
-			->set('report_formats', Kohana_PHPUnit::$report_formats)
-			->set('results', $runner->results)
-			->set('totals', $runner->totals)
 
+			->set('report_uri',     $this->report_uri.url::query())
+			->set('report_formats', Kohana_PHPUnit::$report_formats)
+			
 			// Whitelist related stuff
 			->set('whitelistable_items', $this->get_whitelistable_items())
-			->set('whitelisted_items', isset($whitelist) ? array_keys($whitelist) : array())
-			->set('whitelist', ! empty($whitelist));
+			->set('whitelisted_items',   isset($whitelist) ? array_keys($whitelist) : array())
+			->set('whitelist',           ! empty($whitelist));
 	}
 
 	/**
 	 * Get the list of groups from the test suite, sorted with 'All groups' prefixed
+	 * 
 	 * @return array Array of groups in the test suite
 	 */
 	protected function get_groups_list($suite)

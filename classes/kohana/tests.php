@@ -12,37 +12,52 @@
 class Kohana_Tests
 {
 	/**
-	 * Controls whether the suite will automatically whitelist files
-	 *
-	 * Set to FALSE before calling suite() to prevent files from being whitelisted
-	 *
-	 * @var boolean
+	 * Loads test files if they cannot be found by kohana
+	 * @param <type> $class
 	 */
-	static public $auto_whitelist = TRUE;
+	static function autoload($class)
+	{
+		$file = str_replace('_', '/', $class);
+
+		if($file = Kohana::find_file('tests', $file))
+		{
+			require_once $file;
+		}
+	}
 
 	/**
+	 * Configures the enviroment for testing
 	 *
-	 * @var <type>
+	 * Does the following:
+	 *
+	 * * Loads the phpunit framework (for the web ui)
+	 * * Restores exception phpunit error handlers (for cli)
+	 * * registeres an autoloader to load test files
 	 */
-	static public $auto_blacklist = TRUE;
+	static public function configure_enviroment($do_whitelist = TRUE, $do_blacklist = TRUE)
+	{
+		if( ! class_exists('PHPUnit_Util_Filter', FALSE))
+		{
+			// Make sure the PHPUnit classes are available
+			require_once 'PHPUnit/Framework.php';
+		}
 
-	static function suite()
-	{		
-		$files = Kohana::list_files('tests');
-
-		$suite = new PHPUnit_Framework_TestSuite();
-
-		self::addTests($suite, $files);
+		if(Kohana::$is_cli)
+		{
+			restore_exception_handler();
+			restore_error_handler();
+		}
+		
+		spl_autoload_register(array('Kohana_Tests', 'autoload'));
 
 		$config = Kohana::config('phpunit');
 
-		// In case the web ui wants to whitelist files
-		if(self::$auto_whitelist AND $config->use_whitelist)
+		if($do_whitelist AND $config->use_whitelist)
 		{
 			self::whitelist();
 		}
 
-		if(count($config['blacklist']))
+		if($do_blacklist AND count($config['blacklist']))
 		{
 			foreach($config->blacklist as $item)
 			{
@@ -56,11 +71,40 @@ class Kohana_Tests
 				}
 			}
 		}
+	}
+
+	/**
+	 * Creates the test suite for kohana
+	 *
+	 * @return PHPUnit_Framework_TestSuite
+	 */
+	static function suite()
+	{
+		static $suite = NULL;
+
+		if($suite instanceof PHPUnit_Framework_TestSuite)
+		{
+			return $suite;
+		}
+		
+		$files = Kohana::list_files('tests');
+
+		$suite = new PHPUnit_Framework_TestSuite();
+
+		self::addTests($suite, $files);
 
 		return $suite;
 	}
-	
-	static function addTests($suite, $files)
+
+	/**
+	 * Add files to test suite $suite
+	 *
+	 * Uses recursion to scan subdirectories
+	 *
+	 * @param PHPUnit_Framework_TestSuite  $suite   The test suite to add to
+	 * @param array                        $files   Array of files to test
+	 */
+	static function addTests(PHPUnit_Framework_TestSuite $suite, array $files)
 	{
 		foreach($files as $file)
 		{
@@ -90,7 +134,11 @@ class Kohana_Tests
 
 	/**
 	 * Sets the whitelist
-	 * @param array $directories
+	 *
+	 * If no directories are provided then the function'll load the whitelist
+	 * set in the config file
+	 *
+	 * @param array $directories Optional directories to whitelist
 	 */
 	static public function whitelist(array $directories = NULL)
 	{
@@ -115,8 +163,11 @@ class Kohana_Tests
 
 	/**
 	 * Works out the whitelist from the config
+	 * Used only on the CLI
+	 *
+	 * @returns array Array of directories to whitelist
 	 */
-	static public function get_config_whitelist()
+	static protected function get_config_whitelist()
 	{
 		$config = Kohana::config('phpunit');
 		$directories = array();

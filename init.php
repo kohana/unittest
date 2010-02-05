@@ -1,36 +1,17 @@
 <?php
 
-function unittest_autoload($class)
+// If we're on the CLI then PHPUnit will already be loaded
+if(class_exists('PHPUnit_Util_Filter', FALSE))
 {
-	$file = str_replace('_', '/', $class);
-	
-	if($file = Kohana::find_file('tests', $file))
-	{
-		require_once $file;
-	}
-}
+	Kohana_Tests::configure_enviroment();
 
-if(class_exists('PHPUnit_Util_Filter'))
+	// Stop kohana from processing the request
+	define('SUPPRESS_REQUEST', TRUE);
+}
+else if(Kohana::config('phpunit.enviroment') === Kohana::$environment)
 {
-    restore_exception_handler();
-    restore_error_handler();
-	
-	spl_autoload_register('unittest_autoload');
-
-	// Only supress request for CLI mode
-	if (Kohana::$is_cli)
-	{
-		define('SUPPRESS_REQUEST', TRUE);
-	}
+	// People shouldn't be running unit tests on their production server
+	// so we assume that this /could/ be a web ui request on the dev server
+	// and include phpunit so that modules can add specific files to the blacklist
+	require_once 'PHPUnit/Framework.php';
 }
-
-// Make sure the PHPUnit classes are available
-require_once "PHPUnit/Framework.php";
-
-// Add route for web runner
-Route::set('phpunit', 'phpunit(/<action>)')
-	->defaults(array(
-		'action' => 'index',
-		'controller' => 'phpunit',
-		'group' => NULL,
-	));
