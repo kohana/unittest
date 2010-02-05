@@ -11,7 +11,7 @@ if($file = Kohana::find_file('classes', 'kohana/tests'))
 
 	// PHPUnit requires a test suite class to be in this file,
 	// so we create a faux one that uses the kohana base
-	Class TestSute extends Kohana_Tests
+	Class TestSuite extends Kohana_Tests
 	{}
 }
 else
