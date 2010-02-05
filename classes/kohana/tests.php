@@ -39,7 +39,7 @@ class Kohana_Tests
 		// In case the web ui wants to whitelist files
 		if(self::$auto_whitelist AND $config->use_whitelist)
 		{
-			self::whitelist($config);
+			self::whitelist();
 		}
 
 		if(count($config['blacklist']))
