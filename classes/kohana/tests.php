@@ -224,7 +224,16 @@ class Kohana_Tests
 			}
 			else
 			{
-				PHPUnit_Util_Filter::addFileToWhitelist($file);
+				$relative_path = substr($file, strrpos($file, 'classes/') + 8);
+
+				// We need to make sure that we don't accidentally whitelist a file
+				// that will conflict with the cascading filesystem
+				//
+				// Obviously this creates overhead, so we recommneded you enable caching
+				if(Kohana::find_file('classes', $relative_path) === $file)
+				{
+					PHPUnit_Util_Filter::addFileToWhitelist($file);
+				}
 			}
 		}
 	}
