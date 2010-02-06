@@ -70,6 +70,7 @@
 				display: block;
 			}
 			fieldset#results-options {
+				width: 38%;
 				float:right;
 			}
 			fieldset form label {
