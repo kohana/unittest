@@ -173,9 +173,7 @@ class Kohana_Tests
 				$directory = realpath($directory).'/';
 			}
 
-			// When the phpunit report is generated it includes all files, which can cause name conflicts
-			// We therefore only whitelist the "top" files in the cascading filesystem
-			// If you have a bone to pick with this, then simply whitelist the individual modules you're testing
+			// Only whitelist the "top" files in the cascading filesystem
 			self::set_whitelist(Kohana::list_files('classes', $directories));
 		}
 
@@ -247,11 +245,12 @@ class Kohana_Tests
 			{
 				if( ! isset(Kohana_Tests::$cache[$file]))
 				{
-					$relative_path = substr($file, strrpos($file, 'classes/') + 8);
+					$relative_path	= substr($file, strrpos($file, 'classes/') + 8, -strlen(EXT));
+					$cascading_file = Kohana::find_file('classes', $relative_path);
 
-					// We need to make sure that we don't accidentally whitelist a file
-					// that will conflict with the cascading filesystem
-					Kohana_Tests::$cache[$file] = Kohana::find_file('classes', $relative_path) === $file;
+					// The theory is that if this file is the highest one in the cascading filesystem
+					// then it's safe to whitelist
+					Kohana_Tests::$cache[$file] =  ($cascading_file === $file);
 				}
 		
 				if(Kohana_Tests::$cache[$file])
