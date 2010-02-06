@@ -306,8 +306,8 @@ class Controller_PHPUnit extends Controller_Template
 		
 		if ($time > DATE::MINUTE)
 		{
-			$parts[] = floor($time/DATE::MIN).'m';
-			$time = $time % DATE::MIN;
+			$parts[] = floor($time/DATE::MINUTE).'m';
+			$time = $time % DATE::MINUTE;
 		}
 		
 		if ($time > 0)
