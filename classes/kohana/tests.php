@@ -74,6 +74,21 @@ class Kohana_Tests
 	}
 
 	/**
+	 * Helper function to see if phpunit is enabled in the config
+	 *
+	 * @return boolean
+	 */
+	static function enabled()
+	{
+		$p_enviroment = Kohana::config('phpunit.enviroment');
+		$k_enviroment = Kohana::$environment;
+
+		return  (is_array($p_enviroment) AND in_array($k_enviroment, $p_enviroment))
+				OR
+				($k_enviroment === $p_enviroment);
+	}
+
+	/**
 	 * Creates the test suite for kohana
 	 *
 	 * @return PHPUnit_Framework_TestSuite

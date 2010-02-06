@@ -8,7 +8,7 @@ if(class_exists('PHPUnit_Util_Filter', FALSE))
 	// Stop kohana from processing the request
 	define('SUPPRESS_REQUEST', TRUE);
 }
-else if(Kohana::config('phpunit.enviroment') === Kohana::$environment)
+else if(Kohana_Tests::enabled())
 {
 	// People shouldn't be running unit tests on their production server
 	// so we assume that this /could/ be a web ui request on the dev server

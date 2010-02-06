@@ -43,6 +43,15 @@ class Controller_PHPUnit extends Controller_Template
 	{
 		parent::before();
 
+		if( ! Kohana_Tests::enabled())
+		{
+			// Pretend this is a normal 404 error...
+			$this->status = 404;
+
+			throw new Kohana_Request_Exception('Unable to find a route to match the URI: :uri',
+				array(':uri' => $this->request->uri));
+		}
+
 		// Prevent the whitelist from being autoloaded, but allow the blacklist
 		// to be laoded
 		Kohana_Tests::configure_enviroment(FALSE);
