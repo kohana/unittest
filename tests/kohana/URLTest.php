@@ -39,6 +39,12 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 	protected $_index_file = '';
 
 	/**
+	 * This is just a temp fix until f078401 is merged into the blessed phpunit repo
+	 * @var array
+	 */
+	protected $_get =  array();
+
+	/**
 	 * Default values to set for base_url, index_file, protocol and HTTP_HOST
 	 * @var array
 	 */
@@ -47,6 +53,7 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 								'index_file'=> 'index.php',
 								'protocol'	=> 'http',
 								'HTTP_HOST' => 'example.com',
+								'_GET'		=> array(),
 							);
 	/**
 	 * Sets up the enviroment for each test, loads default enviroment values
@@ -56,6 +63,7 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 		$this->_base_url = Kohana::$base_url;
 		$this->_protocol = Request::$protocol;
 		$this->_index_file = Kohana::$index_file;
+		$this->_get = $_GET;
 
 		$this->setEnviroment($this->_defaults);
 	}
@@ -68,6 +76,7 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 		Kohana::$base_url = $this->_base_url;
 		Request::$protocol = $this->_protocol;
 		Kohana::$index_file = $this->_index_file;
+		$_GET = $this->_get;
 	}
 
 	/**
@@ -266,9 +275,9 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 	public function providerQuery()
 	{
 		return array(
-			array(NULL, '', array('_GET' => array())),
+			array(NULL, '', array()),
 			array(NULL, '?test=data', array('_GET' => array('test' => 'data'))),
-			array(array('test' => 'data'), '?test=data', array('_GET' => array())),
+			array(array('test' => 'data'), '?test=data', array()),
 			array(array('test' => 'data'), '?more=data&test=data', array('_GET' => array('more' => 'data')))
 		);
 	}
