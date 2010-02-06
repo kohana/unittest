@@ -11,6 +11,8 @@
  */
 class Kohana_Tests
 {
+	static protected $cache = array();
+
 	/**
 	 * Loads test files if they cannot be found by kohana
 	 * @param <type> $class
@@ -49,6 +51,8 @@ class Kohana_Tests
 		}
 		
 		spl_autoload_register(array('Kohana_Tests', 'autoload'));
+
+		Kohana_Tests::$cache = ($cache = Kohana::cache('phpunit_whitelist_cache')) === NULL ? array() : $cache;
 
 		$config = Kohana::config('phpunit');
 
@@ -174,6 +178,8 @@ class Kohana_Tests
 			// If you have a bone to pick with this, then simply whitelist the individual modules you're testing
 			self::set_whitelist(Kohana::list_files('classes', $directories));
 		}
+
+		Kohana::cache('phpunit_whitelist_cache', Kohana_Tests::$cache, 900);
 	}
 
 	/**
@@ -239,13 +245,16 @@ class Kohana_Tests
 			}
 			else
 			{
-				$relative_path = substr($file, strrpos($file, 'classes/') + 8);
+				if( ! isset(Kohana_Tests::$cache[$file]))
+				{
+					$relative_path = substr($file, strrpos($file, 'classes/') + 8);
 
-				// We need to make sure that we don't accidentally whitelist a file
-				// that will conflict with the cascading filesystem
-				//
-				// Obviously this creates overhead, so we recommneded you enable caching
-				if(Kohana::find_file('classes', $relative_path) === $file)
+					// We need to make sure that we don't accidentally whitelist a file
+					// that will conflict with the cascading filesystem
+					Kohana_Tests::$cache[$file] = Kohana::find_file('classes', $relative_path) === $file;
+				}
+		
+				if(Kohana_Tests::$cache[$file])
 				{
 					PHPUnit_Util_Filter::addFileToWhitelist($file);
 				}

@@ -9,7 +9,6 @@ I've chosen to do this because it's part of the PHPUnit coding conventions and i
 
 * PHPUnit >= 3.4
 * The [Archive module](http://github.com/BMatt/kohana-archive) is required for downloading code coverage reports
-* It's recommended that you enable caching on your testing machines as there is a fair amount of overhead to prevent conflicts between the cascading filesystem and code coverage
 
 ## Installation
 
