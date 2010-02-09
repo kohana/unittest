@@ -236,9 +236,8 @@ Class Kohana_URLTest extends PHPUnit_Framework_TestCase
 			// separator is either - (dash) or _ (underscore) & others are converted to underscores
 			array('some title', '-', 'some-title'),
 			array('some title', '_', 'some_title'),
-			array('some title', '!', 'some_title'),
-			array('some title', NULL, 'some_title'),
-			array('some title', ':', 'some_title'),
+			array('some title', '!', 'some!title'),
+			array('some title', ':', 'some:title'),
 			// Numbers are preserved
 			array('99 Ways to beat apple', '-', '99-ways-to-beat-apple'),
 			// ... with lots of spaces & caps
