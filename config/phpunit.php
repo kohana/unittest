@@ -33,11 +33,16 @@ return array
 	
 	// Does what it says on the tin
 	// Blacklisted files won't be included in code coverage reports
+	// If you use a whitelist then the blacklist will be ignored
 	'use_blacklist'		=> FALSE,
 
 	'blacklist'	=>	array
 					(
 						// List of individual files / folders to blacklist
 					),
+	
+	// A database connection that can be used when testing
+	// This doen'st overwrite anything, tests will have to use this value manually
+	'db_connection'	=> 'unit_testing',
 
 );
