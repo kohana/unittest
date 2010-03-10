@@ -176,8 +176,6 @@ class Kohana_Tests
 			// Only whitelist the "top" files in the cascading filesystem
 			self::set_whitelist(Kohana::list_files('classes', $directories));
 		}
-
-		Kohana::cache('phpunit_whitelist_cache', Kohana_Tests::$cache, 900);
 	}
 
 	/**
