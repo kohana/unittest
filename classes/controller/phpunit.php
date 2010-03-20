@@ -59,7 +59,7 @@ class Controller_PHPUnit extends Controller_Template
 		$this->config = Kohana::config('phpunit');
 
 		// This just stops some very very long lines
-		$route = Route::get('default');
+		$route = Route::get('unittest');
 		$this->report_uri	= $route->uri(array('controller' => 'phpunit', 'action' => 'report'));
 		$this->run_uri		= $route->uri(array('controller' => 'phpunit', 'action' => 'run'));
 

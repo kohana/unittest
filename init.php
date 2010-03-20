@@ -15,3 +15,8 @@ else if(Kohana_Tests::enabled())
 	// and include phpunit so that modules can add specific files to the blacklist
 	require_once 'PHPUnit/Framework.php';
 }
+
+Route::set('unittest', '(<controller>(/<action>(/<id>)))')
+	->defaults(array(
+		'action'     => 'index',
+	));
