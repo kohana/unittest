@@ -244,4 +244,28 @@ Class Kohana_TextTest extends PHPUnit_Framework_TestCase
 		$this->assertSame($expected, Text::widont($string));
 	}
 
+
+	/**
+	 * This checks that auto_link_emails() respects word boundaries and does not
+	 * just blindly replace all occurences of the email address in the text.
+	 *
+	 * In the sample below the algorithm was replacing all occurences of voorzitter@xxxx.com
+	 * inc the copy in the second list item.
+	 *
+	 * It was updated in 6c199366efc1115545ba13108b876acc66c54b2d to respect word boundaries
+	 *
+	 * @test
+	 * @covers Text::auto_link_emails
+	 * @ticket 2772
+	 */
+	function testAutoLinkEmailsRespectsWordBoundaries()
+	{
+		$original = '<ul>
+						<li>voorzitter@xxxx.com</li>
+						<li>vicevoorzitter@xxxx.com</li>
+					</ul>';
+	
+		$this->assertFalse(strpos('vice', Text::auto_link_emails($original)));
+	}
+
 }
