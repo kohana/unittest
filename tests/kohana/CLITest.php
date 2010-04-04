@@ -33,7 +33,8 @@ Class Kohana_CLITest extends PHPUnit_Framework_TestCase
 							'--uri' => 'test/something',
 							'--we_are_cool',
 							'invalid option',
-							'--version' => '2.23'
+							'--version' => '2.23',
+							'--important' => 'something=true',
 						);
 
 	/**
@@ -61,11 +62,10 @@ Class Kohana_CLITest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests CLI::options()
-	 *
 	 * Options should only parse arguments requested
 	 *
 	 * @test
+	 * @covers CLI::options
 	 */
 	function testOnlyParsesWantedArguments()
 	{
@@ -78,11 +78,10 @@ Class Kohana_CLITest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests CLI::options()
-	 *
 	 * Options should not parse invalid arguments (i.e. not starting with --_
 	 *
 	 * @test
+	 * @covers CLI::options
 	 */
 	function testDoesNotParseInvalidArguments()
 	{
@@ -94,11 +93,10 @@ Class Kohana_CLITest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests CLI::options()
-	 *
 	 * Options should parse multiple arguments & values correctly
 	 *
 	 * @test
+	 * @covers CLI::options
 	 */
 	function testParsesMultipleArguments()
 	{
@@ -112,11 +110,10 @@ Class Kohana_CLITest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests CLI::options()
-	 *
 	 * Options should parse arguments without specified values as NULL
 	 *
 	 * @test
+	 * @covers CLI::options
 	 */
 	function testParsesArgumentsWithoutValueAsNull()
 	{
@@ -124,5 +121,19 @@ Class Kohana_CLITest extends PHPUnit_Framework_TestCase
 
 		$this->assertSame(2, count($options));
 		$this->assertSame(NULL, $options['we_are_cool']);
+	}
+
+	/**
+	 * 
+	 * @test
+	 * @covers CLI::options
+	 * @ticket 2642
+	 */
+	function testCliOnlySplitsOnTheFirstEquals()
+	{
+		$options = CLI::options('important');
+
+		$this->assertSame(1, count($options));
+		$this->assertSame('something=true', reset($options));
 	}
 }
