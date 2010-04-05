@@ -6,9 +6,6 @@
 	(it'll automatically use any phpunit.xml file in the current directory)
 
 	Any options you specify when calling phpunit will override the ones in here
-
-	i.e.
-		phpunit --group kohana
 -->
 <phpunit colors="true" bootstrap="rel/path/to/index.php">
 	<testsuites>
