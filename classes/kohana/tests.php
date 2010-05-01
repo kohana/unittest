@@ -133,7 +133,8 @@ class Kohana_Tests
 			} 
 			else 
 			{		
-				if(is_file($file))
+				// Make sure we only include php files
+				if(is_file($file) AND substr($file, -strlen(EXT)) === EXT)
 				{
 					// The default PHPUnit TestCase extension
 					if(! strpos($file, 'TestCase'.EXT))
