@@ -52,9 +52,9 @@ class Kohana_Tests
 		
 		spl_autoload_register(array('Kohana_Tests', 'autoload'));
 
-		Kohana_Tests::$cache = ($cache = Kohana::cache('phpunit_whitelist_cache')) === NULL ? array() : $cache;
+		Kohana_Tests::$cache = ($cache = Kohana::cache('unittest_whitelist_cache')) === NULL ? array() : $cache;
 
-		$config = Kohana::config('phpunit');
+		$config = Kohana::config('unittest');
 
 		if($do_whitelist AND $config->use_whitelist)
 		{
@@ -78,13 +78,13 @@ class Kohana_Tests
 	}
 
 	/**
-	 * Helper function to see if phpunit is enabled in the config
+	 * Helper function to see if unittest is enabled in the config
 	 *
 	 * @return boolean
 	 */
 	static function enabled()
 	{
-		$p_enviroment = Kohana::config('phpunit.enviroment');
+		$p_enviroment = Kohana::config('unittest.enviroment');
 		$k_enviroment = Kohana::$environment;
 
 		return  (is_array($p_enviroment) AND in_array($k_enviroment, $p_enviroment))
@@ -187,7 +187,7 @@ class Kohana_Tests
 	 */
 	static protected function get_config_whitelist()
 	{
-		$config = Kohana::config('phpunit');
+		$config = Kohana::config('unittest');
 		$directories = array();
 
 		if($config->whitelist['app'])
@@ -201,7 +201,7 @@ class Kohana_Tests
 
 			// Have to do this because kohana merges config...
 			// If you want to include all modules & override defaults then TRUE must be the first
-			// value in the modules array of your app/config/phpunit file
+			// value in the modules array of your app/config/unittest file
 			if(array_search(TRUE, $modules, TRUE) === (count($modules) - 1))
 			{
 				$modules = $k_modules;

@@ -10,7 +10,7 @@
  * @license    http://kohanaphp.com/license
  */
 
-class Controller_PHPUnit extends Controller_Template
+class Controller_UnitTest extends Controller_Template
 {
 	/**
 	 * The uri by which the report uri will be executed
@@ -34,7 +34,7 @@ class Controller_PHPUnit extends Controller_Template
 	 * Template
 	 * @var string
 	 */
-	public $template = 'phpunit/layout';
+	public $template = 'unittest/layout';
 
 	/**
 	 * Loads test suite
@@ -56,12 +56,12 @@ class Controller_PHPUnit extends Controller_Template
 		// to be laoded
 		Kohana_Tests::configure_enviroment(FALSE);
 
-		$this->config = Kohana::config('phpunit');
+		$this->config = Kohana::config('unittest');
 
 		// This just stops some very very long lines
 		$route = Route::get('unittest');
-		$this->report_uri	= $route->uri(array('controller' => 'phpunit', 'action' => 'report'));
-		$this->run_uri		= $route->uri(array('controller' => 'phpunit', 'action' => 'run'));
+		$this->report_uri	= $route->uri(array('action' => 'report'));
+		$this->run_uri		= $route->uri(array('action' => 'run'));
 
 		// Switch used to disable cc settings
 		$this->xdebug_loaded = extension_loaded('xdebug');
@@ -69,11 +69,11 @@ class Controller_PHPUnit extends Controller_Template
 	}
 
 	/**
-	 * Handles index page for /phpunit/ and /phpunit/index/
+	 * Handles index page for /unittest/ and /unittest/index/
 	 */
 	public function action_index()
 	{
-		$this->template->body = View::factory('phpunit/index')
+		$this->template->body = View::factory('unittest/index')
 			->set('run_uri', $this->run_uri)
 			->set('report_uri', $this->report_uri)
 			->set('whitelistable_items', $this->get_whitelistable_items())
@@ -100,7 +100,7 @@ class Controller_PHPUnit extends Controller_Template
 		$group			= (array) Arr::get($_GET, 'group', array());
 		$report_format	= Arr::get($_POST, 'format', 'PHP_Util_Report');
 
-		// Stop phpunit from interpretting "all groups" as "no groups"
+		// Stop unittest from interpretting "all groups" as "no groups"
 		if(empty($group) OR empty($group[0]))
 		{
 			$group = array();
@@ -137,7 +137,7 @@ class Controller_PHPUnit extends Controller_Template
 	 */
 	public function action_run()
 	{
-		$this->template->body = View::factory('phpunit/results');
+		$this->template->body = View::factory('unittest/results');
 
 		// Get the test suite and work out which groups we're testing
 		$suite	= Kohana_Tests::suite();
