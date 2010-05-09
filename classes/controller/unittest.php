@@ -77,8 +77,7 @@ class Controller_UnitTest extends Controller_Template
 			->set('run_uri', $this->run_uri)
 			->set('report_uri', $this->report_uri)
 			->set('whitelistable_items', $this->get_whitelistable_items())
-			->set('groups', $this->get_groups_list(Kohana_Tests::suite()))
-			->set('report_formats', Kohana_PHPUnit::$report_formats);
+			->set('groups', $this->get_groups_list(Kohana_Tests::suite()));
 	}
 
 	/**
@@ -98,7 +97,6 @@ class Controller_UnitTest extends Controller_Template
 		$suite			= Kohana_Tests::suite();
 		$temp_path		= rtrim($this->config->temp_path, '/').'/';
 		$group			= (array) Arr::get($_GET, 'group', array());
-		$report_format	= Arr::get($_POST, 'format', 'PHP_Util_Report');
 
 		// Stop unittest from interpretting "all groups" as "no groups"
 		if(empty($group) OR empty($group[0]))
@@ -115,8 +113,8 @@ class Controller_UnitTest extends Controller_Template
 
 		// $report is the actual directory of the report,
 		// $folder is the name component of directory
-		list($report, $folder) = $runner->generate_report($group, $temp_path, $report_format);
-
+		list($report, $folder) = $runner->generate_report($group, $temp_path);
+		
 		$archive = Archive::factory('zip');
 
 		// TODO: Include the test results?
@@ -192,7 +190,6 @@ class Controller_UnitTest extends Controller_Template
 			->set('groups', $this->get_groups_list($suite))
 
 			->set('report_uri',     $this->report_uri.url::query())
-			->set('report_formats', Kohana_PHPUnit::$report_formats)
 			
 			// Whitelist related stuff
 			->set('whitelistable_items', $this->get_whitelistable_items())

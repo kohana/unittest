@@ -41,9 +41,6 @@
 				<?php echo Form::label('cc_group', __('Generate report for')); ?>
 				<?php echo Form::select('group', $groups, NULL, array('id' => 'cc_group'));?>
 
-				<?php echo Form::label('cc_format', __('Report format')); ?>
-				<?php echo Form::select('format', $report_formats, array(), array('id' => 'cc_format')); ?>
-
 				<?php echo Form::label('report_use_whitelist', __('Use code coverage whitelist'));?>
 				<?php echo Form::checkbox('use_whitelist', 1, TRUE, array('id' => 'report_use_whitelist')); ?>
 				

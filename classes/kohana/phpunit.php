@@ -13,16 +13,6 @@
 Class Kohana_PHPUnit implements PHPUnit_Framework_TestListener
 {
 	/**
-	 * Allowed formats for code coverage reports
-	 * @var array
-	 */
-	public static $report_formats =	array
-								(
-									'PHPUnit_Util_Report'						=> 'HTML files (zipped)',
-									'PHPUnit_Util_Log_CodeCoverage_XML_Clover'	=> 'Clover',
-									'PHPUnit_Util_Log_CodeCoverage_XML_Source'	=> 'XML',
-								);
-	/**
 	 * Results
 	 * @var array
 	 */
@@ -167,10 +157,10 @@ Class Kohana_PHPUnit implements PHPUnit_Framework_TestListener
 	/**
 	 * Generate a report using the specified $temp_path
 	 *
+	 * @param array  $groups    Groups to test
 	 * @param string $temp_path Temporary path to use while generating report
-	 * @param string $format
 	 */
-	public function generate_report(array $groups, $temp_path, $format)
+	public function generate_report(array $groups, $temp_path)
 	{
 		if( ! is_writable($temp_path))
 		{
@@ -178,6 +168,7 @@ Class Kohana_PHPUnit implements PHPUnit_Framework_TestListener
 		}
 
 		// Icky, highly unlikely, but do it anyway
+		// Basically adds "(n)" to the end of the filename until there's a free file
 		$count = 0;
 		do
 		{
@@ -191,23 +182,14 @@ Class Kohana_PHPUnit implements PHPUnit_Framework_TestListener
 		$folder = $temp_path.$folder_name;
 
 		mkdir($folder, 0777);
-
+		
 		$this->run($groups, TRUE);
-
+		
 		require_once 'PHPUnit/Runner/Version.php';
-		switch($format)
-		{
-			// Not implmeneted yet..
-			case 'PHPUnit_Util_Log_CodeCoverage_XML_Clover':
-			case 'PHPUnit_Util_Log_CodeCoverage_XML_Source':
+		require_once 'PHPUnit/Util/Report.php';
 
-			case 'PHPUnit_Util_Report':
-			default:
-				require_once 'PHPUnit/Util/Report'.EXT;
-				PHPUnit_Util_Report::render($this->result, $folder);
-				break;
-		}
-
+		PHPUnit_Util_Report::render($this->result, $folder);
+		
 		return array($folder, $folder_name);
 	}
 

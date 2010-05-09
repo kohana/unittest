@@ -42,12 +42,7 @@
 				)
 			);
 		?>,
-		
-		<?php echo Form::open($report_uri, array('method' => 'POST', 'id' => 'download-report')); ?>
-			<label><?php echo __('Download report as'); ?></label>
-			<?php echo Form::select('format', $report_formats); ?>
-			<input type="submit" value="Get it!" />
-		<?php echo Form::close(); ?>
+		<?php echo HTML::anchor($report_uri, 'Download HTML Report'); ?>
 	</span>
 	<?php endif; ?>
 </div>
@@ -65,7 +60,7 @@
 			endif; ?>
 			<?php $hide = ($type === 'skipped' OR $type === 'incomplete'); ?>
 			<div class="<?php echo $type?>-list">
-				<h2 onclick="toggle('<?php echo $type?>');"><?php echo count($tests)?> 
+				<h2 onclick="toggle('<?php echo $type?>');"><?php echo count($tests)?>
 					<?php echo __(ucfirst(Inflector::singular($type, count($tests))))?>
 					<span id="<?php echo $type?>-show" class="show">[<?php echo $hide ? __('show') : __('hide'); ?>]</span></h2>
 				<ol id="<?php echo $type?>-ol" class="<?php echo $hide ? 'hidden' : ''; ?>">

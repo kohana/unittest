@@ -49,7 +49,7 @@ class Kohana_Tests
 			restore_exception_handler();
 			restore_error_handler();
 		}
-		
+
 		spl_autoload_register(array('Kohana_Tests', 'autoload'));
 
 		Kohana_Tests::$cache = ($cache = Kohana::cache('unittest_whitelist_cache')) === NULL ? array() : $cache;
