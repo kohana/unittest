@@ -42,7 +42,10 @@
 				)
 			);
 		?>,
-		<?php echo HTML::anchor($report_uri, 'Download HTML Report'); ?>
+		<?php echo HTML::anchor($report_uri, 'View'); ?> 
+		or
+		<?php echo HTML::anchor($report_uri.'&archive=1', 'Download'); ?>
+		 the report
 	</span>
 	<?php endif; ?>
 </div>

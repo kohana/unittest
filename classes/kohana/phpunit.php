@@ -160,37 +160,46 @@ Class Kohana_PHPUnit implements PHPUnit_Framework_TestListener
 	 * @param array  $groups    Groups to test
 	 * @param string $temp_path Temporary path to use while generating report
 	 */
-	public function generate_report(array $groups, $temp_path)
+	public function generate_report(array $groups, $temp_path, $create_sub_dir = TRUE)
 	{
 		if( ! is_writable($temp_path))
 		{
 			throw new Kohana_Exception('Temp path :path does not exist or is not writable by the webserver', array(':path' => $temp_path));
 		}
 
-		// Icky, highly unlikely, but do it anyway
-		// Basically adds "(n)" to the end of the filename until there's a free file
-		$count = 0;
-		do
-		{
-			$folder_name =	date('Y-m-d_H:i:s')
-							.(! empty($groups) ? '['.implode(',', $groups).']' : '')
-							.($count > 0 ? '('.$count.')' : '');
-			++$count;
-		}
-		while(is_dir($temp_path.$folder_name));
-
-		$folder = $temp_path.$folder_name;
-
-		mkdir($folder, 0777);
+		$folder_path = $temp_path;
 		
+		if($create_sub_dir === TRUE)
+		{
+			// Icky, highly unlikely, but do it anyway
+			// Basically adds "(n)" to the end of the filename until there's a free file
+			$count = 0;
+			do
+			{
+				$folder_name =	date('Y-m-d_H:i:s')
+								.(! empty($groups) ? '['.implode(',', $groups).']' : '')
+								.($count > 0 ? '('.$count.')' : '');
+				++$count;
+			}
+			while(is_dir($folder_path.$folder_name));
+
+			$folder_path .= $folder_name;
+
+			mkdir($folder_path, 0777);
+		}
+		else
+		{
+			$folder_name = basename($folder_path);
+		}
+
 		$this->run($groups, TRUE);
 		
 		require_once 'PHPUnit/Runner/Version.php';
 		require_once 'PHPUnit/Util/Report.php';
 
-		PHPUnit_Util_Report::render($this->result, $folder);
+		PHPUnit_Util_Report::render($this->result, $folder_path);
 		
-		return array($folder, $folder_name);
+		return array($folder_path, $folder_name);
 	}
 
 	/**

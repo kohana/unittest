@@ -41,6 +41,10 @@
 			#header fieldset form label {
 				display: block;
 			}
+		
+			#header a {
+				color: #4e7aa0;
+			}
 
 			li {
 				margin-bottom: 5px;
@@ -185,8 +189,6 @@
 			span[title]{
 				border-bottom: 1px dashed #83919C;
 			}
-
-
 		</style>
 		
 	</head>

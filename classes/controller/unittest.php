@@ -10,8 +10,20 @@
  * @license    http://kohanaphp.com/license
  */
 
-class Controller_UnitTest extends Controller_Template
+Class Controller_UnitTest extends Controller_Template
 {
+	/**
+	 * Whether the archive module is available
+	 * @var boolean
+	 */
+	protected $cc_archive_available = FALSE;
+
+	/**
+	 * Unittest config
+	 * @var Kohana_Config
+	 */
+	protected $config = NULL;
+
 	/**
 	 * The uri by which the report uri will be executed
 	 * @var string
@@ -64,8 +76,11 @@ class Controller_UnitTest extends Controller_Template
 		$this->run_uri		= $route->uri(array('action' => 'run'));
 
 		// Switch used to disable cc settings
-		$this->xdebug_loaded = extension_loaded('xdebug');
-		$this->template->set_global('xdebug_enabled', $this->xdebug_loaded);
+		$this->xdebug_loaded 		= extension_loaded('xdebug');
+		$this->cc_archive_enabled	= class_exists('Archive');
+
+		Kohana_View::set_global('xdebug_enabled', $this->xdebug_loaded);
+		Kohana_View::set_global('cc_archive_enabled', $this->cc_archive_enabled);
 	}
 
 	/**
@@ -86,7 +101,7 @@ class Controller_UnitTest extends Controller_Template
 	public function action_report()
 	{
 		// Fairly foolproof
-		if( ! class_exists('Archive'))
+		if( ! $this->config->cc_report_path AND ! class_exists('Archive'))
 		{
 			throw new Kohana_Exception('The Archive module is needed to package the reports');
 		}
@@ -111,23 +126,46 @@ class Controller_UnitTest extends Controller_Template
 
 		$runner = new Kohana_PHPUnit($suite);
 
-		// $report is the actual directory of the report,
-		// $folder is the name component of directory
-		list($report, $folder) = $runner->generate_report($group, $temp_path);
-		
-		$archive = Archive::factory('zip');
+		// If the user wants to download a report
+		if($this->cc_archive_enabled AND Arr::get($_GET, 'archive') === '1')
+		{
+			// $report is the actual directory of the report,
+			// $folder is the name component of directory
+			list($report, $folder) = $runner->generate_report($group, $temp_path);
+			
+			$archive = Archive::factory('zip');
 
-		// TODO: Include the test results?
-		$archive->add($report, 'report', TRUE);
+			// TODO: Include the test results?
+			$archive->add($report, 'report', TRUE);
 
-		$filename = $folder.'.zip';
+			$filename = $folder.'.zip';
 
-		$archive->save($temp_path.$filename);
+			$archive->save($temp_path.$filename);
 
-		// It'd be nice to clear up afterwards but by deleting the report dir we corrupt the archive
-		// And once the archive has been sent to the user Request stops the script so we can't delete anything
-		// It'll be up to the user to delete files periodically
-		$this->request->send_file($temp_path.$filename, $filename);
+			// It'd be nice to clear up afterwards but by deleting the report dir we corrupt the archive
+			// And once the archive has been sent to the user Request stops the script so we can't delete anything
+			// It'll be up to the user to delete files periodically
+			$this->request->send_file($temp_path.$filename, $filename);
+		}
+		else
+		{
+			$folder = trim($this->config->cc_report_path, '/').'/';
+			$path 	= DOCROOT.$folder;
+
+			if( ! file_exists($path))
+			{
+				throw new Kohana_Exception('Report directory :dir does not exist', array(':dir' => $path));
+			}
+
+			if( ! is_writable($path))
+			{
+				throw new Kohana_Exception('Script doesn\'t have permission to write to report dir :dir ', array(':dir' => $path));
+			}
+
+			$runner->generate_report($group, $path, FALSE);
+
+			$this->request->redirect(URL::base(FALSE, TRUE).$folder.'index.html');
+		}
 	}
 
 	/**
