@@ -11,6 +11,13 @@ return array
 	// Needs to be readable and writable
 	'temp_path'				=> Kohana::$cache_dir.'/unittest',
 
+	// Path from DOCROOT (i.e. http://yoursite/) to the folder where HTML cc reports can be 
+	// published.  If you'd prefer not to allow users to do this then simply set the value
+	// to FALSE.
+	//
+	// Example value of 'cc_report' would allow devs to see report at http://yourdomain/cc_report/
+	'cc_report_path' => 'report',
+
 	// If you don't use a whitelist then only files included during the request will be counted
 	// If you do, then only whitelisted items will be counted
 	'use_whitelist'		=> TRUE,
