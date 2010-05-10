@@ -103,7 +103,7 @@ Class Controller_UnitTest extends Controller_Template
 		// Fairly foolproof
 		if( ! $this->config->cc_report_path AND ! class_exists('Archive'))
 		{
-			throw new Kohana_Exception('The Archive module is needed to package the reports');
+			throw new Kohana_Exception('Cannot generate report');
 		}
 
 		// We don't want to use the HTML layout, we're sending the user 100111011100110010101100
