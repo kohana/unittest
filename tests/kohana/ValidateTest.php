@@ -25,7 +25,10 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 			array('asdavafaiwnoabwiubafpowf', TRUE),
 			array('!aidhfawiodb', FALSE),
 			array('51535oniubawdawd78', FALSE),
-			array('!"£$(G$W£(HFW£F(HQ)"n', FALSE)
+			array('!"£$(G$W£(HFW£F(HQ)"n', FALSE),
+			// UTF-8 tests
+			array('あいうえお', TRUE, TRUE),
+			array('¥', FALSE, TRUE)
 		);
 	}
 	
@@ -40,11 +43,11 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * @param string  $string
 	 * @param boolean $expected
 	 */
-	public function testAlpha($string, $expected)
+	public function testAlpha($string, $expected, $utf8 = FALSE)
 	{
 		$this->assertSame(
 			$expected,
-			Validate::alpha($string)
+			Validate::alpha($string, $utf8)
 		);
 	}
 
