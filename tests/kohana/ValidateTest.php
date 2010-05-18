@@ -686,7 +686,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 			array('hello world', '/[a-zA-Z\s]++/', TRUE),
 			array('123456789', '/[0-9]++/', TRUE),
 			array('£$%£%', '/[abc]/', FALSE),
-			array('Good evening',  '/[a-gA-Z]++/',  FALSE),
+			array('Good evening',  '/hello/',  FALSE),
 		);
 	}
 
