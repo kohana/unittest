@@ -678,6 +678,39 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * DataProvider for the valid::regex() test
+	 */
+	public function providerRegex()
+	{
+		return array(
+			array('hello world', '/[a-zA-Z\s]++/', TRUE),
+			array('123456789', '/[0-9]++/', TRUE),
+			array('£$%£%', '/[abc]/', FALSE),
+			array('Good evening',  '/[a-gA-Z]++/',  FALSE),
+		);
+	}
+
+	/**
+	 * Tests Validate::range()
+	 *
+	 * Tests if a number is within a range.
+	 *
+	 * @test
+	 * @group kohana.validation.helpers
+	 * @dataProvider providerRegex
+	 * @param string Value to test against
+	 * @param string Valid pcre regular expression
+	 * @param bool Does the value match the expression?
+	 */
+	public function testRegex($value, $regex, $expected)
+	{
+		$this->AssertSame(
+			$expected,
+			Validate::regex($value, $regex)
+		);
+	}
+
+	/**
 	 * DataProvider for the valid::range() test
 	 */
 	public function providerRange()
