@@ -17,7 +17,7 @@ If you want to run tests from within an IDE then you need to include the kohana 
 
 ### From the web
 
-Just navigate to http://yoursite.com/phpunit. You may need to use yoursite.com/index.php/phpunit if you have not removed this by using .htaccess.
+Just navigate to http://yoursite.com/unittest. You may need to use yoursite.com/index.php/unittest if you have not enabled url rewriting in your .htaccess.
 
 ## Writing tests
 
