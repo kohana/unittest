@@ -60,7 +60,11 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 			array('abcd1234',  TRUE),
 		    array('abcd',      TRUE),
 		    array('1234',      TRUE),
-		    array('abc123&^/-', FALSE)
+		    array('abc123&^/-', FALSE),
+				// UTF-8 tests
+				array('あいうえお', TRUE, TRUE),
+				array('零一二三四五', TRUE, TRUE),
+				array('あい四五£^£^', FALSE, TRUE),
 		);
 	}
 
@@ -75,11 +79,11 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * @param string  $input     The string to test
 	 * @param boolean $expected  Is $input valid
 	 */
-	public function testAlphaNumeric($input, $expected)
+	public function testAlphaNumeric($input, $expected, $utf8 = FALSE)
 	{
 		$this->assertSame(
 			$expected,
-			Validate::alpha_numeric($input)
+			Validate::alpha_numeric($input, $utf8)
 		);
 	}
 
