@@ -130,6 +130,39 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * DataProvider for the valid::date() test
+	 */
+	public function providerDate()
+	{
+		return array(
+			array('now',TRUE),
+			array('10 September 2010',TRUE),
+			array('+1 day',TRUE),
+			array('+1 week',TRUE),
+			array('+1 week 2 days 4 hours 2 seconds',TRUE),
+			array('next Thursday',TRUE),
+			array('last Monday',TRUE),
+		);
+	}
+
+	/**
+	 * Tests Validate::date()
+	 *
+	 * @test
+	 * @group kohana.validation.helpers
+	 * @dataProvider providerDate
+	 * @param string  $date  The date to validate
+	 * @param integer $expected
+	 */
+	public function testDate($date, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			Validate::date($date, $expected)
+		);
+	}
+
+	/**
 	 * DataProvider for the valid::decimal() test
 	 */
 	public function providerDecimal()
