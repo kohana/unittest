@@ -142,6 +142,10 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 			array('+1 week 2 days 4 hours 2 seconds',TRUE),
 			array('next Thursday',TRUE),
 			array('last Monday',TRUE),
+
+			array('blarg',FALSE),
+			array('in the year 2000',FALSE),
+			array('324824',FALSE),
 		);
 	}
 
