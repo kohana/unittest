@@ -571,11 +571,20 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 */
 	function providerNotEmpty()
 	{
-		return array(
+		// Create a blank arrayObject
+		$ao = new ArrayObject;
+
+		// arrayObject with value
+		$ao1 = new ArrayObject;
+		$ao1['test'] = 'value';
+		
+   	return array(
 			array(array(),		FALSE),
 			array(Null,			FALSE),
 			array('',			FALSE),
 			array(0,			FALSE),
+			array($ao,			FALSE),
+			array($ao1,			TRUE),
 			array(array(NULL),	TRUE),
 			array('0',			TRUE),
 			array('Something',	TRUE),
