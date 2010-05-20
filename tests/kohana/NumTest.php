@@ -3,6 +3,7 @@
 /**
  * Tests Num
  *
+ * @group      kohana
  * @package    Unittest
  * @author     Kohana Team
  * @author     BRMatt <matthew@sigswitch.com>
@@ -23,6 +24,8 @@ Class Kohana_NumTest extends PHPUnit_Framework_TestCase
 			array(1, 'st'),
 			array(21, 'st'),
 			array(112, 'th'),
+			array(23, 'rd'),
+			array(42, 'nd'),
 		);
 	}
 

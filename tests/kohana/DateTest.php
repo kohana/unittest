@@ -237,7 +237,6 @@ Class Kohana_DateTest extends PHPUnit_Framework_TestCase
 				'weeks,days,hours,minutes,seconds',
 				array('weeks' => 2, 'days' => 1, 'hours' => 0, 'minutes' => 5, 'seconds' => 0),
 			),
-			
 		);
 	}
 
