@@ -297,6 +297,7 @@ Class Kohana_ValidateTest extends PHPUnit_Framework_TestCase
 	 * Tests Validate::credit_card()
 	 *
 	 * @test
+	 * @covers Validate::credit_card
 	 * @group kohana.validation.helpers
 	 * @dataProvider  providerCreditCard()
 	 * @param string  $number   Credit card number
