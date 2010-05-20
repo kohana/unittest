@@ -114,7 +114,6 @@ Class Kohana_DateTest extends PHPUnit_Framework_TestCase
 	 * Tests Date::ampm()
 	 *
 	 * @test
-	 * @covers Date::ampm
 	 * @dataProvider providerAdjust
 	 * @param integer $hour       Hour in 12 hour format
 	 * @param string  $ampm       Either am or pm
@@ -217,6 +216,13 @@ Class Kohana_DateTest extends PHPUnit_Framework_TestCase
 				'',
 				FALSE
 			),
+			// Test that providing only one output just returns that output
+			array(
+				$time - 30,
+				$time,
+				'seconds',
+				30
+			),
 			// Random tests
 			array(
 				$time - 30,
@@ -236,6 +242,13 @@ Class Kohana_DateTest extends PHPUnit_Framework_TestCase
 				$time,
 				'weeks,days,hours,minutes,seconds',
 				array('weeks' => 2, 'days' => 1, 'hours' => 0, 'minutes' => 5, 'seconds' => 0),
+			),
+			array(
+				// Add a bit of extra time to account for phpunit processing
+				$time + (14 * 31 * 24* 60 * 60) + (79 * 80),
+				NULL,
+				'months,years',
+				array('months' => 2, 'years' => 1),
 			),
 		);
 	}
@@ -259,5 +272,171 @@ Class Kohana_DateTest extends PHPUnit_Framework_TestCase
 		);
 	}
 
-	
-}
+	/**
+	 * Provides test data to testFuzzySpan
+	 * 
+	 * This test data is provided on the assumption that it
+	 * won't take phpunit more than 30 seconds to get the 
+	 * data from this provider to the test... ;)
+	 *
+	 * @return array Test Data
+	 */
+	function providerFuzzySpan()
+	{
+		return array(
+			array('moments ago', time() - 30),
+			array('in moments', time() + 30),
+
+			array('a few minutes ago', time() - 10*60),
+			array('in a few minutes', time() + 10*60),
+
+			array('less than an hour ago', time() - 45*60),
+			array('in less than an hour', time() + 45*60),
+
+			array('a couple of hours ago', time() - 2*60*60),
+			array('in a couple of hours', time() + 2*60*60),
+
+			array('less than a day ago', time() - 12*60*60),
+			array('in less than a day', time() + 12*60*60),
+
+			array('about a day ago', time() - 30*60*60),	
+			array('in about a day', time() + 30*60*60),	
+
+			array('a couple of days ago', time() - 3*24*60*60),
+			array('in a couple of days', time() + 3*24*60*60),
+
+			array('less than a week ago', time() - 5*24*60*60),
+			array('in less than a week', time() + 5*24*60*60),
+
+			array('about a week ago', time() - 9*24*60*60),
+			array('in about a week', time() + 9*24*60*60),
+
+			array('less than a month ago', time() - 20*24*60*60),
+			array('in less than a month', time() + 20*24*60*60),
+
+			array('about a month ago', time() - 40*24*60*60),
+			array('in about a month', time() + 40*24*60*60),
+
+			array('a couple of months ago', time() - 3*30*24*60*60),
+			array('in a couple of months', time() + 3*30*24*60*60),
+
+			array('less than a year ago', time() - 7*31*24*60*60),
+			array('in less than a year', time() + 7*31*24*60*60),
+
+			array('about a year ago', time() - 18*31*24*60*60),
+			array('in about a year', time() + 18*31*24*60*60),
+
+			array('a couple of years ago', time() - 3*12*31*24*60*60),
+			array('in a couple of years', time() + 3*12*31*24*60*60),
+
+			array('a few years ago', time() - 5*12*31*24*60*60),
+			array('in a few years', time() + 5*12*31*24*60*60),
+
+			array('about a decade ago', time() - 11*12*31*24*60*60),
+			array('in about a decade', time() + 11*12*31*24*60*60),
+
+			array('a couple of decades ago', time() - 20*12*31*24*60*60),
+			array('in a couple of decades', time() + 20*12*31*24*60*60),
+
+			array('several decades ago', time() - 50*12*31*24*60*60),
+			array('in several decades', time() + 50*12*31*24*60*60),
+
+			array('a long time ago', time() - pow(10,10)),
+			array('in a long time', time() + pow(10,10)),
+		);
+	}
+
+	/**
+	 * Test of Date::fuzy_span()
+	 *
+	 * @test
+	 * @dataProvider providerFuzzySpan
+	 * @param string $expected Expected output
+	 * @param integer $timestamp Timestamp to use
+	 */
+	function testFuzzySpan($expected, $timestamp)
+	{
+		$this->assertSame(
+			$expected,
+			Date::fuzzy_span($timestamp)
+		);
+	}
+
+	/** 
+	 * Provides test data for testYears()
+	 *
+	 * @return array Test Data
+	 */
+	function providerYears()
+	{
+		return array(
+			array(
+				array (
+					2005 => '2005', 
+					2006 => '2006', 
+					2007 => '2007',
+				    2008 => '2008',
+				    2009 => '2009',
+				    2010 => '2010',
+				    2011 => '2011',
+				    2012 => '2012',
+					2013 => '2013', 
+					2014 => '2014',
+					2015 => '2015',
+				),
+				2005,
+				2015
+			),
+		);
+	}
+
+	/**
+	 * Tests Data::years()
+	 *
+	 * @test
+	 * @dataProvider providerYears
+	 */
+	function testYears($expected, $start = FALSE, $end = FALSE)
+	{
+		$this->assertSame(
+			$expected,
+			Date::years($start, $end)
+		);
+	}
+
+	function providerHours()
+	{
+		return array(
+			array(
+				array(
+					1 => '1',
+					2 => '2',
+					3 => '3',
+					4 => '4',
+					5 => '5',
+					6 => '6',
+					7 => '7',
+					8 => '8',
+					9 => '9',
+					10 => '10',
+					11 => '11',
+					12 => '12',
+				),
+			),
+		);
+	}
+
+	/**
+	 * Test for Date::hours
+	 *
+	 * @test
+	 * @dataProvider providerHours
+	 */
+	function testHours($expected, $step = 1, $long = FALSE, $start = NULL) 
+	{
+		$this->assertSame(
+			$expected,
+			Date::hours($step, $long, $start)
+		);
+	}
+}	

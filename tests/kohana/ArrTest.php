@@ -169,9 +169,28 @@ Class Kohana_ArrTest extends PHPUnit_Framework_TestCase
 		);
 	}
 
-	function testMerge()
+	function providerMerge()
 	{
+		return array(
+			array(
+				array('name' => 'mary', 'children' => array('fred', 'paul', 'sally', 'jane')),
+				array('name' => 'john', 'children' => array('fred', 'paul', 'sally', 'jane')),
+				array('name' => 'mary', 'children' => array('jane')),
+			),
+		);	
+	}
 
+	/**
+	 *
+	 * @test
+	 * @dataProvider providerMerge
+	 */
+	function testMerge($expected, $array1, $array2)
+	{
+		$this->assertSame(
+			$expected,
+			Arr::merge($array1,$array2)
+		);
 	}
 
 	/**
