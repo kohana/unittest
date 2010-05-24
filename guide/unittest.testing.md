@@ -4,17 +4,6 @@
 
 Of course, you'll need to make sure the path to the tests.php file is correct.  If you want you can copy it to a more accessible location
 
-If you want to run tests from within an IDE then you need to include the kohana files within the test itself:
-
-	<?php
-
-	require_once 'path/to/kohanas/index.php';
-
-	Class HalfEmptyTestCase extends PHPUnit_Framework_TestCase
-	{
-		// ...
-	}
-
 ### From the web
 
 Just navigate to http://yoursite.com/unittest. You may need to use yoursite.com/index.php/unittest if you have not enabled url rewriting in your .htaccess.
