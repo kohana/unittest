@@ -150,6 +150,8 @@ Class Kohana_TextTest extends PHPUnit_Framework_TestCase
 				array("Cake### isn't nearly as good as kohana###", "CakePHP isn't nearly as good as kohanaphp", array('php'), '#', TRUE),
 				// If it's > 1 then it's just replaced straight out
 				array("If you're born out of wedlock you're a --expletive--", "If you're born out of wedlock you're a child", array('child'), '--expletive--', TRUE),
+
+				array('class', 'class', array('ass'), '*', FALSE),
 			);
 	}
 
@@ -163,6 +165,66 @@ Class Kohana_TextTest extends PHPUnit_Framework_TestCase
 	function testCensor($expected, $str, $badwords, $replacement, $replace_partial_words)
 	{
 		$this->assertSame($expected, Text::censor($str, $badwords, $replacement, $replace_partial_words));
+	}
+
+	/**
+	 * Provides test data for testRandom
+	 *
+	 * @return array Test Data
+	 */
+	function providerRandom()
+	{
+		return array(
+			array('alnum', 8),
+			array('alpha', 10),
+			array('hexdec', 20),
+			array('nozero', 5),
+			array('numeric', 14),
+			array('distinct', 12),
+			array('aeiou', 4),
+		);
+	}
+
+	/**
+	 * Tests Text::random() as well as possible
+	 *
+	 * Obviously you can't compare a randomly generated string against a 
+	 * pre-generated one and check that they are the same as this goes
+	 * against the whole ethos of random.
+	 *
+	 * This test just makes sure that the value returned is of the correct
+	 * values and length
+	 *
+	 * @test
+	 * @dataProvider providerRandom
+	 */
+	function testRandom($type, $length)
+	{
+		$pool = (string) $type;
+
+		switch ($pool)
+		{
+			case 'alnum':
+				$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			break;
+			case 'alpha':
+				$pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			break;
+			case 'hexdec':
+				$pool = '0123456789abcdef';
+			break;
+			case 'numeric':
+				$pool = '0123456789';
+			break;
+			case 'nozero':
+				$pool = '123456789';
+			break;
+			case 'distinct':
+				$pool = '2345679ACDEFHJKLMNPRSTUVWXYZ';
+			break;
+		}
+		
+		$this->assertRegExp('/^['.$pool.']{'.$length.'}$/', Text::random($type, $length));
 	}
 
 	/**

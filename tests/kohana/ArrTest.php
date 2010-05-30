@@ -13,14 +13,6 @@
  */
 Class Kohana_ArrTest extends PHPUnit_Framework_TestCase
 {
-	protected $traversable =	array(
-									'foobar' =>	array(
-													'definition' => 'lost'
-												),
-									'kohana' => 'awesome'
-								);
-
-
 	/**
 	 * Provides test data for testCallback()
 	 *
@@ -200,32 +192,50 @@ Class Kohana_ArrTest extends PHPUnit_Framework_TestCase
 	 */
 	function providerPath()
 	{
+		$array = array(
+			'foobar' =>	array('definition' => 'lost'),
+			'kohana' => 'awesome',
+			'users'  => array(
+				1 => array('name' => 'matt'),
+				2 => array('name' => 'john', 'interests' => array('hocky' => array('length' => 2), 'football' => array())),
+			),
+		);
+
 		return array(
-			array('foobar',  NULL, $this->traversable['foobar']),
-			array('kohana',  NULL, $this->traversable['kohana']),
-			array('foobar.definition',  NULL, $this->traversable['foobar']['definition']),
-			array('foobar.alternatives',  NULL, NULL),
-			array('kohana.alternatives',  NULL, NULL),
-			array('kohana.alternatives',  'nothing', 'nothing'),
-			array('cheese.origins',  array('far', 'wide'), array('far', 'wide')),
+			// Tests returns normal values
+			array($array['foobar'], $array, 'foobar'),
+			array($array['kohana'], $array, 'kohana'),
+			array($array['foobar']['definition'], $array,  'foobar.definition'),
+			// We should be able to use NULL as a default, returned if the key DNX
+			array(NULL, $array, 'foobar.alternatives',  NULL),
+			array(NULL, $array, 'kohana.alternatives',  NULL),
+			// Try using a string as a default
+			array('nothing', $array, 'kohana.alternatives',  'nothing'),
+			// Make sure you can use arrays as defaults
+			array(array('far', 'wide'), $array, 'cheese.origins',  array('far', 'wide')),
+			// Ensures path() casts ints to actual integers for keys
+			array($array['users'][1]['name'], $array, 'users.1.name'),
+			// Test that a wildcard returns the entire array at that "level"
+			array($array['users'], $array, 'users.*'),
+			// Now we check that keys after a wilcard will be processed
+			array(array(0 => array(0 => 2)), $array, 'users.*.interests.*.length'),
 		);
 	}
 
 	/**
 	 * Tests Arr::get()
 	 *
-	 * Uses $this->traversable
 	 * @test
 	 * @dataProvider providerPath
 	 * @param string  $path      The path to follow
 	 * @param mixed   $default   The value to return if dnx
 	 * @param boolean $expected  The expected value
 	 */
-	function testPath($path, $default, $expected)
+	function testPath($expected, $array, $path, $default = NULL)
 	{
 		$this->assertSame(
 			$expected,
-			Arr::path($this->traversable, $path, $default)
+			Arr::path($array, $path, $default)
 		);
 	}
 
@@ -301,5 +311,60 @@ Class Kohana_ArrTest extends PHPUnit_Framework_TestCase
 
 		$this->assertSame($value, reset($array));
 		$this->assertSame(key($array), $key);
+	}
+
+	/**
+	 * Provies test data for testOverwrite
+	 *
+	 * @return array Test Data
+	 */
+	function providerOverwrite()
+	{
+		return array(
+			array(
+				array('name' => 'Henry', 'mood' => 'tired', 'food' => 'waffles', 'sport' => 'checkers'),
+				array('name' => 'John', 'mood' => 'bored', 'food' => 'bacon', 'sport' => 'checkers'),
+				array('name' => 'Matt', 'mood' => 'tired', 'food' => 'waffles'),
+				array('name' => 'Henry', 'age' => 18,),
+			),
+		);
+	}
+
+	/**
+	 *
+	 * @test
+	 * @dataProvider providerOverwrite
+	 */
+	function testOverwrite($expected, $arr1, $arr2, $arr3 = array(), $arr4 = array())
+	{
+		$this->assertSame(
+			$expected, 
+			Arr::overwrite($arr1, $arr2, $arr3, $arr4)
+		);
+	}
+
+	/**
+	 * Provides test data for testBinarySearch
+	 *
+	 * @return array Test Data
+	 */
+	function providerBinarySearch()
+	{
+		return array(
+			array(2, 'john', array('mary', 'louise', 'john', 'kent'))
+		);
+	}
+
+	/**
+	 *
+	 * @test
+	 * @dataProvider providerBinarySearch
+	 */
+	function testBinarySearch($expected, $needle, $haystack, $sort = FALSE)
+	{
+		$this->assertSame(
+			$expected,
+			Arr::binary_search($needle, $haystack, $sort)
+		);
 	}
 }
