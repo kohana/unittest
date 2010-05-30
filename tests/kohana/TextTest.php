@@ -17,6 +17,71 @@ Class Kohana_TextTest extends Kohana_Unittest_TestCase
 	}
 
 	/**
+	 * This test makes sure that auto_p returns an empty string if
+	 * an empty input was provided
+	 *
+	 * @test
+	 * @covers Text::auto_p
+	 */
+	function testAutoParaReturnsEmptyStringOnEmptyInput()
+	{
+		$this->assertSame('', Text::auto_p(''));
+	}
+
+	/**
+	 *
+	 * @return array Test Data
+	 */
+	function providerAutoParaDoesnotEncloseHtmlTagsInParagraphs()
+	{
+		return array(
+			array(
+				array('div'),
+				'<div>Pick a plum of peppers</div>',
+			),
+			array(
+				array('div'),
+				'<div id="awesome">Tangas</div>',
+			),
+		);
+	}
+
+	/**
+	 * This test makes sure that auto_p doesn't enclose HTML tags 
+	 * in paragraphs
+	 *
+	 * @test
+	 * @dataProvider providerAutoParaDoesNotEncloseHtmlTagsInParagraphs
+	 * @covers Text::auto_p
+	 */ 
+	function testAutoParaDoesNotEncloseHtmlTagsInParagraphcs(array $tags, $text)
+	{
+		$output = Text::auto_p($text);
+		
+		foreach($tags as $tag)
+		{
+			$this->assertNotTag(
+				array('tag' => $tag, 'ancestor' => array('tag' => 'p')),
+				$output
+			);
+		}
+	}
+
+	/**
+	 * This test makes sure that auto_p surrounds a single line of text
+	 * with paragraph tags
+	 *
+	 * @test
+	 * @covers Text::auto_p
+	 */
+	function testAutoParaEnclosesSLOTInParagraph()
+	{
+		$text = 'Pick a pinch of purple pepper';
+
+		$this->assertSame('<p>'.$text.'</p>', Text::auto_p($text));
+	}
+
+	/**
 	 * Data provider for testLimitWords
 	 *
 	 * @return array Array of test data
