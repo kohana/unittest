@@ -11,7 +11,7 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-Class Kohana_DateTest extends PHPUnit_Framework_TestCase
+Class Kohana_DateTest extends Kohana_Unittest_TestCase
 {
 	/**
 	 * Provides test data for testDate()

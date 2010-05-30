@@ -6,7 +6,7 @@
  * @group kohana
  */
 
-Class Kohana_SecurityTest extends PHPUnit_Framework_TestCase
+Class Kohana_SecurityTest extends Kohana_Unittest_TestCase
 {
 	/**
 	 * Provides test data for testEnvodePHPTags()

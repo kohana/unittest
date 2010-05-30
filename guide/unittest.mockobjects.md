@@ -262,5 +262,4 @@ If you don't call a mocked method and PHPUnit expects it to be called then the t
 <!--
 ### What about if the mocked method should change everytime its called?
 
-[!!] As of writing this is untested, I'm just working on assumptions from the code.
 -->

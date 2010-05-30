@@ -11,7 +11,7 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Kohana_RouteTest extends PHPUnit_Framework_TestCase
+class Kohana_RouteTest extends Kohana_Unittest_TestCase
 {
 	/**
 	 * Route::matches() should return false if the route doesn't match against a uri

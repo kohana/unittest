@@ -10,7 +10,7 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-Class Kohana_NumTest extends PHPUnit_Framework_TestCase
+Class Kohana_NumTest extends Kohana_Unittest_TestCase
 {
 
 	/**
