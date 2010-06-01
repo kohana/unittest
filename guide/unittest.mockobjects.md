@@ -136,74 +136,74 @@ PHPUnit has a fairly complex way of comparing parameters passed to the mock meth
 
 Sometimes you need to be more specific about how PHPUnit should compare parameters, i.e. if you want to make sure that one of the parameters is an instance of an object, yet isn't necessarily identical to a particular instance.
 
-PHPUnit has refactored the comparision logic for paramteres into "constraint objects".  These objects encapsulate the comparisions and allow you to easily create your own comparisions.
+In PHPUnit, the logic for validating objects and datatypes has been refactored into "constraint objects".  If you look in any of the assertX() methods you can see that they are nothing more than wrappers for associating constraint objects with tests.
 
-If a parameter passed to `with()` is not an instance of `PHPUnit_Framework_Constraint` then it creates a new `PHPUnit_Framework_Constraint_IsEqual` comparision object for it.
+If a parameter passed to `with()` is not an instance of a constraint object (one which extends `PHPUnit_Framework_Constraint`) then PHPUnit creates a new `IsEqual` comparision object for it.
 
 i.e., the following methods produce the same result:
 
 	->with('foo', 1);
 
-	->with(new PHPUnit_Framework_Constraint_IsEqual('foo'), new PHPUnit_Framework_Constraint_IsEqual(1));
+	->with($this->equalTo('foo'), $this->equalTo(1));
 
-The following types of constraint are provided out of the box:
+Here are some of the wrappers PHPUnit provides for creating constraint objects:
 
-`PHPUnit_Framework_Constraint_ArrayHasKey::__construct($key)`
+`$this->arrayHasKey($key)`
 : Asserts that the parameter will have an element with index `$key`
 
-`PHPUnit_Framework_Constraint_Attribute::__construct(PHPUnit_Framework_Constraint $constraint, $attributeName)`
-: Asserts that object attribute `$attributeName` of the parameter will satisfy `$constraint`, where constraint is an instance of a constraint (i.e. `PHPUnit_Framework_Constraint_IsEqual`
+`$this->attribute(PHPUnit_Framework_Constraint $constraint, $attributeName)`
+: Asserts that object attribute `$attributeName` of the parameter will satisfy `$constraint`, where constraint is an instance of a constraint (i.e. `$this->equalTo()`)
 
-`PHPUnit_Framework_Constraint_FileExists`
-: Has no constructor, asserts that the parameter is a path to a valid file (i.e. `file_exists() === TRUE`)
+`$this->fileExists()`
+: Accepts no parameters, asserts that the parameter is a path to a valid file (i.e. `file_exists() === TRUE`)
 
-`PHPUnit_Framework_Constraint_GreaterThan::__construct($value)`
+`$this->greaterThan($value)`
 : Asserts that the parameter is greater than `$value`
 
-`PHPUnit_Framework_Constraint_IsAnything`
+`$this->anything()`
 : Returns TRUE regardless of what the parameter is
 
-`PHPUnit_Framework_Constraint_IsEqual::__construct($value, $delta = 0, $canonicalizeEOL = FALSE, $ignoreCase = False)`
+`$this->equalTo($value, $delta = 0, $canonicalizeEOL = FALSE, $ignoreCase = False)`
 : Asserts that the parameter is equal to `$value` (same as not passing a constraint object to `with()`)
 : `$delta` is the degree of accuracy to use when comparing numbers. i.e. 0 means numbers need to be identical, 1 means numbers can be within a distance of one from each other
 : If `$canonicalizeEOL` is TRUE then all newlines in string values will be converted to `\n` before comparision
 : If `$ignoreCase` is TRUE then both strings will be converted to lowercase before comparision
 
-`PHPUnit_Framework_Constraint_IsIdentical::__construct($value)`
+`$this->identicalTo($value)`
 : Asserts that the parameter is identical to `$value`
 
-`PHPUnit_Framework_Constraint_IsType::__construct($type)`
+`$this->isType($type)`
 : Asserts that the parameter is of type `$type`, where `$type` is a string representation of the core PHP data types
 
-`PHPUnit_Framework_Constraint_IsInstanceOf::__construct($className)`
+`$this->isInstanceOf($className)`
 : Asserts that the parameter is an instance of `$className`
 
-`PHPUnit_Framework_Constraint_LessThan::__construct($value)`
+`$this->lessThan($value)`
 : Asserts that the parameter is less than `$value`
 
-`PHPUnit_Framework_Constraint_ObjectHasAttribute::__construct($attribute)`
+`$this->objectHasAttribute($attribute)`
 : Asserts that the paramater (which is assumed to be an object) has an attribute `$attribute`
 
-`PHPUnit_Framework_Constraint_PCREMatch::__construct($pattern)`
+`$this->matchesRegularExpression($pattern)`
 : Asserts that the parameter matches the PCRE pattern `$pattern` (using `preg_match()`)
 
-`PHPUnit_Framework_Constraint_StringContains::__construct($string, $ignoreCase = FALSE)`
+`$this->stringContains($string, $ignoreCase = FALSE)`
 : Asserts that the parameter contains the string `$string`.  If `$ignoreCase` is TRUE then a case insensitive comparision is done
 
-`PHPUnit_Framework_Constraint_StringEndsWith::__construct($suffix)`
+`$this->stringEndsWith($suffix)`
 : Asserts that the parameter ends with `$suffix` (assumes parameter is a string)
 
-`PHPUnit_Framework_Constraint_StringStartsWith::__construct($prefix)`
+`$this->stringStartsWith($prefix)`
 : Asserts that the parameter starts with `$prefix` (assumes parameter is a string)
 
-`PHPUnit_Framework_Constraint_TraversableContains::__construct($value)`
+`$this->contains($value)`
 : Asserts that the parameter contains at least one value that is identical to `$value` (assumes parameter is array or `SplObjectStorage`)
 
-`PHPUnit_Framework_Constraint_TraversableContainsOnly::__construct($type, $isNativeType = TRUE)`
+`$this->containsOnly($type, $isNativeType = TRUE)`
 : Asserts that the parameter only contains items of type `$type`. `$isNativeType` should be set to TRUE when `$type` refers to a built in PHP data type (i.e. int, string etc.) (assumes parameter is array)
 
 
-There are more constraint objects provided than listed here, look in the directory `PHPUnit/Framework/Constraint/`.
+There are more constraint objects than listed here, look in `PHPUnit_Framework_Assert` and `PHPUnit/Framework/Constraint` if you need more constraints.
 
 If we continue our example, we have the following:  
 	
