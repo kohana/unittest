@@ -6,8 +6,8 @@
 			#select {
                 font-family: sans-serif;
                 border: 2px solid black;
-                padding: 30px;
-                margin: 100px;
+                padding: 20px;
+                margin: 40px 80px;
 			}
 			#select #groups {
 				overflow: auto;
