@@ -19,7 +19,7 @@ return array(
 
 	// If you don't use a whitelist then only files included during the request will be counted
 	// If you do, then only whitelisted items will be counted
-	'use_whitelist' => TRUE,
+	'use_whitelist' => FALSE,
 
 	// Items to whitelist, only used in cli
 	// Web runner ui allows user to choose which items to whitelist
