@@ -1,6 +1,6 @@
 <?php
 
-Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
+Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * A backup of the environment
@@ -57,6 +57,9 @@ Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 			// Handle changing superglobals
 			if(in_array($option, array('_GET', '_POST', '_SERVER')))
 			{
+				// For some reason we need to do this in order to change the superglobals
+				global $$option;
+
 				// PHPUnit makes a backup of superglobals automatically
 				$$option = $GLOBALS[$option] = $value;
 			}
