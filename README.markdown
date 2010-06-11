@@ -70,9 +70,9 @@ to read:
 
 Step 3: Create a folder called phpunit in your app's cache dir (APPPATH/cache).  If you don't want to use this path for storing generated reports then skip this step and change the config file (see Step 3.5)
 
-Step 3.5: Make sure the settings in config/phpunit.php are correct for your enviroment.
+Step 3.5: Make sure the settings in config/unittest.php are correct for your enviroment.
 
-If they aren't, then copy the file to application/config/phpunit.php and change the values accordingly
+If they aren't, then copy the file to application/config/unittest.php and change the values accordingly
 
 Step 4: Start testing!
 
