@@ -244,8 +244,12 @@ Class Controller_UnitTest extends Controller_Template
 	{
 		// Make groups aray suitable for drop down
 		$groups = $suite->getGroups();
-		sort($groups);
-		return array('' => 'All Groups') + array_combine($groups, $groups);	
+		if (count($groups) > 0)
+		{
+			sort($groups);
+			$groups = array_combine($groups, $groups);
+		}
+		return array('' => 'All Groups') + $groups;	
 	}
 
 	/**
