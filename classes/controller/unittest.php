@@ -72,8 +72,8 @@ Class Controller_UnitTest extends Controller_Template
 
 		// This just stops some very very long lines
 		$route = Route::get('unittest');
-		$this->report_uri	= $route->uri(array('action' => 'report'));
-		$this->run_uri		= $route->uri(array('action' => 'run'));
+		$this->report_uri	= URL::base(). $route->uri(array('action' => 'report'));
+		$this->run_uri		= URL::base(). $route->uri(array('action' => 'run'));
 
 		// Switch used to disable cc settings
 		$this->xdebug_loaded 		= extension_loaded('xdebug');
