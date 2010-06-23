@@ -55,7 +55,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 		foreach($environment as $option => $value)
 		{
 			// Handle changing superglobals
-			if(in_array($option, array('_GET', '_POST', '_SERVER')))
+			if(in_array($option, array('_GET', '_POST', '_SERVER', '_FILES')))
 			{
 				// For some reason we need to do this in order to change the superglobals
 				global $$option;
