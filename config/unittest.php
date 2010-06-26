@@ -3,7 +3,7 @@
 return array(
 
 	// The only environment in which the web runner is allowed to run
-	// You can run tests from phpunit cli command reguardless of this setting
+	// You can run tests from phpunit cli command regardless of this setting
 	// This can also be set to an array for multiple environments
 	'environment' => Kohana::DEVELOPMENT,
 
@@ -12,8 +12,7 @@ return array(
 	'temp_path' => Kohana::$cache_dir.'/unittest',
 
 	// Path from DOCROOT (i.e. http://yourdomain/) to the folder where HTML cc reports can be published.
-        // If you'd prefer not to allow users to do this then simply set the value to FALSE.
-	//
+	// If you'd prefer not to allow users to do this then simply set the value to FALSE.
 	// Example value of 'cc_report_path' would allow devs to see report at http://yourdomain/report/
 	'cc_report_path' => 'report',
 
@@ -34,20 +33,20 @@ return array(
 		// Or set to FALSE to exclude all modules
 		'modules' => array(TRUE),
 
-		// If you don't want the kohana code coverage reports to pollute your app's,
+		// If you don't want the Kohana code coverage reports to pollute your app's,
 		// then set this to FALSE
 		'system' => TRUE,
 	),
-	
+
 	// Does what it says on the tin
 	// Blacklisted files won't be included in code coverage reports
 	// If you use a whitelist then the blacklist will be ignored
 	'use_blacklist' => FALSE,
 
-	// List of individual files / folders to blacklist
+	// List of individual files/folders to blacklist
 	'blacklist' => array(
 	),
-	
+
 	// A database connection that can be used when testing
 	// This doesn't overwrite anything, tests will have to use this value manually
 	'db_connection' => 'unittest',

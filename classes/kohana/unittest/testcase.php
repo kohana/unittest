@@ -46,16 +46,16 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	 * * Config option
 	 *
 	 * @param array $environment List of environment to set
-	 */ 
+	 */
 	function setEnvironment(array $environment)
 	{
-		if( ! count($environment))
+		if ( ! count($environment))
 			return FALSE;
 
-		foreach($environment as $option => $value)
+		foreach ($environment as $option => $value)
 		{
 			// Handle changing superglobals
-			if(in_array($option, array('_GET', '_POST', '_SERVER', '_FILES')))
+			if (in_array($option, array('_GET', '_POST', '_SERVER', '_FILES')))
 			{
 				// For some reason we need to do this in order to change the superglobals
 				global $$option;
@@ -64,13 +64,13 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 				$$option = $GLOBALS[$option] = $value;
 			}
 			// If this is a static property i.e. Html::$windowed_urls
-			elseif(strpos($option, '::$') !== FALSE)
+			elseif (strpos($option, '::$') !== FALSE)
 			{
 				list($class, $var) = explode('::$', $option, 2);
 
 				$class = new ReflectionClass($class);
 
-				if( ! array_key_exists($option, $this->environmentBackup))
+				if ( ! array_key_exists($option, $this->environmentBackup))
 				{
 					$this->environmentBackup[$option] = $class->getStaticPropertyValue($var);
 				}
@@ -78,7 +78,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 				$class->setStaticPropertyValue($var, $value);
 			}
 			// If this is an environment variable
-			elseif(preg_match('/^[A-Z_-]+$/', $option) OR isset($_SERVER[$option]))
+			elseif (preg_match('/^[A-Z_-]+$/', $option) OR isset($_SERVER[$option]))
 			{
 				// We don't need to backup envr. vars, phpunit automatically does it
 				$_SERVER[$option] = $value;
@@ -86,17 +86,16 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 			// Else we assume this is a config option
 			else
 			{
-				if( ! array_key_exists($option, $this->environmentBackup))
+				if ( ! array_key_exists($option, $this->environmentBackup))
 				{
 					$this->environmentBackup[$option] = Kohana::config($option);
 				}
-				
+
 				list($group, $var) = explode('.', $option, 2);
 
 				Kohana::config($group)->set($var, $value);
 			}
 		}
 	}
-
 
 }

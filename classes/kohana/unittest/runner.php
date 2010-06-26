@@ -16,28 +16,26 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 	 * Results
 	 * @var array
 	 */
-	protected $results	=	array
-							(
-								'errors'		=> array(),
-								'failures'		=> array(),
-								'skipped'		=> array(),
-								'incomplete'	=> array(),
-							);
+	protected $results = array(
+		'errors'     => array(),
+		'failures'   => array(),
+		'skipped'    => array(),
+		'incomplete' => array(),
+	);
 
 	/**
 	 * Test result totals
 	 * @var array
 	 */
-	protected $totals = array
-						(
-							'tests'			=> 0,
-							'passed'		=> 0,
-							'errors'		=> 0,
-							'failures'		=> 0,
-							'skipped'		=> 0,
-							'incomplete'	=> 0,
-							'assertions'	=> 0,
-						);
+	protected $totals = array(
+		'tests'      => 0,
+		'passed'     => 0,
+		'errors'     => 0,
+		'failures'   => 0,
+		'skipped'    => 0,
+		'incomplete' => 0,
+		'assertions' => 0,
+	);
 
 	/**
 	 * Info about the current test running
@@ -56,7 +54,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 	 * @var PHPUnit_Framework_TestResult
 	 */
 	protected $result = NULL;
-	
+
 	/**
 	 * the test suite to run
 	 * @var PHPUnit_Framework_TestSuite
@@ -65,26 +63,26 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param PHPUnit_Framework_TestSuite $suite    The suite to test
 	 * @param PHPUnit_Framework_TestResult $result  Optional result object to use
 	 */
 	function __construct(PHPUnit_Framework_TestSuite $suite, PHPUnit_Framework_TestResult $result = NULL)
 	{
-		if($result === NULL)
+		if ($result === NULL)
 		{
 			$result = new PHPUnit_Framework_TestResult;
 		}
 
 		$result->addListener($this);
 
-		$this->suite	= $suite;
-		$this->result	= $result;
+		$this->suite  = $suite;
+		$this->result = $result;
 	}
 
 	/**
 	 * Magic getter to allow access to member variables
-	 * 
+	 *
 	 * @param string $var Variable to get
 	 * @return mixed
 	 */
@@ -97,21 +95,21 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 	 * Calcualtes stats for each file covered by the code testing
 	 *
 	 * Each member of the returned array is formatted like so:
-	 * 
+	 *
 	 * <code>
 	 * array(
-     *     'coverage'      => $coverage_percent_for_file,
-     *     'loc'           => $lines_of_code,
-     *     'locExecutable' => $lines_of_executable_code,
-     *     'locExecuted'   => $lines_of_code_executed
-     *   );
+	 *     'coverage'      => $coverage_percent_for_file,
+	 *     'loc'           => $lines_of_code,
+	 *     'locExecutable' => $lines_of_executable_code,
+	 *     'locExecuted'   => $lines_of_code_executed
+	 *   );
 	 * </code>
 	 *
 	 * @return array Statistics for code coverage of each file
 	 */
 	public function calculate_cc()
 	{
-		if($this->result->getCollectCodeCoverageInformation())
+		if ($this->result->getCollectCodeCoverageInformation())
 		{
 			$coverage = $this->result->getCodeCoverageInformation();
 
@@ -119,7 +117,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 
 			$stats = array();
 
-			foreach($coverage_summary as $file => $_lines)
+			foreach ($coverage_summary as $file => $_lines)
 			{
 				$stats[$file] = PHPUnit_Util_CodeCoverage::getStatistics($coverage_summary, $file);
 			}
@@ -132,15 +130,15 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 
 	/**
 	 * Calculates the percentage code coverage information
-	 * 
+	 *
 	 * @return boolean|float FALSE if cc is not enabled, float for coverage percent
 	 */
 	public function calculate_cc_percentage()
 	{
-		if($stats = $this->calculate_cc())
+		if ($stats = $this->calculate_cc())
 		{
 			$executable = 0;
-			$executed	= 0;
+			$executed   = 0;
 
 			foreach ($stats as $stat)
 			{
@@ -150,7 +148,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 
 			return $executable > 0 ? ($executed / $executable) * 100 : 100;
 		}
-		
+
 		return FALSE;
 	}
 
@@ -162,23 +160,23 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 	 */
 	public function generate_report(array $groups, $temp_path, $create_sub_dir = TRUE)
 	{
-		if( ! is_writable($temp_path))
+		if ( ! is_writable($temp_path))
 		{
 			throw new Kohana_Exception('Temp path :path does not exist or is not writable by the webserver', array(':path' => $temp_path));
 		}
 
 		$folder_path = $temp_path;
-		
-		if($create_sub_dir === TRUE)
+
+		if ($create_sub_dir === TRUE)
 		{
 			// Icky, highly unlikely, but do it anyway
 			// Basically adds "(n)" to the end of the filename until there's a free file
 			$count = 0;
 			do
 			{
-				$folder_name =	date('Y-m-d_H:i:s')
-								.(! empty($groups) ? '['.implode(',', $groups).']' : '')
-								.($count > 0 ? '('.$count.')' : '');
+				$folder_name = date('Y-m-d_H:i:s')
+					.( ! empty($groups) ? '['.implode(',', $groups).']' : '')
+					.($count > 0 ? '('.$count.')' : '');
 				++$count;
 			}
 			while(is_dir($folder_path.$folder_name));
@@ -193,12 +191,12 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 		}
 
 		$this->run($groups, TRUE);
-		
+
 		require_once 'PHPUnit/Runner/Version.php';
 		require_once 'PHPUnit/Util/Report.php';
 
 		PHPUnit_Util_Report::render($this->result, $folder_path);
-		
+
 		return array($folder_path, $folder_name);
 	}
 
@@ -211,7 +209,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 	 */
 	public function run(array $groups = array(), $collect_cc = FALSE)
 	{
-		if($collect_cc AND ! extension_loaded('xdebug'))
+		if ($collect_cc AND ! extension_loaded('xdebug'))
 		{
 			throw new Kohana_Exception('Code coverage cannot be collected because the xdebug extension is not loaded');
 		}
@@ -223,7 +221,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 
 		return $this;
 	}
-	
+
 	public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
 	{
 		$this->totals['errors']++;
@@ -294,7 +292,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 		{
 			foreach ($testresults as $type => $result)
 			{
-				preg_match("/^(?:([a-z0-9_]+?)::)?([a-z0-9_]+)(?: with data set (#\d+ \(.*?\)))?/i", $result['description'], $m);
+				preg_match('/^(?:([a-z0-9_]+?)::)?([a-z0-9_]+)(?: with data set (#\d+ \(.*?\)))?/i', $result['description'], $m);
 
 				$this->results[$case][$type] += array(
 					'class' => $m[1],

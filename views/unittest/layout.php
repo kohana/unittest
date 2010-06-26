@@ -1,13 +1,14 @@
 <html>
 	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 		<title>PHPUnit for Kohana</title>
-		
+
 		<style type="text/css">
 			#select {
-                font-family: sans-serif;
-                border: 2px solid black;
-                padding: 20px;
-                margin: 40px 80px;
+				font-family: sans-serif;
+				border: 2px solid black;
+				padding: 20px;
+				margin: 40px 80px;
 			}
 			#select #groups {
 				overflow: auto;
@@ -41,7 +42,7 @@
 			#header fieldset form label {
 				display: block;
 			}
-		
+
 			#header a {
 				color: #4e7aa0;
 			}
@@ -49,7 +50,7 @@
 			li {
 				margin-bottom: 5px;
 			}
-			
+
 			fieldset {
 				color: #000;
 				background: #E5EFF8;
@@ -66,7 +67,7 @@
 				-moz-border-radius: 2px;
 				color: #FEFEFE;
 				background: #4D6171;
-			}			
+			}
 			form {
 				display: inline;
 			}
@@ -104,7 +105,7 @@
 			fieldset#results-options form select {
 				float: left;
 			}
-			
+
 			fieldset.tests {
 				float: left;
 			}
@@ -127,9 +128,9 @@
 			fieldset form input[type="submit"] {
 				margin-top: 15px;
 				display: block;
-			}			
-			
-			
+			}
+
+
 			#results {
 				font-family: sans-serif;
 			}
@@ -190,63 +191,65 @@
 				border-bottom: 1px dashed #83919C;
 			}
 		</style>
-		
+
 	</head>
 	<body>
-		<?php echo $body; ?>
-	</body>
-	<?php echo html::script('http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js'); ?>
-	<script type="text/javascript">
-		$(document).ready(function(){
+		<?php echo $body ?>
 
-			// Using our own attribute is a little messy but gets the job done
-			// this isn't very important code anyway...
-			$('[depends_on]').each(function(){
-				var dependent = $(this);
-				var controller = $(dependent.attr('depends_on'));
+		<?php echo HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js') ?>
+		<script type="text/javascript">
+			$(document).ready(function(){
 
-				// We do this in the loop so that it can access dependent
-				// Javascript scopes are slightly crazy
-				var toggler = function(){
-					if($(this).attr("checked")){
-						dependent.show();
-					} else {
+				// Using our own attribute is a little messy but gets the job done
+				// this isn't very important code anyway...
+				$('[depends_on]').each(function(){
+					var dependent = $(this);
+					var controller = $(dependent.attr('depends_on'));
+
+					// We do this in the loop so that it can access dependent
+					// Javascript scopes are slightly crazy
+					var toggler = function(){
+						if ($(this).attr('checked')){
+							dependent.show();
+						} else {
+							dependent.hide();
+						}
+					}
+
+					// Register the toggler
+					controller.change(toggler);
+
+					// And degrade nicely...
+					if ( ! controller.attr('checked')){
 						dependent.hide();
 					}
-				}
 
-				// Register the toggler
-				controller.change(toggler);
-
-				// And degrade nicely...
-				if( ! controller.attr('checked')){
-					dependent.hide();
-				}
+				});
 
 			});
 
-		});
+			document.write('<style type="text/css"> .collapsed { display: none; } </style>');
+			function toggle(type)
+			{
+				var elem = document.getElementById(type+'-ol');
+				var plus = document.getElementById(type+'-show');
 
-		document.write('<style type="text/css"> .collapsed { display: none; } </style>');
-		function toggle(type)
-		{
-			var elem = document.getElementById(type+'-ol');
-			var plus = document.getElementById(type+'-show');
+				if (elem.style && elem.style['display'])
+					// Only works with the "style" attr
+					var disp = elem.style['display'];
+				else if (elem.currentStyle)
+					// For MSIE, naturally
+					var disp = elem.currentStyle['display'];
+				else if (window.getComputedStyle)
+					// For most other browsers
+					var disp = document.defaultView.getComputedStyle(elem, null).getPropertyValue('display');
 
-			if (elem.style && elem.style['display'])
-				// Only works with the "style" attr
-				var disp = elem.style['display'];
-			else if (elem.currentStyle)
-				// For MSIE, naturally
-				var disp = elem.currentStyle['display'];
-			else if (window.getComputedStyle)
-				// For most other browsers
-				var disp = document.defaultView.getComputedStyle(elem, null).getPropertyValue('display');
+				// Toggle the state of the "display" style
+				elem.style.display = disp == 'block' ? 'none' : 'block';
+				plus.innerHTML = disp == 'block' ? '[<?php echo __('show') ?>]' : '[<?php echo __('hide') ?>]';
+				return false;
+			}
+		</script>
 
-			// Toggle the state of the "display" style
-			elem.style.display = disp == 'block' ? 'none' : 'block';
-			plus.innerHTML = disp == 'block' ? '[<?php echo __('show'); ?>]' : '[<?php echo __('hide'); ?>]';
-			return false;
-		}
-	</script>
+	</body>
 </html>
