@@ -10,7 +10,7 @@ To access it goto
 
 	http://pathtoyourdoain/unittest/
 
-*Note:* Your site will need to be in the correct enviroment in order to use the webui.  See the config file for more details.
+*Note:* Your site will need to be in the correct environment in order to use the webui.  See the config file for more details.
 
 ## Integrating with IDEs
 

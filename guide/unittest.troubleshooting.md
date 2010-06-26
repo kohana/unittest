@@ -10,7 +10,7 @@ Only the "highest" files in the cascading filesystem are whitelisted for code co
 
 To test your module's file, remove the higher file from the cascading filesystem by disabling their respective module.
 
-A good way of testing is to create a "vanilla" testing enviroment for your module, devoid of anything that isn't required by the module.
+A good way of testing is to create a "vanilla" testing environment for your module, devoid of anything that isn't required by the module.
 
 ## I get a blank page when trying to generate a code coverage report
 

@@ -15,7 +15,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	protected $environmentDefault = array();
 
 	/**
-	 * Creates a predefined enviroment using the default environment
+	 * Creates a predefined environment using the default environment
 	 *
 	 * Extending classes that have their own setUp() should call
 	 * parent::setUp()
@@ -77,7 +77,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 
 				$class->setStaticPropertyValue($var, $value);
 			}
-			// If this is an enviroment variable
+			// If this is an environment variable
 			elseif(preg_match('/^[A-Z_-]+$/', $option) OR isset($_SERVER[$option]))
 			{
 				// We don't need to backup envr. vars, phpunit automatically does it

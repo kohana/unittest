@@ -66,7 +66,7 @@ Class Controller_UnitTest extends Controller_Template
 
 		// Prevent the whitelist from being autoloaded, but allow the blacklist
 		// to be laoded
-		Kohana_Tests::configure_enviroment(FALSE);
+		Kohana_Tests::configure_environment(FALSE);
 
 		$this->config = Kohana::config('unittest');
 

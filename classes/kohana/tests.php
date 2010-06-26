@@ -28,7 +28,7 @@ class Kohana_Tests
 	}
 
 	/**
-	 * Configures the enviroment for testing
+	 * Configures the environment for testing
 	 *
 	 * Does the following:
 	 *
@@ -36,7 +36,7 @@ class Kohana_Tests
 	 * * Restores exception phpunit error handlers (for cli)
 	 * * registeres an autoloader to load test files
 	 */
-	static public function configure_enviroment($do_whitelist = TRUE, $do_blacklist = TRUE)
+	static public function configure_environment($do_whitelist = TRUE, $do_blacklist = TRUE)
 	{
 		if( ! class_exists('PHPUnit_Util_Filter', FALSE))
 		{
@@ -84,12 +84,12 @@ class Kohana_Tests
 	 */
 	static function enabled()
 	{
-		$p_enviroment = Kohana::config('unittest.enviroment');
-		$k_enviroment = Kohana::$environment;
+		$p_environment = Kohana::config('unittest.environment');
+		$k_environment = Kohana::$environment;
 
-		return  (is_array($p_enviroment) AND in_array($k_enviroment, $p_enviroment))
+		return  (is_array($p_environment) AND in_array($k_environment, $p_environment))
 				OR
-				($k_enviroment === $p_enviroment);
+				($k_environment === $p_environment);
 	}
 
 	/**
