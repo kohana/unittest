@@ -95,7 +95,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 			{
 				if($backup_needed)
 				{
-					$this->environmentBackup[$option] = $_SERVER[$option];
+					$this->environmentBackup[$option] = isset($_SERVER[$option]) ? $_SERVER[$option] : '';
 				}
 				
 				$_SERVER[$option] = $value;
