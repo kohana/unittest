@@ -3,6 +3,12 @@
 Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 {
 	/**
+	 * Make sure PHPUnit backs up globals
+	 * @var boolean
+	 */
+	protected $backupGlobals = TRUE;
+
+	/**
 	 * A backup of the environment
 	 * @var array
 	 */
@@ -54,14 +60,21 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 
 		foreach ($environment as $option => $value)
 		{
+			$backup_needed = ! array_key_exists($option, $this->environmentBackup);
+
 			// Handle changing superglobals
 			if (in_array($option, array('_GET', '_POST', '_SERVER', '_FILES')))
 			{
 				// For some reason we need to do this in order to change the superglobals
 				global $$option;
 
+				if($backup_needed)
+				{
+					$this->environmentBackup[$option] = $$option;
+				}
+
 				// PHPUnit makes a backup of superglobals automatically
-				$$option = $GLOBALS[$option] = $value;
+				$$option = $value;
 			}
 			// If this is a static property i.e. Html::$windowed_urls
 			elseif (strpos($option, '::$') !== FALSE)
@@ -70,7 +83,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 
 				$class = new ReflectionClass($class);
 
-				if ( ! array_key_exists($option, $this->environmentBackup))
+				if ($backup_needed)
 				{
 					$this->environmentBackup[$option] = $class->getStaticPropertyValue($var);
 				}
@@ -80,13 +93,17 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 			// If this is an environment variable
 			elseif (preg_match('/^[A-Z_-]+$/', $option) OR isset($_SERVER[$option]))
 			{
-				// We don't need to backup envr. vars, phpunit automatically does it
+				if($backup_needed)
+				{
+					$this->environmentBackup[$option] = $_SERVER[$option];
+				}
+				
 				$_SERVER[$option] = $value;
 			}
 			// Else we assume this is a config option
 			else
 			{
-				if ( ! array_key_exists($option, $this->environmentBackup))
+				if ($backup_needed)
 				{
 					$this->environmentBackup[$option] = Kohana::config($option);
 				}
