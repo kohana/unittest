@@ -244,7 +244,7 @@ class Kohana_Tests
 			{
 				if ( ! isset(Kohana_Tests::$cache[$file]))
 				{
-					$relative_path = substr($file, strrpos($file, 'classes/') + 8, -strlen(EXT));
+					$relative_path = substr($file, strrpos($file, 'classes'.DIRECTORY_SEPARATOR) + 8, -strlen(EXT));
 					$cascading_file = Kohana::find_file('classes', $relative_path);
 
 					// The theory is that if this file is the highest one in the cascading filesystem
