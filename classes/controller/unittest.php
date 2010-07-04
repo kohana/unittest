@@ -65,14 +65,15 @@ Class Controller_UnitTest extends Controller_Template
 		}
 
 		// Prevent the whitelist from being autoloaded, but allow the blacklist
-		// to be laoded
+		// to be loaded
 		Kohana_Tests::configure_environment(FALSE);
 
 		$this->config = Kohana::config('unittest');
 
 		// This just stops some very very long lines
-		$this->report_uri = Route::url('unittest', array('action' => 'report') , TRUE);
-		$this->run_uri    = Route::url('unittest', array('action' => 'run'), TRUE);
+		$route = Route::get('unittest');
+		$this->report_uri = $route->uri(array('action' => 'report'));
+		$this->run_uri    = $route->uri(array('action' => 'run'));
 
 		// Switch used to disable cc settings
 		$this->xdebug_loaded      = extension_loaded('xdebug');
