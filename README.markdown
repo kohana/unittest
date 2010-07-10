@@ -8,7 +8,10 @@ I've chosen to do this because it's part of the PHPUnit coding conventions and i
 ## Requirements
 
 * [PHPUnit](http://www.phpunit.de/) >= 3.4
-* The [Archive module](http://github.com/BMatt/kohana-archive) is required for downloading code coverage reports
+
+### Optional extras
+
+* The [Archive module](http://github.com/BRMatt/kohana-archive) is required if you want to download code coverage reports from the web ui, however you can also view them without downloading.
 
 ## Installation
 
