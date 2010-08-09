@@ -43,7 +43,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Allows easy setting & backing up of conviroment config
+	 * Allows easy setting & backing up of enviroment config
 	 *
 	 * Option types are checked in the following order:
 	 *
@@ -115,4 +115,21 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 		}
 	}
 
+	/**
+	 * Check for internet connectivity
+	 */
+	protected function hasInternet()
+	{
+		static $has_internet;
+
+		if ( ! isset($has_internet))
+		{
+			// The @ operator is used here to avoid DNS errors when there is no connection.
+			$sock = @fsockopen("www.google.com", 80, $errno, $errstr, 1);
+
+			$has_internet = $sock ? TRUE : FALSE;
+		}
+
+		return $has_internet;
+	}
 }
