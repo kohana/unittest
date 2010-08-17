@@ -8,9 +8,9 @@ The web ui is a fairly temporary solution, aimed at helping developers get into 
 
 To access it goto
 
-	http://pathtoyourdoain/unittest/
+	http://yoursite.com/unittest/
 
-*Note:* Your site will need to be in the correct environment in order to use the webui.  See the config file for more details.
+*Note:* Your site will need to be in the correct environment in order to use the webui.  See the config file for more details.  You may also need to use http://yoursite.com/index.php/unittest/
 
 ## Integrating with IDEs
 
