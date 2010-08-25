@@ -6,7 +6,7 @@ Of course, you'll need to make sure the path to the tests.php file is correct.  
 
 ### From the web
 
-Just navigate to http://yoursite.com/unittest. You may need to use yoursite.com/index.php/unittest if you have not enabled url rewriting in your .htaccess.
+Just navigate to http://example.com/unittest. You may need to use http://example.com/index.php/unittest if you have not enabled url rewriting in your .htaccess.
 
 ## Writing tests
 
