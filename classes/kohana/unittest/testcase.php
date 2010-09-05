@@ -46,6 +46,14 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Removes all kohana related cache files in the cache directory
+	 */
+	public function cleanCacheDir()
+	{
+		return Kohana_Unittest_Helpers::clean_cache_dir();
+	}
+
+	/**
 	 * Helper function that replaces all occurences of '/' with
 	 * the OS-specific directory separator
 	 *

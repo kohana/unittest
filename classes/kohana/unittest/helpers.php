@@ -43,6 +43,41 @@ class Kohana_Unittest_Helpers
 	}
 
 	/**
+	 * Removes all cache files from the kohana cache dir 
+	 *
+	 * @return void
+	 */
+	static public function clean_cache_dir()
+	{
+		$cache_dir = opendir(Kohana::$cache_dir);
+
+		while($dir = readdir($cache_dir))
+		{
+			// Cache files are split into directories based on first two characters of hash
+			if ($dir[0] !== '.' AND strlen($dir) === 2)
+			{
+				$dir = self::dir_separator(Kohana::$cache_dir.'/'.$dir.'/');
+	
+				$cache = opendir($dir);
+
+				while($file = readdir($cache))
+				{
+					if ($file[0] !== '.')
+					{
+						unlink($dir.$file);
+					}
+				}
+
+				closedir($cache);
+
+				rmdir($dir);
+			}
+		}
+
+		closedir($cache_dir);
+	}
+
+	/**
 	 * Backup of the environment variables
 	 * @see set_environment
 	 * @var array
