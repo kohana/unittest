@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * TestCase for unittesting
+ *
+ * @package    Kohana/Unittest
+ * @author     Kohana Team
+ * @author     BRMatt <matthew@sigswitch.com>
+ * @author	   Paul Banks
+ * @copyright  (c) 2008-2009 Kohana Team
+ * @license    http://kohanaphp.com/license
+ */
 Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 {
 	/**
