@@ -50,9 +50,9 @@ class Kohana_Tests
 			restore_error_handler();
 		}
 
-		spl_autoload_register(array('Kohana_Tests', 'autoload'));
+		spl_autoload_register(array('Tests', 'autoload'));
 
-		Kohana_Tests::$cache = ($cache = Kohana::cache('unittest_whitelist_cache')) === NULL ? array() : $cache;
+		Tests::$cache = ($cache = Kohana::cache('unittest_whitelist_cache')) === NULL ? array() : $cache;
 
 		$config = Kohana::config('unittest');
 
@@ -242,17 +242,17 @@ class Kohana_Tests
 			}
 			else
 			{
-				if ( ! isset(Kohana_Tests::$cache[$file]))
+				if ( ! isset(Tests::$cache[$file]))
 				{
 					$relative_path = substr($file, strrpos($file, 'classes'.DIRECTORY_SEPARATOR) + 8, -strlen(EXT));
 					$cascading_file = Kohana::find_file('classes', $relative_path);
 
 					// The theory is that if this file is the highest one in the cascading filesystem
 					// then it's safe to whitelist
-					Kohana_Tests::$cache[$file] =  ($cascading_file === $file);
+					Tests::$cache[$file] =  ($cascading_file === $file);
 				}
 
-				if (Kohana_Tests::$cache[$file])
+				if (Tests::$cache[$file])
 				{
 					PHPUnit_Util_Filter::addFileToWhitelist($file);
 				}
