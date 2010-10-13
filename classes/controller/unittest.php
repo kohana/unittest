@@ -124,7 +124,7 @@ Class Controller_UnitTest extends Controller_Template
 			$this->whitelist(Arr::get($_GET, 'whitelist', array()));
 		}
 
-		$runner = new Kohana_Unittest_Runner($suite);
+		$runner = new Unittest_Runner($suite);
 
 		// If the user wants to download a report
 		if ($this->cc_archive_enabled AND Arr::get($_GET, 'archive') === '1')
@@ -194,7 +194,7 @@ Class Controller_UnitTest extends Controller_Template
 			$whitelist = $this->whitelist(Arr::get($_GET, 'whitelist', array()));
 		}
 
-		$runner = new Kohana_Unittest_Runner($suite);
+		$runner = new Unittest_Runner($suite);
 
 		try
 		{
