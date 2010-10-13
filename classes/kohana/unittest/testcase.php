@@ -38,7 +38,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	 */
 	public function setUp()
 	{
-		$this->_helpers = new Kohana_Unittest_Helpers;
+		$this->_helpers = new Unittest_Helpers;
 
 		$this->setEnvironment($this->environmentDefault);
 	}
@@ -59,7 +59,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	 */
 	public function cleanCacheDir()
 	{
-		return Kohana_Unittest_Helpers::clean_cache_dir();
+		return Unittest_Helpers::clean_cache_dir();
 	}
 
 	/**
@@ -71,7 +71,7 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	 */
 	public function dirSeparator($path)
 	{
-		return Kohana_Unittest_Helpers::dir_separator($path);
+		return Unittest_Helpers::dir_separator($path);
 	}
 
 	/**
@@ -97,6 +97,6 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	 */
 	public function hasInternet()
 	{
-		return Kohana_Unittest_Helpers::has_internet();
+		return Unittest_Helpers::has_internet();
 	}
 }
