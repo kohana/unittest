@@ -14,7 +14,7 @@ return array(
 			'name' => 'Unittest',
 
 			// A short description of this module, shown on the index page
-			'description' => 'Unit Testing for Kohana using PHPUnit',
+			'description' => 'Unit testing for Kohana using PHPUnit',
 			
 			// Copyright message, shown in the footer for this module
 			'copyright' => '&copy; 2008–2010 Kohana Team',
