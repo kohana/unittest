@@ -3,7 +3,7 @@
 // If we're on the CLI then PHPUnit will already be loaded
 if (class_exists('PHPUnit_Util_Filter', FALSE))
 {
-	Kohana_Tests::configure_environment();
+	Unittest_Tests::configure_environment();
 
 	// Stop kohana from processing the request
 	define('SUPPRESS_REQUEST', TRUE);
