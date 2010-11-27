@@ -4,7 +4,7 @@ Having unittests for your application is a nice idea, but unless you actually us
 
 ## Testing through the webui
 
-The web ui is a fairly temporary solution, aimed at helping developers get into unittesting and code coverage.  Eventually it's hoped that people migrate on to CI servers, but it's fine for calculating code coverage locally.
+The web ui is a fairly temporary solution, aimed at helping developers get into unittesting and code coverage.  Eventually it's hoped that people migrate on to the termainl & CI servers.
 
 To access it goto
 
@@ -34,15 +34,15 @@ You can also specify a custom test suite loader (enter the path to your tests.ph
 
 ## Looping shell
 
-I personally prefer to do all of my development in an advanced text editor such as vim/gedit/np++.
+If you're developing in a text editor such as textmate, vim, gedit etc. chances are phpunit support isn't natively supported by your editor.
 
-To test while I work I run tests in an infinte looping.  It's very easy to setup and only takes a few commands to setup.  
-On nix you can run the following commands in the terminal:
+In such situations you can run a simple bash script to loop over the tests every X seconds, here's an example script:
 
 	while(true) do clear; phpunit; sleep 8; done;
 
-In my experience this gives you just enough time to see what's going wrong before the tests are rerun.  
-It's also quite handy to store common phpunit settings (like path to the bootstrap) in a a phpunit xml file to reduce the amount that has to be written in order to start a loop.
+You will probably need to adjust the timeout (`sleep 8`) to suit your own workflow, but 8 seconds seems to be about enough time to see what's erroring before the tests are re-run.
+
+In the above example we're using a phpunit.xml config file to specify all the unit testing settings & to reduce the complexity of the looping script.
 
 ## Continuous Integration (CI)
 
