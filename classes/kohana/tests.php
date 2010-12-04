@@ -82,7 +82,7 @@ class Kohana_Tests
 
 		if ($do_blacklist AND count($config['blacklist']))
 		{
-			Unittest_tests::blacklist($config->blacklist);
+			Kohana_Tests::blacklist($config->blacklist);
 		}
 	}
 
