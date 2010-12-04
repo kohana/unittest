@@ -39,6 +39,20 @@ class Kohana_Unittest_Tests
 	 */
 	static public function configure_environment($do_whitelist = TRUE, $do_blacklist = TRUE)
 	{
+		// During a webui request we need to manually load PHPUnit
+		if( ! class_exists('PHPUnit_Util_Filter', FALSE) AND ! function_exists('phpunit_autoload'))
+		{
+			try
+			{
+				include_once 'PHPUnit/Autoload.php';
+			}
+			catch (ErrorException $e)
+			{
+				include_once 'PHPUnit/Framework.php';
+			}
+			
+		}
+
 		if (Kohana::$is_cli)
 		{
 			restore_exception_handler();

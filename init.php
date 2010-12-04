@@ -1,7 +1,7 @@
 <?php
 
 // If we're on the CLI then PHPUnit will already be loaded
-if (class_exists('PHPUnit_Util_Filter', FALSE))
+if (class_exists('PHPUnit_Util_Filter', FALSE) OR function_exists('phpunit_autoload'))
 {
 	Unittest_Tests::configure_environment();
 
