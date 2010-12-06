@@ -20,7 +20,7 @@ Class Controller_UnitTest extends Controller_Template
 
 	/**
 	 * Unittest config
-	 * @var Kohana_Config
+	 * @var Config
 	 */
 	protected $config = NULL;
 
