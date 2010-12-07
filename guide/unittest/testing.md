@@ -1,18 +1,8 @@
-### From the command line
-
-	$ phpunit --bootstrap=index.php modules/unittest/tests.php
-
-Of course, you'll need to make sure the path to the tests.php file is correct.  If you want you can copy it to a more accessible location
-
-### From the web
-
-Just navigate to http://example.com/unittest. You may need to use http://example.com/index.php/unittest if you have not enabled url rewriting in your .htaccess.
-
 ## Writing tests
 
-If you're writing a test for your application, place it in "application/tests".  Similarly, if you're writing a test for a module place it in modules/[modulefolder]/tests
+If you're writing a test for your application, place it in `application/tests`.  Similarly, if you're writing a test for a module place it in `modules/<modulefolder>/tests`.
 
-Rather than tell you how to write tests I'll point you in the direction of the [PHPUnit Manual](http://www.phpunit.de/manual/3.4/en/index.html).  One thing you should bear in mind when writing tests is that testcases should extend Kohana_Unittest_Testcase rathr than PHPUnit_Framework_TestCase.
+Rather than tell you how to write tests I'll point you in the direction of the [PHPUnit Manual](http://www.phpunit.de/manual/3.4/en/index.html).  One thing you should bear in mind when writing tests is that testcases should extend [Kohana_Unittest_Testcase] rather than `PHPUnit_Framework_TestCase`.
 
 Here's a taster of some of the cool things you can do with phpunit:
 
