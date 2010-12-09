@@ -10,8 +10,7 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
-{
+class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener {
 	/**
 	 * Results
 	 * @var array

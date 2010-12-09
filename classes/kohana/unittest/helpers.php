@@ -3,8 +3,7 @@
 /**
  * Unit testing helpers
  */
-class Kohana_Unittest_Helpers
-{
+class Kohana_Unittest_Helpers {
 	/**
 	 * Static variable used to work out whether we have an internet 
 	 * connection 

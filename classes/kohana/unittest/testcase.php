@@ -4,8 +4,7 @@
  * A version of the stock PHPUnit testcase that includes some extra helpers
  * and default settings
  */
-Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
-{
+abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	/**
 	 * Make sure PHPUnit backs up globals
 	 * @var boolean
