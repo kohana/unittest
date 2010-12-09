@@ -46,7 +46,7 @@ class Kohana_Tests
 	static public function configure_environment($do_whitelist = TRUE, $do_blacklist = TRUE)
 	{
 		// During a webui request we need to manually load PHPUnit
-		if( ! class_exists('PHPUnit_Util_Filter', FALSE) AND ! function_exists('phpunit_autoload'))
+		if ( ! class_exists('PHPUnit_Util_Filter', FALSE) AND ! function_exists('phpunit_autoload'))
 		{
 			try
 			{
@@ -68,7 +68,7 @@ class Kohana_Tests
 
 		spl_autoload_register(array('Kohana_Tests', 'autoload'));
 
-		Kohana_Tests::$cache = ($cache = Kohana::cache('unittest_whitelist_cache')) === NULL ? array() : $cache;
+		Kohana_Tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === NULL) ? array() : $cache;
 		
 		// As of PHPUnit v3.5 there are slight differences in the way files are black|whitelisted
 		self::$phpunit_v35 = function_exists('phpunit_autoload');
@@ -117,7 +117,7 @@ class Kohana_Tests
 
 		$files = Kohana::list_files('tests');
 
-		$suite = new PHPUnit_Framework_TestSuite();
+		$suite = new PHPUnit_Framework_TestSuite;
 
 		self::addTests($suite, $files);
 
@@ -134,7 +134,7 @@ class Kohana_Tests
 	 */
 	static function addTests(PHPUnit_Framework_TestSuite $suite, array $files)
 	{
-		if(self::$phpunit_v35)
+		if (self::$phpunit_v35)
 		{
 			$filter = PHP_CodeCoverage_Filter::getInstance();
 		}
@@ -160,7 +160,7 @@ class Kohana_Tests
 						require_once($file);
 					}
 					
-					if(isset($filter))
+					if (isset($filter))
 					{
 						$filter->addFileToBlacklist($file);
 					}
@@ -180,13 +180,13 @@ class Kohana_Tests
 	 */
 	static public function blacklist(array $blacklist_items)
 	{
-		if(self::$phpunit_v35)
+		if (self::$phpunit_v35)
 		{
 			$filter = PHP_CodeCoverage_Filter::getInstance();
 
-			foreach($blacklist_items as $item)
+			foreach ($blacklist_items as $item)
 			{
-				if(is_dir($item))
+				if (is_dir($item))
 				{
 					$filter->addDirectoryToBlacklist($item);
 				}
@@ -229,7 +229,7 @@ class Kohana_Tests
 
 		if (count($directories))
 		{
-			foreach ($directories as &$directory)
+			foreach ($directories as & $directory)
 			{
 				$directory = realpath($directory).'/';
 			}
@@ -294,7 +294,7 @@ class Kohana_Tests
 	 */
 	static protected function set_whitelist($files)
 	{
-		if(self::$phpunit_v35)
+		if (self::$phpunit_v35)
 		{
 			$filter = PHP_CodeCoverage_Filter::getInstance();
 		}
@@ -319,7 +319,7 @@ class Kohana_Tests
 
 				if (Kohana_Tests::$cache[$file])
 				{
-					if(isset($filter))
+					if (isset($filter))
 					{
 						$filter->addFileToWhitelist($file);
 					}

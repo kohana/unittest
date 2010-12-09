@@ -51,7 +51,7 @@ class Kohana_Unittest_Helpers
 	{
 		$cache_dir = opendir(Kohana::$cache_dir);
 
-		while($dir = readdir($cache_dir))
+		while ($dir = readdir($cache_dir))
 		{
 			// Cache files are split into directories based on first two characters of hash
 			if ($dir[0] !== '.' AND strlen($dir) === 2)
@@ -60,7 +60,7 @@ class Kohana_Unittest_Helpers
 	
 				$cache = opendir($dir);
 
-				while($file = readdir($cache))
+				while ($file = readdir($cache))
 				{
 					if ($file[0] !== '.')
 					{
@@ -110,7 +110,7 @@ class Kohana_Unittest_Helpers
 				// For some reason we need to do this in order to change the superglobals
 				global $$option;
 
-				if($backup_needed)
+				if ($backup_needed)
 				{
 					$this->_environment_backup[$option] = $$option;
 				}
@@ -135,7 +135,7 @@ class Kohana_Unittest_Helpers
 			// If this is an environment variable
 			elseif (preg_match('/^[A-Z_-]+$/', $option) OR isset($_SERVER[$option]))
 			{
-				if($backup_needed)
+				if ($backup_needed)
 				{
 					$this->_environment_backup[$option] = isset($_SERVER[$option]) ? $_SERVER[$option] : '';
 				}
