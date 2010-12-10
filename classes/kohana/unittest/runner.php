@@ -174,8 +174,8 @@ class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener {
 			do
 			{
 				$folder_name = date('Y-m-d_H:i:s')
-					.(empty($groups) ? '' : '['.implode(',', $groups).']')
-					.($count > 0 ? '('.$count.')' : '');
+					.(empty($groups) ? '' : ('['.implode(',', $groups).']'))
+					.(($count > 0) ? ('('.$count.')') : '');
 				++$count;
 			}
 			while (is_dir($folder_path.$folder_name));

@@ -21,7 +21,7 @@
 		<?php echo Form::submit('run', 'Run');?>
 		<?php echo Form::close();?>
 	</fieldset>
-	<h1><?php echo  (is_null($group) ? __('All Groups') : __('Group').': ')?> <?php echo $group?></h1>
+	<h1><?php echo is_null($group) ? __('All Groups') : (__('Group').': ') ?> <?php echo $group ?></h1>
 	<span class="time"><?php echo __('Time') ?>: <b><?php echo $time?></b></span>
 	<span class="summary">
 		<?php echo __('Tests') ?> <b><?php echo $totals['tests']?></b>,
@@ -32,13 +32,13 @@
 	</span>
 	<?php if ($xdebug_enabled AND isset($coverage)): ?>
 	<span class="code_coverage">
-		<?php $level_class = ($coverage > 75 ? 'excellent' : ($coverage > 35 ? 'ok' : 'terrible')) ?>
+		<?php $level_class = ($coverage > 75) ? 'excellent' : (($coverage > 35) ? 'ok' : 'terrible') ?>
 		<?php
 			echo __('Tests covered :percent of the :codebase',
 				array
 				(
 					':percent'  => '<b class="'.$level_class.'">'.num::format($coverage, 2).'%</b>',
-					':codebase' => ( ! empty($coverage_explanation) ? '<span title="'.$coverage_explanation.'" style="display:inline;">modules</span>' : 'codebase')
+					':codebase' => empty($coverage_explanation) ? 'codebase' : ('<span title="'.$coverage_explanation.'" style="display:inline;">modules</span>'),
 				)
 			);
 		?>,
