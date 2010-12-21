@@ -2,10 +2,10 @@
 /**
  * PHPUnit Kohana web based test runner
  *
- * @package	   Unittest
+ * @package    Kohana/UnitTest
  * @author     Kohana Team
  * @author     BRMatt <matthew@sigswitch.com>
- * @author	   Paul Banks
+ * @author     Paul Banks
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
