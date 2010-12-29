@@ -84,6 +84,16 @@ Abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 		return $this->createDefaultDBConnection($pdo, $config['connection']['database']);
 	}
 
+    /**
+     * Gets a connection to the unittest database
+     *
+     * @return Kohana_Database The database connection
+     */
+    public function getKohanaConnection()
+    {
+        return Database::instance(Kohana::config('unittest')->db_connection);
+    }
+
 	/**
 	 * Removes all kohana related cache files in the cache directory
 	 */
