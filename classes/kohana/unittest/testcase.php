@@ -9,8 +9,14 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
-{
+abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
+	
+	/**
+	 * Whether we should enable work arounds to make the tests compatible with phpunit 3.4
+	 * @var boolean
+	 */
+	protected static $_assert_type_compatability = NULL;
+
 	/**
 	 * Make sure PHPUnit backs up globals
 	 * @var boolean
@@ -38,7 +44,12 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	 */
 	public function setUp()
 	{
-		$this->_helpers = new Kohana_Unittest_Helpers;
+		if(self::$_assert_type_compatability === NULL)
+		{
+			self::$_assert_type_compatability = version_compare(PHPUnit_Runner_Version::id(), '3.5.0', '<=');
+		}
+
+		$this->_helpers = new Unittest_Helpers;
 
 		$this->setEnvironment($this->environmentDefault);
 	}
@@ -98,5 +109,153 @@ Abstract Class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase
 	public function hasInternet()
 	{
 		return Kohana_Unittest_Helpers::has_internet();
+	}
+
+	/**
+	 * Asserts that a variable is of a given type.
+	 *
+	 * @param string $expected
+	 * @param mixed  $actual
+	 * @param string $message
+	 * @since Method available since Release 3.5.0
+	 */
+	public static function assertInstanceOf($expected, $actual, $message = '')
+	{
+		if(self::$_assert_type_compatability)
+		{
+			return self::assertType($expected, $actual, $message);
+		}
+
+		return parent::assertInstanceOf($expected, $actual, $message);
+	}
+	
+	/**
+	 * Asserts that an attribute is of a given type.
+	 *
+	 * @param string $expected
+	 * @param string $attributeName
+	 * @param mixed  $classOrObject
+	 * @param string $message
+	 * @since Method available since Release 3.5.0
+	 */
+	public static function assertAttributeInstanceOf($expected, $attributeName, $classOrObject, $message = '')
+	{
+		if(self::$_assert_type_compatability)
+		{
+			return self::assertAttributeType($expected, $attributeName, $classOrObject, $message);
+		}
+
+		return parent::assertAttributeInstanceOf($expected, $attributeName, $classOrObject, $message);
+	}
+
+	/**
+	 * Asserts that a variable is not of a given type.
+	 *
+	 * @param string $expected
+	 * @param mixed  $actual
+	 * @param string $message
+	 * @since Method available since Release 3.5.0
+	 */
+	public static function assertNotInstanceOf($expected, $actual, $message = '')
+	{
+		if(self::$_assert_type_compatability)
+		{
+			return self::assertNotType($expected, $actual, $message);
+		}
+
+		return self::assertNotInstanceOf($expected, $actual, $message);
+	}
+
+	/**
+	 * Asserts that an attribute is of a given type.
+	 *
+	 * @param string $expected
+	 * @param string $attributeName
+	 * @param mixed  $classOrObject
+	 * @param string $message
+	 * @since Method available since Release 3.5.0
+	 */
+	public static function assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message = '')
+	{
+		if(self::$_assert_type_compatability)
+		{
+			return self::assertAttributeNotType($expected, $attributeName, $classOrObject, $message);
+		}
+
+		return self::assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message);
+	}
+
+	/**
+	 * Asserts that a variable is of a given type.
+	 *
+	 * @param string $expected
+	 * @param mixed  $actual
+	 * @param string $message
+	 * @since Method available since Release 3.5.0
+	 */
+	public static function assertInternalType($expected, $actual, $message = '')
+	{
+		if(self::$_assert_type_compatability)
+		{
+			return self::assertType($expected, $actual, $message);
+		}
+		
+		return parent::assertInternalType($expected, $actual, $message);
+	}
+
+	/**
+	 * Asserts that an attribute is of a given type.
+	 *
+	 * @param string $expected
+	 * @param string $attributeName
+	 * @param mixed  $classOrObject
+	 * @param string $message
+	 * @since Method available since Release 3.5.0
+	 */
+	public static function assertAttributeInternalType($expected, $attributeName, $classOrObject, $message = '')
+	{
+		if(self::$_assert_type_compatability)
+		{
+			return self::assertAttributeType($expected, $attributeName, $classOrObject, $message);
+		}
+
+		return self::assertAttributeInternalType($expected, $attributeName, $classOrObject, $message);
+	}
+
+	/**
+	 * Asserts that a variable is not of a given type.
+	 *
+	 * @param string $expected
+	 * @param mixed  $actual
+	 * @param string $message
+	 * @since Method available since Release 3.5.0
+	 */
+	public static function assertNotInternalType($expected, $actual, $message = '')
+	{
+		if(self::$_assert_type_compatability)
+		{
+			return self::assertNotType($expected, $actual, $message);
+		}
+
+		return self::assertNotInternalType($expected, $actual, $message);
+	}
+
+	/**
+	 * Asserts that an attribute is of a given type.
+	 *
+	 * @param string $expected
+	 * @param string $attributeName
+	 * @param mixed  $classOrObject
+	 * @param string $message
+	 * @since Method available since Release 3.5.0
+	 */
+	public static function assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message = '')
+	{
+		if(self::$_assert_type_compatability)
+		{
+			return self::assertAttributeNotType($expected, $attributeName, $classOrObject, $message);
+		}
+
+		return self::assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message);
 	}
 }
