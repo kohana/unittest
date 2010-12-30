@@ -1,16 +1,15 @@
 <?php
 /**
- * TestCase for unittesting
+ * TestCase for testing a database
  *
  * @package    Kohana/Unittest
  * @author     Kohana Team
  * @author     BRMatt <matthew@sigswitch.com>
- * @author	   Paul Banks
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
-	
+Abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Database_TestCase {
+
 	/**
 	 * Whether we should enable work arounds to make the tests compatible with phpunit 3.4
 	 * @var boolean
@@ -48,10 +47,12 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 		{
 			self::$_assert_type_compatability = version_compare(PHPUnit_Runner_Version::id(), '3.5.0', '<=');
 		}
-
+		
 		$this->_helpers = new Kohana_Unittest_Helpers;
 
 		$this->setEnvironment($this->environmentDefault);
+
+		return parent::setUp();
 	}
 
 	/**
@@ -63,7 +64,46 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	public function tearDown()
 	{
 		$this->_helpers->restore_environment();
+
+		return parent::tearDown();
 	}
+
+	/**
+	 * Creates a connection to the unittesting database
+	 *
+	 * @return PDO
+	 */
+	public function getConnection()
+	{
+		// Get the unittesting db connection
+		$config = Kohana::config('database')
+			->{Kohana::config('unittest')->db_connection};
+
+		if($config['type'] !== 'pdo')
+		{
+			$config['connection']['dsn'] = $config['type'].':'.
+			'host='.$config['connection']['hostname'].';'.
+			'dbname='.$config['connection']['database'];
+		}
+
+		$pdo = new PDO(
+			$config['connection']['dsn'], 
+			$config['connection']['username'], 
+			$config['connection']['password']
+		);
+
+		return $this->createDefaultDBConnection($pdo, $config['connection']['database']);
+	}
+
+    /**
+     * Gets a connection to the unittest database
+     *
+     * @return Kohana_Database The database connection
+     */
+    public function getKohanaConnection()
+    {
+        return Database::instance(Kohana::config('unittest')->db_connection);
+    }
 
 	/**
 	 * Removes all kohana related cache files in the cache directory

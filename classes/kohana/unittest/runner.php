@@ -145,7 +145,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 				$executed   += $stat['locExecuted'];
 			}
 
-			return $executable > 0 ? ($executed / $executable) * 100 : 100;
+			return ($executable > 0) ? ($executed * 100 / $executable) : 100;
 		}
 
 		return FALSE;
@@ -174,11 +174,11 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 			do
 			{
 				$folder_name = date('Y-m-d_H:i:s')
-					.( ! empty($groups) ? '['.implode(',', $groups).']' : '')
-					.($count > 0 ? '('.$count.')' : '');
+					.(empty($groups) ? '' : ('['.implode(',', $groups).']'))
+					.(($count > 0) ? ('('.$count.')') : '');
 				++$count;
 			}
-			while(is_dir($folder_path.$folder_name));
+			while (is_dir($folder_path.$folder_name));
 
 			$folder_path .= $folder_name;
 
@@ -213,7 +213,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 			throw new Kohana_Exception('Code coverage cannot be collected because the xdebug extension is not loaded');
 		}
 
-		$this->result->collectCodeCoverageInformation((bool) $collect_cc);
+		$this->result->collectCodeCoverageInformation( (bool) $collect_cc);
 
 		// Run the tests.
 		$this->suite->run($this->result, FALSE, $groups);
