@@ -49,7 +49,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 			self::$_assert_type_compatability = version_compare(PHPUnit_Runner_Version::id(), '3.5.0', '<=');
 		}
 
-		$this->_helpers = new Unittest_Helpers;
+		$this->_helpers = new Kohana_Unittest_Helpers;
 
 		$this->setEnvironment($this->environmentDefault);
 	}
