@@ -45,6 +45,11 @@ Abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	{
 		if(self::$_assert_type_compatability === NULL)
 		{
+			if( ! class_exists('PHPUnit_Runner_Version'))
+			{
+				require_once 'PHPUnit/Runner/Version.php';
+			}
+
 			self::$_assert_type_compatability = version_compare(PHPUnit_Runner_Version::id(), '3.5.0', '<=');
 		}
 		
