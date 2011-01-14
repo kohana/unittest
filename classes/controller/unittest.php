@@ -61,7 +61,7 @@ Class Controller_UnitTest extends Controller_Template
 			$this->status = 404;
 
 			throw new Kohana_Request_Exception('Unable to find a route to match the URI: :uri',
-				array(':uri' => $this->request->uri));
+				array(':uri' => $this->request->uri()));
 		}
 
 		// Prevent the whitelist from being autoloaded, but allow the blacklist
