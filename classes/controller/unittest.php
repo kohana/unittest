@@ -10,7 +10,7 @@
  * @license    http://kohanaphp.com/license
  */
 
-Class Controller_UnitTest extends Controller_Template
+class Controller_UnitTest extends Controller_Template
 {
 	/**
 	 * Whether the archive module is available
