@@ -164,7 +164,7 @@ class Controller_UnitTest extends Controller_Template
 
 			$runner->generate_report($group, $path, FALSE);
 
-			$this->request->redirect(URL::base(FALSE, TRUE).$folder.'index.html');
+			$this->request->redirect(URL::site($folder.'index.html', $this->request));
 		}
 	}
 
