@@ -227,6 +227,7 @@ class Controller_UnitTest extends Controller_Template
 			->set('group',  Arr::get($this->get_groups_list($suite), reset($group), 'All groups'))
 			->set('groups', $this->get_groups_list($suite))
 
+			->set('run_uri',        $this->request->uri())
 			->set('report_uri',     $this->report_uri.url::query())
 
 			// Whitelist related stuff
