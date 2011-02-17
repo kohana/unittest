@@ -100,8 +100,5 @@ if ( ! defined('KOHANA_START_MEMORY'))
 // Bootstrap the application
 require APPPATH.'bootstrap'.EXT;
 
-// Disable output buffering
-ob_end_flush();
-
 // Enable the unittest module
 Kohana::modules(Kohana::modules() + array('unittest' => MODPATH.'unittest'));
