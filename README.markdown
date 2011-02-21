@@ -32,3 +32,5 @@ Of course, you can always download the code from the [github project](http://git
 Where `{tests}` can either be a path to a folder of tests, or a path to the the `tests.php` (`modules/unittest/tests.php`)
 
 Please see the guide pages for more info.  An example of how we run the tests for the kohana project can be found in the [phing build script](https://github.com/kohana/kohana/blob/3.1/master/build.xml#L172).
+
+If you're looking for more info on running the core kohana tests then please see our [dev wiki](https://github.com/kohana/kohana/wiki/Unit-Testing-Kohana)
