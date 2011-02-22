@@ -8,6 +8,7 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
+// @codingStandardsIgnoreFile
 abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Database_TestCase {
 
 	/**
@@ -43,9 +44,9 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public function setUp()
 	{
-		if(self::$_assert_type_compatability === NULL)
+		if (self::$_assert_type_compatability === NULL)
 		{
-			if( ! class_exists('PHPUnit_Runner_Version'))
+			if ( ! class_exists('PHPUnit_Runner_Version'))
 			{
 				require_once 'PHPUnit/Runner/Version.php';
 			}
@@ -100,15 +101,15 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 		return $this->createDefaultDBConnection($pdo, $config['connection']['database']);
 	}
 
-    /**
-     * Gets a connection to the unittest database
-     *
-     * @return Kohana_Database The database connection
-     */
-    public function getKohanaConnection()
-    {
-        return Database::instance(Kohana::config('unittest')->db_connection);
-    }
+	/**
+	 * Gets a connection to the unittest database
+	 *
+	 * @return Kohana_Database The database connection
+	 */
+	public function getKohanaConnection()
+	{
+		return Database::instance(Kohana::config('unittest')->db_connection);
+	}
 
 	/**
 	 * Removes all kohana related cache files in the cache directory
@@ -166,10 +167,8 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public static function assertInstanceOf($expected, $actual, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertType($expected, $actual, $message);
-		}
 
 		return parent::assertInstanceOf($expected, $actual, $message);
 	}
@@ -185,10 +184,8 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public static function assertAttributeInstanceOf($expected, $attributeName, $classOrObject, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertAttributeType($expected, $attributeName, $classOrObject, $message);
-		}
 
 		return parent::assertAttributeInstanceOf($expected, $attributeName, $classOrObject, $message);
 	}
@@ -203,10 +200,8 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public static function assertNotInstanceOf($expected, $actual, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertNotType($expected, $actual, $message);
-		}
 
 		return self::assertNotInstanceOf($expected, $actual, $message);
 	}
@@ -222,10 +217,8 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public static function assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertAttributeNotType($expected, $attributeName, $classOrObject, $message);
-		}
 
 		return self::assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message);
 	}
@@ -240,10 +233,8 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public static function assertInternalType($expected, $actual, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertType($expected, $actual, $message);
-		}
 		
 		return parent::assertInternalType($expected, $actual, $message);
 	}
@@ -259,10 +250,8 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public static function assertAttributeInternalType($expected, $attributeName, $classOrObject, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertAttributeType($expected, $attributeName, $classOrObject, $message);
-		}
 
 		return self::assertAttributeInternalType($expected, $attributeName, $classOrObject, $message);
 	}
@@ -277,10 +266,8 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public static function assertNotInternalType($expected, $actual, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertNotType($expected, $actual, $message);
-		}
 
 		return self::assertNotInternalType($expected, $actual, $message);
 	}
@@ -296,10 +283,8 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public static function assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertAttributeNotType($expected, $attributeName, $classOrObject, $message);
-		}
 
 		return self::assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message);
 	}
