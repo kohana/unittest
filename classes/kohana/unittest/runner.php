@@ -221,43 +221,54 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 		return $this;
 	}
 
+	// @codingStandardsIgnoreStart
 	public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->totals['errors']++;
 		$this->current['result'] = 'errors';
 		$this->current['message'] = $test->getStatusMessage();
-
 	}
 
+	// @codingStandardsIgnoreStart
 	public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->totals['failures']++;
 		$this->current['result'] = 'failures';
 		$this->current['message'] = $test->getStatusMessage();
 	}
 
+	// @codingStandardsIgnoreStart
 	public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->totals['incomplete']++;
 		$this->current['result'] = 'incomplete';
 		$this->current['message'] = $test->getStatusMessage();
 	}
 
+	// @codingStandardsIgnoreStart
 	public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->totals['skipped']++;
 		$this->current['result'] = 'skipped';
 		$this->current['message'] = $test->getStatusMessage();
 	}
 
+	// @codingStandardsIgnoreStart
 	public function startTest(PHPUnit_Framework_Test $test)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->current['name'] = $test->getName(FALSE);
 		$this->current['description'] = $test->toString();
 		$this->current['result'] = 'passed';
 	}
 
+	// @codingStandardsIgnoreStart
 	public function endTest(PHPUnit_Framework_Test $test, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		// Add totals
 		$this->totals['tests']++;
@@ -280,11 +291,13 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 		$this->time += $time;
 	}
 
-	public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
-	{
-	}
+	// @codingStandardsIgnoreStart
+	public function startTestSuite(PHPUnit_Framework_TestSuite $suite) {}
+	// @codingStandardsIgnoreEnd
 
+	// @codingStandardsIgnoreStart
 	public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
+	// @codingStandardsIgnoreEnd
 	{
 		// Parse test descriptions to make them look nicer
 		foreach ($this->results as $case => $testresults)
