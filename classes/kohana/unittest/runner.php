@@ -160,9 +160,7 @@ class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener {
 	public function generate_report(array $groups, $temp_path, $create_sub_dir = TRUE)
 	{
 		if ( ! is_writable($temp_path))
-		{
 			throw new Kohana_Exception('Temp path :path does not exist or is not writable by the webserver', array(':path' => $temp_path));
-		}
 
 		$folder_path = $temp_path;
 
@@ -209,9 +207,7 @@ class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener {
 	public function run(array $groups = array(), $collect_cc = FALSE)
 	{
 		if ($collect_cc AND ! extension_loaded('xdebug'))
-		{
 			throw new Kohana_Exception('Code coverage cannot be collected because the xdebug extension is not loaded');
-		}
 
 		$this->result->collectCodeCoverageInformation( (bool) $collect_cc);
 
@@ -221,42 +217,54 @@ class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener {
 		return $this;
 	}
 
+	// @codingStandardsIgnoreStart
 	public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->totals['errors']++;
 		$this->current['result'] = 'errors';
 		$this->current['message'] = $test->getStatusMessage();
 	}
 
+	// @codingStandardsIgnoreStart
 	public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->totals['failures']++;
 		$this->current['result'] = 'failures';
 		$this->current['message'] = $test->getStatusMessage();
 	}
 
+	// @codingStandardsIgnoreStart
 	public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->totals['incomplete']++;
 		$this->current['result'] = 'incomplete';
 		$this->current['message'] = $test->getStatusMessage();
 	}
 
+	// @codingStandardsIgnoreStart
 	public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->totals['skipped']++;
 		$this->current['result'] = 'skipped';
 		$this->current['message'] = $test->getStatusMessage();
 	}
 
+	// @codingStandardsIgnoreStart
 	public function startTest(PHPUnit_Framework_Test $test)
+	// @codingStandardsIgnoreEnd
 	{
 		$this->current['name'] = $test->getName(FALSE);
 		$this->current['description'] = $test->toString();
 		$this->current['result'] = 'passed';
 	}
 
+	// @codingStandardsIgnoreStart
 	public function endTest(PHPUnit_Framework_Test $test, $time)
+	// @codingStandardsIgnoreEnd
 	{
 		// Add totals
 		$this->totals['tests']++;
@@ -279,11 +287,13 @@ class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener {
 		$this->time += $time;
 	}
 
-	public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
-	{
-	}
+	// @codingStandardsIgnoreStart
+	public function startTestSuite(PHPUnit_Framework_TestSuite $suite) {}
+	// @codingStandardsIgnoreEnd
 
+	// @codingStandardsIgnoreStart
 	public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
+	// @codingStandardsIgnoreEnd
 	{
 		// Parse test descriptions to make them look nicer
 		foreach ($this->results as $case => $testresults)
