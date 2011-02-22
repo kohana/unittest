@@ -7,8 +7,8 @@
  * @author     BRMatt <matthew@sigswitch.com>
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
- * @codingStandardsIgnoreFile
  */
+// @codingStandardsIgnoreFile
 Abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Database_TestCase {
 
 	/**
