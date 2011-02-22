@@ -160,9 +160,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 	public function generate_report(array $groups, $temp_path, $create_sub_dir = TRUE)
 	{
 		if ( ! is_writable($temp_path))
-		{
 			throw new Kohana_Exception('Temp path :path does not exist or is not writable by the webserver', array(':path' => $temp_path));
-		}
 
 		$folder_path = $temp_path;
 
@@ -209,9 +207,7 @@ Class Kohana_Unittest_Runner implements PHPUnit_Framework_TestListener
 	public function run(array $groups = array(), $collect_cc = FALSE)
 	{
 		if ($collect_cc AND ! extension_loaded('xdebug'))
-		{
 			throw new Kohana_Exception('Code coverage cannot be collected because the xdebug extension is not loaded');
-		}
 
 		$this->result->collectCodeCoverageInformation( (bool) $collect_cc);
 
