@@ -108,8 +108,14 @@ else
 	require SYSPATH.'classes/kohana'.EXT;
 }
 
+if ( ! defined('SUPPRESS_REQUEST'))
+{
+	// Stop kohana from processing the request
+	define('SUPPRESS_REQUEST', TRUE);
+}
+
 // Bootstrap the application
 require APPPATH.'bootstrap'.EXT;
 
-// Enable the unittest module
+// Enable the unittest module with current modules
 Kohana::modules(Kohana::modules() + array('unittest' => MODPATH.'unittest'));

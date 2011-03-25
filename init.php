@@ -4,7 +4,10 @@
 if (class_exists('PHPUnit_Util_Filter', FALSE) OR function_exists('phpunit_autoload'))
 {
 	Kohana_Tests::configure_environment();
+}
 
+if ( ! defined('SUPPRESS_REQUEST'))
+{
 	// Stop kohana from processing the request
 	define('SUPPRESS_REQUEST', TRUE);
 }
