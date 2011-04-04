@@ -1,3 +1,5 @@
+# Testing
+
 ### From the command line
 
 	$ phpunit --bootstrap=index.php modules/unittest/tests.php
