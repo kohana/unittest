@@ -25,46 +25,12 @@ And watch the gitorious magic...
 
 Of course, you can always download the code from the [github project](http://github.com/kohana/unittest) as an archive.
 
-The following instructions will assume you've moved it to `modules/unittest`, if you haven't then you should update all paths accordingly.
+## Running the tests
 
-**Step 1**: Enable this module in your bootstrap file:
+         $ phpunit --bootstrap=modules/unittest/bootstrap.php {tests}
 
-	/**
-	 * Enable modules. Modules are referenced by a relative or absolute path.
-	 */
-	Kohana::modules(array(
-		'unittest' => MODPATH.'unittest',  // PHPUnit integration
-		));
+Where `{tests}` can either be a path to a folder of tests, or a path to the the `tests.php` (`modules/unittest/tests.php`)
 
-**Step 2**: In your app's bootstrap file modify the lines where the request is handled, which by default looks like:
+Please see the guide pages for more info.  An example of how we run the tests for the kohana project can be found in the [phing build script](https://github.com/kohana/kohana/blob/3.1/master/build.xml#L172).
 
-	/**
-	 * Execute the main request using PATH_INFO. If no URI source is specified,
-	 * the URI will be automatically detected.
-	 */
-	echo Request::instance($_SERVER['PATH_INFO'])
-		->execute()
-		->send_headers()
-		->response;
-
-To:
-
-	if ( ! defined('SUPPRESS_REQUEST'))
-	{
-		/**
-		 * Execute the main request using PATH_INFO. If no URI source is specified,
-		 * the URI will be automatically detected.
-		 */
-		echo Request::instance($_SERVER['PATH_INFO'])
-			->execute()
-			->send_headers()
-			->response;
-	}
-
-**Step 3**: Create a folder called `unittest` in your app's cache dir (`APPPATH/cache`). If you don't want to use this path for storing generated reports, skip this step and change the config file.
-
-Note: make sure the settings in `config/unittest.php` are correct for your environment. If they aren't, copy the file to `application/config/unittest.php` and change the values accordingly.
-
-**Step 4**: Start testing!
-
-You can find more info and tutorials in the [guide/](http://github.com/kohana/unittest/tree/master/guide/) directory.
+If you're looking for more info on running the core kohana tests then please see our [dev wiki](https://github.com/kohana/kohana/wiki/Unit-Testing-Kohana)
