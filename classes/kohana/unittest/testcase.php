@@ -4,6 +4,7 @@
  * A version of the stock PHPUnit testcase that includes some extra helpers
  * and default settings
  */
+// @codingStandardsIgnoreFile
 abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	
 	/**
@@ -39,9 +40,9 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public function setUp()
 	{
-		if(self::$_assert_type_compatability === NULL)
+		if (self::$_assert_type_compatability === NULL)
 		{
-			if( ! class_exists('PHPUnit_Runner_Version'))
+			if ( ! class_exists('PHPUnit_Runner_Version'))
 			{
 				require_once 'PHPUnit/Runner/Version.php';
 			}
@@ -121,10 +122,8 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function assertInstanceOf($expected, $actual, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertType($expected, $actual, $message);
-		}
 
 		return parent::assertInstanceOf($expected, $actual, $message);
 	}
@@ -140,10 +139,8 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function assertAttributeInstanceOf($expected, $attributeName, $classOrObject, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertAttributeType($expected, $attributeName, $classOrObject, $message);
-		}
 
 		return parent::assertAttributeInstanceOf($expected, $attributeName, $classOrObject, $message);
 	}
@@ -158,10 +155,8 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function assertNotInstanceOf($expected, $actual, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertNotType($expected, $actual, $message);
-		}
 
 		return self::assertNotInstanceOf($expected, $actual, $message);
 	}
@@ -177,10 +172,8 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertAttributeNotType($expected, $attributeName, $classOrObject, $message);
-		}
 
 		return self::assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message);
 	}
@@ -195,10 +188,8 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function assertInternalType($expected, $actual, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertType($expected, $actual, $message);
-		}
 		
 		return parent::assertInternalType($expected, $actual, $message);
 	}
@@ -214,10 +205,8 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function assertAttributeInternalType($expected, $attributeName, $classOrObject, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertAttributeType($expected, $attributeName, $classOrObject, $message);
-		}
 
 		return self::assertAttributeInternalType($expected, $attributeName, $classOrObject, $message);
 	}
@@ -232,10 +221,8 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function assertNotInternalType($expected, $actual, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertNotType($expected, $actual, $message);
-		}
 
 		return self::assertNotInternalType($expected, $actual, $message);
 	}
@@ -251,10 +238,8 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message = '')
 	{
-		if(self::$_assert_type_compatability)
-		{
+		if (self::$_assert_type_compatability)
 			return self::assertAttributeNotType($expected, $attributeName, $classOrObject, $message);
-		}
 
 		return self::assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message);
 	}
