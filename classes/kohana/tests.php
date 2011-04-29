@@ -132,7 +132,9 @@ class Kohana_Tests
 	 * @param PHPUnit_Framework_TestSuite  $suite   The test suite to add to
 	 * @param array                        $files   Array of files to test
 	 */
+	// @codingStandardsIgnoreStart
 	static function addTests(PHPUnit_Framework_TestSuite $suite, array $files)
+	// @codingStandardsIgnoreEnd
 	{
 		if (self::$phpunit_v35)
 		{
