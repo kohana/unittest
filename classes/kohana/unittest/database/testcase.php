@@ -20,7 +20,7 @@ abstract Class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 * Make sure PHPUnit backs up globals
 	 * @var boolean
 	 */
-	protected $backupGlobals = TRUE;
+	protected $backupGlobals = FALSE;
 
 	/**
 	 * A set of unittest helpers that are shared between normal / database
