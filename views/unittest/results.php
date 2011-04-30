@@ -2,7 +2,7 @@
 <div id="header" class="results">
 	<fieldset id="results-options">
 		<legend>Options</legend>
-		<?php echo Form::open(NULL, array('method' => 'get'));?>
+		<?php echo Form::open($run_uri, array('method' => 'get'));?>
 		<?php echo Form::label('group', __('Switch Group')) ?>
 		<?php echo Form::select('group', $groups, $group, array('id' => 'group'));?>
 		<?php if ($xdebug_enabled): ?>
