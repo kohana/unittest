@@ -73,10 +73,10 @@ Class Controller_UnitTest extends Controller_Template
 		// This just stops some very very long lines
 		$route = Route::get('unittest');
 		$this->report_uri = $route->uri(array('action' => 'report'));
-		$this->run_uri    = $route->uri(array('action' => 'run'));
+		$this->run_uri = $route->uri(array('action' => 'run'));
 
 		// Switch used to disable cc settings
-		$this->xdebug_loaded      = extension_loaded('xdebug');
+		$this->xdebug_loaded = extension_loaded('xdebug');
 		$this->cc_archive_enabled = class_exists('Archive');
 
 		Kohana_View::set_global('xdebug_enabled', $this->xdebug_loaded);
@@ -109,9 +109,9 @@ Class Controller_UnitTest extends Controller_Template
 		// We don't want to use the HTML layout, we're sending the user 100111011100110010101100
 		$this->auto_render = FALSE;
 
-		$suite     = Kohana_Tests::suite();
+		$suite = Kohana_Tests::suite();
 		$temp_path = rtrim($this->config->temp_path, '/').'/';
-		$group     = (array) Arr::get($_GET, 'group', array());
+		$group = (array) Arr::get($_GET, 'group', array());
 
 		// Stop unittest from interpretting "all groups" as "no groups"
 		if (empty($group) OR empty($group[0]))
@@ -150,17 +150,13 @@ Class Controller_UnitTest extends Controller_Template
 		else
 		{
 			$folder = trim($this->config->cc_report_path, '/').'/';
-			$path   = DOCROOT.$folder;
+			$path = DOCROOT.$folder;
 
 			if ( ! file_exists($path))
-			{
 				throw new Kohana_Exception('Report directory :dir does not exist', array(':dir' => $path));
-			}
 
 			if ( ! is_writable($path))
-			{
 				throw new Kohana_Exception('Script doesn\'t have permission to write to report dir :dir ', array(':dir' => $path));
-			}
 
 			$runner->generate_report($group, $path, FALSE);
 
@@ -220,19 +216,19 @@ Class Controller_UnitTest extends Controller_Template
 		// Show some results
 		$this->template->body
 			->set('results', $runner->results)
-			->set('totals',  $runner->totals)
-			->set('time',    $this->nice_time($runner->time))
+			->set('totals', $runner->totals)
+			->set('time', $this->nice_time($runner->time))
 
 			// Sets group to the currently selected group, or default all groups
-			->set('group',  Arr::get($this->get_groups_list($suite), reset($group), 'All groups'))
+			->set('group', Arr::get($this->get_groups_list($suite), reset($group), 'All groups'))
 			->set('groups', $this->get_groups_list($suite))
 
-			->set('report_uri',     $this->report_uri.url::query())
+			->set('report_uri', $this->report_uri.url::query())
 
 			// Whitelist related stuff
 			->set('whitelistable_items', $this->get_whitelistable_items())
-			->set('whitelisted_items',   isset($whitelist) ? array_keys($whitelist) : array())
-			->set('whitelist',           ! empty($whitelist));
+			->set('whitelisted_items', isset($whitelist) ? array_keys($whitelist) : array())
+			->set('whitelist', ! empty($whitelist));
 	}
 
 	/**
@@ -262,9 +258,7 @@ Class Controller_UnitTest extends Controller_Template
 		static $whitelist;
 
 		if (count($whitelist))
-		{
 			return $whitelist;
-		}
 
 		$whitelist = array();
 
