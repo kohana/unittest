@@ -31,6 +31,15 @@ $system = 'system';
 define('EXT', '.php');
 
 /**
+ * Set the path to the document root
+ *
+ * This assumes that this file is stored 2 levels below the DOCROOT, if you move 
+ * this bootstrap file somewhere else then you'll need to modify this value to 
+ * compensate.
+ */
+define('DOCROOT', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR);
+
+/**
  * Set the PHP error reporting level. If you set this in php.ini, you remove this.
  * @see  http://php.net/error_reporting
  *
@@ -51,9 +60,6 @@ error_reporting(E_ALL | E_STRICT);
  *
  * @see  http://kohanaframework.org/guide/using.configuration
  */
-
-// Set the full path to the docroot
-define('DOCROOT', realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR);
 
 // Make the application relative to the docroot
 if ( ! is_dir($application) AND is_dir(DOCROOT.$application))
