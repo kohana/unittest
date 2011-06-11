@@ -36,6 +36,12 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	protected $environmentDefault = array();
 
 	/**
+	 * The kohana database connection that PHPUnit should use for this test
+	 * @var string
+	 */
+	protected $_database_connection = 'default';
+
+	/**
 	 * Creates a predefined environment using the default environment
 	 *
 	 * Extending classes that have their own setUp() should call
@@ -81,8 +87,7 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	public function getConnection()
 	{
 		// Get the unittesting db connection
-		$config = Kohana::config('database')
-			->{Kohana::config('unittest')->db_connection};
+		$config = Kohana::config('database'.$this->_database_connection);
 
 		if($config['type'] !== 'pdo')
 		{

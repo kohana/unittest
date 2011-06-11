@@ -46,8 +46,4 @@ return array(
 	// List of individual files/folders to blacklist
 	'blacklist' => array(
 	),
-
-	// A database connection that can be used when testing
-	// This doesn't overwrite anything, tests will have to use this value manually
-	'db_connection' => 'unittest',
 );
