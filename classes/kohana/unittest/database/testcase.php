@@ -87,7 +87,7 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	public function getConnection()
 	{
 		// Get the unittesting db connection
-		$config = Kohana::config('database'.$this->_database_connection);
+		$config = Kohana::$config->load('database.'.$this->_database_connection);
 
 		if($config['type'] !== 'pdo')
 		{
@@ -112,7 +112,7 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
      */
     public function getKohanaConnection()
     {
-        return Database::instance(Kohana::config('unittest')->db_connection);
+        return Database::instance(Kohana::$config->load('unittest')->db_connection);
     }
 
 	/**

@@ -55,7 +55,7 @@ class Kohana_Unittest_Tests {
 
 		Unittest_tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === NULL) ? array() : $cache;
 
-		$config = Kohana::config('unittest');
+		$config = Kohana::$config->load('unittest');
 
 		if ($do_whitelist AND $config->use_whitelist)
 		{
@@ -75,7 +75,7 @@ class Kohana_Unittest_Tests {
 	 */
 	static function enabled()
 	{
-		$p_environment = Kohana::config('unittest.environment');
+		$p_environment = Kohana::$config->load('unittest.environment');
 		$k_environment = Kohana::$environment;
 
 		return  (is_array($p_environment) AND in_array($k_environment, $p_environment))
@@ -231,7 +231,7 @@ class Kohana_Unittest_Tests {
 	 */
 	static protected function get_config_whitelist()
 	{
-		$config = Kohana::config('unittest');
+		$config = Kohana::$config->load('unittest');
 		$directories = array();
 
 		if ($config->whitelist['app'])

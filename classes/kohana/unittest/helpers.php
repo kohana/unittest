@@ -146,12 +146,12 @@ class Kohana_Unittest_Helpers {
 			{
 				if ($backup_needed)
 				{
-					$this->_environment_backup[$option] = Kohana::config($option);
+					$this->_environment_backup[$option] = Kohana::$config->load($option);
 				}
 
 				list($group, $var) = explode('.', $option, 2);
 
-				Kohana::config($group)->set($var, $value);
+				Kohana::$config->load($group)->set($var, $value);
 			}
 		}
 	}
