@@ -45,25 +45,8 @@ class Kohana_Unittest_Tests {
 	 */
 	static public function configure_environment($do_whitelist = TRUE, $do_blacklist = TRUE)
 	{
-		// During a webui request we need to manually load PHPUnit
-		if ( ! class_exists('PHPUnit_Util_Filter', FALSE) AND ! function_exists('phpunit_autoload'))
-		{
-			try
-			{
-				include_once 'PHPUnit/Autoload.php';
-			}
-			catch (ErrorException $e)
-			{
-				include_once 'PHPUnit/Framework.php';
-			}
-		}
-
-		// Allow PHPUnit to handle exceptions and errors
-		if (Kohana::$is_cli)
-		{
-			restore_exception_handler();
-			restore_error_handler();
-		}
+		restore_exception_handler();
+		restore_error_handler();
 
 		spl_autoload_register(array('Unittest_tests', 'autoload'));
 
@@ -113,6 +96,8 @@ class Kohana_Unittest_Tests {
 		{
 			return $suite;
 		}
+		
+		Unittest_Tests::configure_environment();
 
 		$files = Kohana::list_files('tests');
 
@@ -330,5 +315,4 @@ class Kohana_Unittest_Tests {
 			}
 		}
 	}
-
 }

@@ -2,26 +2,12 @@
 
 return array(
 
-	// The only environment in which the web runner is allowed to run
-	// You can run tests from phpunit cli command regardless of this setting
-	// This can also be set to an array for multiple environments
-	'environment' => Kohana::DEVELOPMENT,
-
-	// This is the folder where we generate and zip all the reports for downloading
-	// Needs to be readable and writable
-	'temp_path' => Kohana::$cache_dir.'/unittest',
-
-	// Path from DOCROOT (i.e. http://yourdomain/) to the folder where HTML cc reports can be published.
-	// If you'd prefer not to allow users to do this then simply set the value to FALSE.
-	// Example value of 'cc_report_path' would allow devs to see report at http://yourdomain/report/
-	'cc_report_path' => 'report',
-
 	// If you don't use a whitelist then only files included during the request will be counted
 	// If you do, then only whitelisted items will be counted
-	'use_whitelist' => TRUE,
+	// By default this is FALSE so that a phpunit.xml file can set the whitelist
+	'use_whitelist' => FALSE,
 
 	// Items to whitelist, only used in cli
-	// Web runner ui allows user to choose which items to whitelist
 	'whitelist' => array(
 
 		// Should the app be whitelisted?
