@@ -69,21 +69,6 @@ class Kohana_Unittest_Tests {
 	}
 
 	/**
-	 * Helper function to see if unittest is enabled in the config
-	 *
-	 * @return boolean
-	 */
-	static function enabled()
-	{
-		$p_environment = Kohana::$config->load('unittest.environment');
-		$k_environment = Kohana::$environment;
-
-		return  (is_array($p_environment) AND in_array($k_environment, $p_environment))
-				OR
-				($k_environment === $p_environment);
-	}
-
-	/**
 	 * Creates the test suite for kohana
 	 *
 	 * @return PHPUnit_Framework_TestSuite
