@@ -81,7 +81,7 @@ class Kohana_Unittest_Tests {
 		{
 			return $suite;
 		}
-		
+
 		Unittest_Tests::configure_environment();
 
 		$files = Kohana::list_files('tests');
@@ -108,11 +108,14 @@ class Kohana_Unittest_Tests {
 			$filter = PHP_CodeCoverage_Filter::getInstance();
 		}
 
-		foreach ($files as $file)
+		foreach ($files as $path => $file)
 		{
 			if (is_array($file))
 			{
-				self::addTests($suite, $file);
+				if ($path != 'tests/test_data')
+				{
+					self::addTests($suite, $file);
+				}
 			}
 			else
 			{
