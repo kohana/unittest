@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+<?php defined('SYSPATH') OR die('No direct script access.');
 
 /**
  * PHPUnit testsuite for kohana application
@@ -101,7 +101,9 @@ class Kohana_Unittest_Tests {
 	 * @param PHPUnit_Framework_TestSuite  $suite   The test suite to add to
 	 * @param array                        $files   Array of files to test
 	 */
+	// @codingStandardsIgnoreStart
 	static function addTests(PHPUnit_Framework_TestSuite $suite, array $files)
+	// @codingStandardsIgnoreEnd
 	{
 		if (self::$phpunit_v35)
 		{
