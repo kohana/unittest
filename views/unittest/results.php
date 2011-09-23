@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') or die('No direct script access.') ?>
+<?php defined('SYSPATH') OR die('No direct script access.') ?>
 <div id="header" class="results">
 	<fieldset id="results-options">
 		<legend>Options</legend>
