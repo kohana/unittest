@@ -33,16 +33,20 @@ abstract class Kohana_Unittest_TestSuite extends PHPUnit_Framework_TestSuite
 		
 		// Get the code coverage filter from the suite's result object
 		$coverage = $result->getCodeCoverage();
-		$coverage_filter = $coverage->filter();
 		
-		// Apply the white and blacklisting
-		foreach ($this->_filter_calls as $method => $args)
+		if ($coverage)
 		{
-			foreach ($args as $arg)
+			$coverage_filter = $coverage->filter();
+
+			// Apply the white and blacklisting
+			foreach ($this->_filter_calls as $method => $args)
 			{
-				$coverage_filter->$method($arg);
+				foreach ($args as $arg)
+				{
+					$coverage_filter->$method($arg);
+				}
 			}
-		}		
+		}
 		
 		return parent::run($result, $filter, $groups, $excludeGroups, $processIsolation);
 	}
