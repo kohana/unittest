@@ -5,6 +5,7 @@
  *
  * @package    Kohana/UnitTest
  * @author     Kohana Team
+ * @author     Woody Gilk <woody.gilk@kohanaframework.org>
  * @author     BRMatt <matthew@sigswitch.com>
  * @author	   Paul Banks
  * @copyright  (c) 2008-2009 Kohana Team
@@ -19,6 +20,12 @@ class Kohana_Unittest_Tests {
 	 * @var boolean
 	 */
 	static protected $phpunit_v35 = FALSE;
+
+	/**
+	 * CodeCoverage_Filter instance.
+	 * @var  PHP_CodeCoverage_Filter
+	 */
+	static protected $filter;
 
 	/**
 	 * Loads test files if they cannot be found by kohana
@@ -52,6 +59,18 @@ class Kohana_Unittest_Tests {
 
 		// As of PHPUnit v3.5 there are slight differences in the way files are black|whitelisted
 		self::$phpunit_v35 = function_exists('phpunit_autoload');
+
+		if (self::$phpunit_v35)
+		{
+			if (method_exists('PHP_CodeCoverage_Filter', 'getInstance'))
+			{
+				self::$filter = PHP_CodeCoverage_Filter::getInstance();
+			}
+			else
+			{
+				self::$filter = new PHP_CodeCoverage_Filter;
+			}
+		}
 
 		Unittest_tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === NULL) ? array() : $cache;
 
@@ -103,11 +122,6 @@ class Kohana_Unittest_Tests {
 	 */
 	static function addTests(PHPUnit_Framework_TestSuite $suite, array $files)
 	{
-		if (self::$phpunit_v35)
-		{
-			$filter = PHP_CodeCoverage_Filter::getInstance();
-		}
-
 		foreach ($files as $path => $file)
 		{
 			if (is_array($file))
@@ -132,9 +146,9 @@ class Kohana_Unittest_Tests {
 						require_once($file);
 					}
 
-					if (isset($filter))
+					if (isset(self::$filter))
 					{
-						$filter->addFileToBlacklist($file);
+						self::$filter->addFileToBlacklist($file);
 					}
 					else
 					{
@@ -152,19 +166,17 @@ class Kohana_Unittest_Tests {
 	 */
 	static public function blacklist(array $blacklist_items)
 	{
-		if (self::$phpunit_v35)
+		if (isset(self::$filter))
 		{
-			$filter = PHP_CodeCoverage_Filter::getInstance();
-
 			foreach ($blacklist_items as $item)
 			{
 				if (is_dir($item))
 				{
-					$filter->addDirectoryToBlacklist($item);
+					self::$filter->addDirectoryToBlacklist($item);
 				}
 				else
 				{
-					$filter->addFileToBlacklist($item);
+					self::$filter->addFileToBlacklist($item);
 				}
 			}
 		}
@@ -266,11 +278,6 @@ class Kohana_Unittest_Tests {
 	 */
 	static protected function set_whitelist($files)
 	{
-		if (self::$phpunit_v35)
-		{
-			$filter = PHP_CodeCoverage_Filter::getInstance();
-		}
-
 		foreach ($files as $file)
 		{
 			if (is_array($file))
@@ -291,9 +298,9 @@ class Kohana_Unittest_Tests {
 
 				if (Unittest_tests::$cache[$file])
 				{
-					if (isset($filter))
+					if (isset(self::$filter))
 					{
-						$filter->addFileToWhitelist($file);
+						self::$filter->addFileToWhitelist($file);
 					}
 					else
 					{
