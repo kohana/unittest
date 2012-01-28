@@ -12,6 +12,8 @@
  */
 class Kohana_Unittest_Tests {
 	static protected $cache = array();
+        
+        static protected $cc_instance = NULL;
 
 	/**
 	 * Flag to identify whether the installed version of phpunit
@@ -105,7 +107,9 @@ class Kohana_Unittest_Tests {
 	{
 		if (self::$phpunit_v35)
 		{
-			$filter = PHP_CodeCoverage_Filter::getInstance();
+                        if( !self::$cc_instance )
+                          self::$cc_instance = new PHP_CodeCoverage_Filter();
+			$filter = self::$cc_instance;
 		}
 
 		foreach ($files as $file)
@@ -151,7 +155,9 @@ class Kohana_Unittest_Tests {
 	{
 		if (self::$phpunit_v35)
 		{
-			$filter = PHP_CodeCoverage_Filter::getInstance();
+                        if( !self::$cc_instance )
+                          self::$cc_instance = new PHP_CodeCoverage_Filter();
+			$filter = self::$cc_instance;
 
 			foreach ($blacklist_items as $item)
 			{
@@ -265,7 +271,9 @@ class Kohana_Unittest_Tests {
 	{
 		if (self::$phpunit_v35)
 		{
-			$filter = PHP_CodeCoverage_Filter::getInstance();
+                        if( !self::$cc_instance )
+                          self::$cc_instance = new PHP_CodeCoverage_Filter();
+			$filter = self::$cc_instance;
 		}
 
 		foreach ($files as $file)
