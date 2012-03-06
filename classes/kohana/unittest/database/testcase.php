@@ -213,7 +213,7 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 			return self::assertNotType($expected, $actual, $message);
 		}
 
-		return self::assertNotInstanceOf($expected, $actual, $message);
+		return parent::assertNotInstanceOf($expected, $actual, $message);
 	}
 
 	/**
@@ -232,7 +232,7 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 			return self::assertAttributeNotType($expected, $attributeName, $classOrObject, $message);
 		}
 
-		return self::assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message);
+		return parent::assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message);
 	}
 
 	/**
@@ -269,7 +269,7 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 			return self::assertAttributeType($expected, $attributeName, $classOrObject, $message);
 		}
 
-		return self::assertAttributeInternalType($expected, $attributeName, $classOrObject, $message);
+		return parent::assertAttributeInternalType($expected, $attributeName, $classOrObject, $message);
 	}
 
 	/**
@@ -287,7 +287,7 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 			return self::assertNotType($expected, $actual, $message);
 		}
 
-		return self::assertNotInternalType($expected, $actual, $message);
+		return parent::assertNotInternalType($expected, $actual, $message);
 	}
 
 	/**
@@ -306,6 +306,6 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 			return self::assertAttributeNotType($expected, $attributeName, $classOrObject, $message);
 		}
 
-		return self::assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message);
+		return parent::assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message);
 	}
 }
