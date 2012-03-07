@@ -93,11 +93,12 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 		{
 			$config['connection']['dsn'] = $config['type'].':'.
 			'host='.$config['connection']['hostname'].';'.
-			'dbname='.$config['connection']['database'];
+			'dbname='.$config['connection']['database'].';'.
+			'charset='.$config['charset'];
 		}
 
 		$pdo = new PDO(
-			$config['connection']['dsn'], 
+			$config['connection']['dsn'].';'.'charset='.$config['charset'],
 			$config['connection']['username'], 
 			$config['connection']['password']
 		);
