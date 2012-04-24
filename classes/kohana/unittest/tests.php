@@ -21,6 +21,13 @@ class Kohana_Unittest_Tests {
 	static protected $phpunit_v35 = FALSE;
 
 	/**
+	 * Flag to identify whether the installed version of phpunit
+	 * is greater than or equal to 3.6
+	 * @var boolean
+	 */
+	static protected $phpunit_v36 = FALSE;
+
+	/**
 	 * Loads test files if they cannot be found by kohana
 	 * @param <type> $class
 	 */
@@ -52,6 +59,12 @@ class Kohana_Unittest_Tests {
 
 		// As of PHPUnit v3.5 there are slight differences in the way files are black|whitelisted
 		self::$phpunit_v35 = function_exists('phpunit_autoload');
+
+		// As of PHPUnit v3.6 the CodeCoverage_Filter class is no longer a singleton
+		if(self::$phpunit_v35)
+		{
+			self::$phpunit_v36 = !method_exists('PHP_CodeCoverage_Filter', 'getInstance');
+		}	
 
 		Unittest_tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === NULL) ? array() : $cache;
 
@@ -103,7 +116,11 @@ class Kohana_Unittest_Tests {
 	 */
 	static function addTests(PHPUnit_Framework_TestSuite $suite, array $files)
 	{
-		if (self::$phpunit_v35)
+		if (self::$phpunit_v36)
+		{
+			$filter = new PHP_CodeCoverage_Filter;
+		}	
+		elseif (self::$phpunit_v35)
 		{
 			$filter = PHP_CodeCoverage_Filter::getInstance();
 		}
@@ -152,10 +169,17 @@ class Kohana_Unittest_Tests {
 	 */
 	static public function blacklist(array $blacklist_items)
 	{
-		if (self::$phpunit_v35)
+		if (self::$phpunit_v36)
+		{
+			$filter = new PHP_CodeCoverage_Filter;
+		}	
+		elseif (self::$phpunit_v35)
 		{
 			$filter = PHP_CodeCoverage_Filter::getInstance();
+		}
 
+		if (isset($filter))
+		{
 			foreach ($blacklist_items as $item)
 			{
 				if (is_dir($item))
@@ -266,7 +290,11 @@ class Kohana_Unittest_Tests {
 	 */
 	static protected function set_whitelist($files)
 	{
-		if (self::$phpunit_v35)
+		if (self::$phpunit_v36)
+		{
+			$filter = new PHP_CodeCoverage_Filter;
+		}	
+		elseif (self::$phpunit_v35)
 		{
 			$filter = PHP_CodeCoverage_Filter::getInstance();
 		}
