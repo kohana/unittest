@@ -51,7 +51,8 @@ class Kohana_Unittest_Tests {
 		spl_autoload_register(array('Unittest_tests', 'autoload'));
 
 		// As of PHPUnit v3.5 there are slight differences in the way files are black|whitelisted
-		self::$phpunit_v35 = function_exists('phpunit_autoload');
+                list($major, $minor, $release) = explode('.', PHPUnit_Runner_Version::id());
+                self::$phpunit_v35 = (($major < 4 && $minor < 6) || $major < 3);
 
 		Unittest_tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === NULL) ? array() : $cache;
 
@@ -136,7 +137,7 @@ class Kohana_Unittest_Tests {
 					{
 						$filter->addFileToBlacklist($file);
 					}
-					else
+					else if (self::$phpunit_v35)
 					{
 						PHPUnit_Util_Filter::addFileToFilter($file);
 					}
@@ -295,7 +296,7 @@ class Kohana_Unittest_Tests {
 					{
 						$filter->addFileToWhitelist($file);
 					}
-					else
+					else if (self::$phpunit_v35)
 					{
 						PHPUnit_Util_Filter::addFileToWhitelist($file);
 					}
