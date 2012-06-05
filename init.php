@@ -9,8 +9,11 @@ if (class_exists('PHPUnit_Util_Filter', FALSE) OR function_exists('phpunit_autol
 	define('SUPPRESS_REQUEST', TRUE);
 }
 
+require_once 'PHPUnit/Autoload.php';
+
 Route::set('unittest', 'unittest(/<action>)')
 	->defaults(array(
 		'controller' => 'unittest',
 		'action'     => 'index',
 	));
+
