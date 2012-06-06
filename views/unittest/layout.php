@@ -246,7 +246,7 @@
 
 				// Toggle the state of the "display" style
 				elem.style.display = disp == 'block' ? 'none' : 'block';
-				plus.innerHTML = disp == 'block' ? '[<?php echo __('show') ?>]' : '[<?php echo __('hide') ?>]';
+				plus.innerHTML = disp == 'block' ? '[<?php echo 'show' ?>]' : '[<?php echo 'hide' ?>]';
 				return false;
 			}
 		</script>
