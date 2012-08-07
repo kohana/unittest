@@ -105,7 +105,7 @@ class Kohana_Unittest_Tests {
 	{
 		if (self::$phpunit_v35)
 		{
-			$filter = PHP_CodeCoverage_Filter::getInstance();
+			$filter = new PHP_CodeCoverage_Filter();
 		}
 
 		foreach ($files as $file)
@@ -151,7 +151,7 @@ class Kohana_Unittest_Tests {
 	{
 		if (self::$phpunit_v35)
 		{
-			$filter = PHP_CodeCoverage_Filter::getInstance();
+			$filter = new PHP_CodeCoverage_Filter();
 
 			foreach ($blacklist_items as $item)
 			{
