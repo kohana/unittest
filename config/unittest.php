@@ -31,4 +31,7 @@ return array(
 	// List of individual files/folders to blacklist
 	'blacklist' => array(
 	),
+	'test_blacklist' => array(
+		'tests/cache',
+	)
 );
