@@ -16,7 +16,7 @@ return array(
 		// Set to array(TRUE) to include all modules, or use an array of module names
 		// (the keys of the array passed to Kohana::modules() in the bootstrap)
 		// Or set to FALSE to exclude all modules
-		'modules' => array(TRUE),
+		'modules' => FALSE,
 
 		// If you don't want the Kohana code coverage reports to pollute your app's,
 		// then set this to FALSE
@@ -31,4 +31,7 @@ return array(
 	// List of individual files/folders to blacklist
 	'blacklist' => array(
 	),
+	'test_blacklist' => array(
+		'tests/cache',
+	)
 );
