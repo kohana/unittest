@@ -35,6 +35,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+define("SUPPRESS_REQUEST","TRUE");
+
 # Kohana additions
 $paths = array(
 	"dbunit",
@@ -48,7 +50,7 @@ $paths = array(
 	"phpunit-selenium",
 );
 
-ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.implode(PATH_SEPARATOR.realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR, $paths));
+ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.implode(PATH_SEPARATOR.realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR, $paths));
 
 unset($paths);
 
