@@ -35,8 +35,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-define("SUPPRESS_REQUEST","TRUE");
-
 # Kohana additions
 $paths = array(
 	"dbunit",
