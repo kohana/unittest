@@ -2,11 +2,7 @@
 
 	$ phpunit --bootstrap=modules/unittest/bootstrap.php modules/unittest/tests.php
 
-Alternatively you can use a phpunit.xml to have a more fine grained control over which tests are included and which files are whitelisted.
-
-Make sure you only whitelist the highest files in the cascading filesystem, else you could end up with a lot of "class cannot be redefined" errors.
-
-If you use the tests.php testsuite loader then it will only whitelist the highest files. see config/unittest.php for details on configuring the tests.php whitelist.
+Of course, you'll need to make sure the path to the tests.php file is correct.  If you want you can copy it to a more accessible location
 
 ## Writing tests
 
@@ -88,7 +84,7 @@ Our convention is to use lowercase group names, with more specific levels in a g
 
 To actually limit your testing to the "somegroup" group, use:
 
-	$ phpunit --boostrap=index.php --group=somegroup modules/unittest/tests.php
+	$ phpunit --boostrap=modules/unittest/bootstrap.php --group=somegroup modules/unittest/tests.php
 
 This functionality can be used to record which bug reports a test is for:
 
