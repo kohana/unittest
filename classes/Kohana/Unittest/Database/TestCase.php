@@ -42,6 +42,18 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	protected $_database_connection = 'default';
 
 	/**
+	 * Disable MySQL foreign key checks
+	 * @var boolean
+	 */
+	protected $_disable_foreign_key_checks = FALSE;
+
+	/**
+	 * The database connection
+	 * @var PDO
+	 */
+	protected $_connection;
+
+	/**
 	 * Creates a predefined environment using the default environment
 	 *
 	 * Extending classes that have their own setUp() should call
@@ -62,6 +74,11 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 		$this->_helpers = new Kohana_Unittest_Helpers;
 
 		$this->setEnvironment($this->environmentDefault);
+
+		if($this->_disable_foreign_key_checks)
+		{
+			$this->getConnection()->getConnection()->query("SET FOREIGN_KEY_CHECKS = 0");
+		}
 
 		return parent::setUp();
 	}
@@ -86,6 +103,12 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 	 */
 	public function getConnection()
 	{
+		// Check if connection already exists
+		if($this->_connection !== NULL)
+		{
+			return $this->_connection;
+		}
+
 		// Get the unittesting db connection
 		$config = Kohana::$config->load('database.'.$this->_database_connection);
 
@@ -97,12 +120,14 @@ abstract class Kohana_Unittest_Database_TestCase extends PHPUnit_Extensions_Data
 		}
 
 		$pdo = new PDO(
-			$config['connection']['dsn'], 
-			$config['connection']['username'], 
+			$config['connection']['dsn'],
+			$config['connection']['username'],
 			$config['connection']['password']
 		);
 
-		return $this->createDefaultDBConnection($pdo, $config['connection']['database']);
+		$this->_connection = $this->createDefaultDBConnection($pdo, $config['connection']['database']);
+
+		return $this->_connection;
 	}
 
     /**
