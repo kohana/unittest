@@ -14,13 +14,6 @@ class Kohana_Unittest_Tests {
 	static protected $cache = array();
 
 	/**
-	 * Flag to identify whether the installed version of phpunit
-	 * is greater than or equal to 3.5
-	 * @var boolean
-	 */
-	static protected $phpunit_v35 = FALSE;
-
-	/**
 	 * Loads test files if they cannot be found by kohana
 	 * @param <type> $class
 	 */
@@ -49,9 +42,6 @@ class Kohana_Unittest_Tests {
 		restore_error_handler();
 
 		spl_autoload_register(array('Unittest_tests', 'autoload'));
-
-		// As of PHPUnit v3.5 there are slight differences in the way files are black|whitelisted
-		self::$phpunit_v35 = function_exists('phpunit_autoload');
 
 		Unittest_tests::$cache = (($cache = Kohana::cache('unittest_whitelist_cache')) === NULL) ? array() : $cache;
 
@@ -136,14 +126,7 @@ class Kohana_Unittest_Tests {
 						require_once($file);
 					}
 
-					if (self::$phpunit_v35)
-					{
-						$suite->addFileToBlacklist($file);
-					}
-					else
-					{
-						PHPUnit_Util_Filter::addFileToFilter($file);
-					}
+					$suite->addFileToBlacklist($file);
 				}
 			}
 		}
@@ -157,32 +140,15 @@ class Kohana_Unittest_Tests {
 	 */
 	static public function blacklist(array $blacklist_items, Unittest_TestSuite $suite = NULL)
 	{
-		if (self::$phpunit_v35)
+		foreach ($blacklist_items as $item)
 		{
-			foreach ($blacklist_items as $item)
+			if (is_dir($item))
 			{
-				if (is_dir($item))
-				{
-					$suite->addDirectoryToBlacklist($item);
-				}
-				else
-				{
-					$suite->addFileToBlacklist($item);
-				}
+				$suite->addDirectoryToBlacklist($item);
 			}
-		}
-		else
-		{
-			foreach ($blacklist_items as $item)
+			else
 			{
-				if (is_dir($item))
-				{
-					PHPUnit_Util_Filter::addDirectoryToFilter($item);
-				}
-				else
-				{
-					PHPUnit_Util_Filter::addFileToFilter($item);
-				}
+				$suite->addFileToBlacklist($item);
 			}
 		}
 	}
