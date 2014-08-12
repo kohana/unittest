@@ -121,5 +121,10 @@ if (($ob_len = ob_get_length()) !== FALSE)
 	}
 }
 
-// Enable the unittest module
-Kohana::modules(Kohana::modules() + array('unittest' => MODPATH.'unittest'));
+// Enable the unittest module, ensuring that the system module comes at the very end
+$modules = Kohana::modules();
+unset($modules['core']);
+$modules['unittest'] = MODPATH.'unittest';
+$modules['core']     = SYSPATH;
+Kohana::modules($modules);
+unset($modules);

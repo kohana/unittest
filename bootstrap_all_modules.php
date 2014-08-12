@@ -15,6 +15,10 @@ foreach ($modules_iterator as $module)
 	}
 }
 
-Kohana::modules(Kohana::modules() + $modules);
+// Add to modules, ensuring that the system 'module' comes at the very end
+$modules = Kohana::modules() + $modules;
+unset($modules['core']);
+$modules['core'] = SYSPATH;
+Kohana::modules($modules);
 
 unset ($modules_iterator, $modules, $module);
