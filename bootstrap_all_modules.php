@@ -20,5 +20,5 @@ $modules = Kohana::modules() + $modules;
 unset($modules['core']);
 $modules['core'] = SYSPATH;
 Kohana::modules($modules);
-
+Kohana::init_modules();
 unset ($modules_iterator, $modules, $module);

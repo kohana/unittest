@@ -127,4 +127,5 @@ unset($modules['core']);
 $modules['unittest'] = MODPATH.'unittest';
 $modules['core']     = SYSPATH;
 Kohana::modules($modules);
+Kohana::init_modules();
 unset($modules);
