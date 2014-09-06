@@ -21,7 +21,7 @@ $modules = 'modules';
  *
  * @link http://kohanaframework.org/guide/about.install#system
  */
-$system = 'system';
+$system = 'vendor/kohana/core';
 
 /**
  * The default extension of resource files. If you change this, all resources
@@ -34,11 +34,11 @@ define('EXT', '.php');
 /**
  * Set the path to the document root
  *
- * This assumes that this file is stored 2 levels below the DOCROOT, if you move 
+ * This assumes that this file is stored 3 levels below the DOCROOT, if you move 
  * this bootstrap file somewhere else then you'll need to modify this value to 
  * compensate.
  */
-define('DOCROOT', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR);
+define('DOCROOT', realpath(dirname(__FILE__).'/../../../').DIRECTORY_SEPARATOR);
 
 /**
  * Set the PHP error reporting level. If you set this in php.ini, you remove this.
@@ -124,7 +124,7 @@ if (($ob_len = ob_get_length()) !== FALSE)
 // Enable the unittest module, ensuring that the system module comes at the very end
 $modules = Kohana::modules();
 unset($modules['core']);
-$modules['unittest'] = MODPATH.'unittest';
+$modules['unittest'] = 'vendor/kohana/unittest';
 $modules['core']     = SYSPATH;
 Kohana::modules($modules);
 Kohana::init_modules();
