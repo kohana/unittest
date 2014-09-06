@@ -3,7 +3,7 @@
 include_once('bootstrap.php');
 
 // Enable all modules we can find
-$modules_iterator = new DirectoryIterator(MODPATH);
+$modules_iterator = new DirectoryIterator(DOCROOT.'vendor/kohana/');
 
 $modules = array();
 
@@ -11,7 +11,7 @@ foreach ($modules_iterator as $module)
 {
 	if ($module->isDir() AND ! $module->isDot())
 	{
-		$modules[$module->getFilename()] = MODPATH.$module->getFilename();
+		$modules[$module->getFilename()] = DOCROOT.'vendor/kohana/'.$module->getFilename();
 	}
 }
 
