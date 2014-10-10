@@ -79,6 +79,13 @@ if ( ! is_dir($system) AND is_dir(DOCROOT.$system))
 {
 	$system = DOCROOT.$system;
 }
+else if (is_dir('system'))
+{
+	// this is a nasty hack to support testing kohana/core with koharness (where the core will not be in /vendor/kohana/core).
+	// It needs to be removed as part of tidying up the bootstrap and removing the duplication of path definitions
+	// between index, minion, etc.
+	$system = 'system';
+}
 
 // Define the absolute paths for configured directories
 define('APPPATH', realpath($application).DIRECTORY_SEPARATOR);
