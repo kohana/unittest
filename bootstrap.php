@@ -128,11 +128,18 @@ if (($ob_len = ob_get_length()) !== FALSE)
 	}
 }
 
-// Enable the unittest module, ensuring that the system module comes at the very end
+// Enable the unittest module if it is not already loaded - use the absolute path
 $modules = Kohana::modules();
-unset($modules['core']);
-$modules['unittest'] = 'vendor/kohana/unittest';
-$modules['core']     = SYSPATH;
-Kohana::modules($modules);
-Kohana::init_modules();
-unset($modules);
+$unittest_path = realpath(__DIR__).DIRECTORY_SEPARATOR;
+if ( ! in_array($unittest_path, $modules)) {
+	// Ensure that the system module comes at the very end
+	$core_path = $modules['core'];
+	unset($modules['core']);
+	$modules['unittest'] = $unittest_path;
+	$modules['core']     = $core_path;
+	Kohana::modules($modules);
+	Kohana::init_modules();
+	unset($modules);
+	unset($core_path);
+	unset($unittest_path);
+}
