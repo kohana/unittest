@@ -22,6 +22,7 @@
 	"require": {
 		"composer/installers": "~1.0",
 		"kohana/core":         ">=3.4",
+		"mikey179/vfsStream":  "^1.6",
 		"php":                 ">=5.4.0",
 		"phpunit/phpunit":     "^4.3",
 		"phpunit/phpunit-mock-objects": ">=2.0.3"
