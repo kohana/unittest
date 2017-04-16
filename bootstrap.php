@@ -1,5 +1,7 @@
 <?php
 
+$vendor_path = 'vendor/';
+
 /**
  * The directory in which your application specific resources are located.
  * The application directory must contain the bootstrap.php file.
@@ -21,7 +23,7 @@ $modules = 'modules';
  *
  * @link http://kohanaframework.org/guide/about.install#system
  */
-$system = 'vendor/kohana/core';
+$system = $vendor_path.'kohana/core';
 
 /**
  * The default extension of resource files. If you change this, all resources
