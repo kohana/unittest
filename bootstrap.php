@@ -21,7 +21,7 @@ $modules = 'modules';
  *
  * @link http://kohanaframework.org/guide/about.install#system
  */
-$system = 'system';
+$system = 'vendor/kohana/core';
 
 /**
  * The default extension of resource files. If you change this, all resources
@@ -34,11 +34,11 @@ define('EXT', '.php');
 /**
  * Set the path to the document root
  *
- * This assumes that this file is stored 2 levels below the DOCROOT, if you move 
+ * This assumes that this file is stored 3 levels below the DOCROOT, if you move 
  * this bootstrap file somewhere else then you'll need to modify this value to 
  * compensate.
  */
-define('DOCROOT', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR);
+define('DOCROOT', realpath(dirname(__FILE__).'/../../../').DIRECTORY_SEPARATOR);
 
 /**
  * Set the PHP error reporting level. If you set this in php.ini, you remove this.
@@ -78,6 +78,13 @@ if ( ! is_dir($modules) AND is_dir(DOCROOT.$modules))
 if ( ! is_dir($system) AND is_dir(DOCROOT.$system))
 {
 	$system = DOCROOT.$system;
+}
+else if (is_dir('system'))
+{
+	// this is a nasty hack to support testing kohana/core with koharness (where the core will not be in /vendor/kohana/core).
+	// It needs to be removed as part of tidying up the bootstrap and removing the duplication of path definitions
+	// between index, minion, etc.
+	$system = 'system';
 }
 
 // Define the absolute paths for configured directories
@@ -125,6 +132,14 @@ if (($ob_len = ob_get_length()) !== FALSE)
 $modules = Kohana::modules();
 $unittest_path = realpath(__DIR__).DIRECTORY_SEPARATOR;
 if ( ! in_array($unittest_path, $modules)) {
+	// Ensure that the system module comes at the very end
+	$core_path = $modules['core'];
+	unset($modules['core']);
 	$modules['unittest'] = $unittest_path;
+	$modules['core']     = $core_path;
 	Kohana::modules($modules);
+	Kohana::init_modules();
+	unset($modules);
+	unset($core_path);
+	unset($unittest_path);
 }
